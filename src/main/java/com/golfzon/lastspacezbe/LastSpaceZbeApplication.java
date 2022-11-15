@@ -1,4 +1,4 @@
-package com.example.lastspacezbe;
+package com.golfzon.lastspacezbe;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
