@@ -19,18 +19,12 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,12 +61,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // h2-console 사용에 대한 허용 (CSRF, FrameOptions 무시)
         web
                 .ignoring()
-                .antMatchers("/h2-console/**")
-                .antMatchers("/oauth/**")
                 .antMatchers(
                         "/favicon.ico"
                         ,"/error"
                         ,"/swagger-ui/**"
+                        ,"/swagger-ui.html"
+                        ,"/webjars/**"
+                        ,"/static/**"
                         ,"/swagger-resources/**"
                         ,"/v2/api-docs");
     }
@@ -85,7 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable() // 소셜로그인 수정
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll() // preflight 대응
-                .antMatchers("/oauth/**").permitAll(); // /auth/**에 대한 접근을 인증 절차 없이 허용(로그인 관련 url)
+                .antMatchers("/oauth/**").permitAll(); // /oauth/**에 대한 접근을 인증 절차 없이 허용(로그인 관련 url)
         // 특정 권한을 가진 사용자만 접근을 허용해야 할 경우, 하기 항목을 통해 가능
         //.antMatchers("/admin/**").hasAnyRole("ADMIN");
 
@@ -119,22 +114,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // [로그아웃 기능]
                 .logout()
                 // 로그아웃 요청 처리 URL
-                .logoutUrl("/user/logout")
-                .logoutSuccessHandler(new LogoutSuccessHandler() {
-
-                    @Override
-                    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
-                                                Authentication authentication) throws IOException, ServletException {
-                        System.out.println("success");
-                    }
-                })
+                .logoutUrl("/member/logout")
+                .logoutSuccessHandler((request, response, authentication) -> System.out.println("success"))
                 .permitAll();
     }
 
     @Bean
     public FormLoginFilter formLoginFilter() throws Exception {
         FormLoginFilter formLoginFilter = new FormLoginFilter(authenticationManager());
-        formLoginFilter.setFilterProcessesUrl("/user/login");
+        formLoginFilter.setFilterProcessesUrl("/member/login");
         formLoginFilter.setAuthenticationSuccessHandler(formLoginSuccessHandler());
 //        formLoginFilter.setAuthenticationFailureHandler(formLoginFailureHandler());
         formLoginFilter.afterPropertiesSet();
@@ -158,21 +146,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         List<String> skipPathList = new ArrayList<>();
 
         // 회원 관리 API 허용
-        skipPathList.add("GET,/user/**");
-        skipPathList.add("POST,/user/**");
-        skipPathList.add("GET,/oauth/**");
+        skipPathList.add("GET,/member/**");
+        skipPathList.add("POST,/member/**");
 
         skipPathList.add("GET,/image/**");
         skipPathList.add("GET,/api/main/**");
         skipPathList.add("GET,/");
 
-        skipPathList.add("GET,/user/kakao/**");
-        skipPathList.add("POST,/user/kakao/**");
-
-        // 채팅 관리 허용 (소켓통신을 위해)
-        skipPathList.add("GET,/mainchat/**");
-        skipPathList.add("GET,/ws-seesaw/**");
-        skipPathList.add("POST,/ws-seesaw/**");
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(
                 skipPathList,
@@ -199,13 +179,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000"); // local 테스트 시
         configuration.addAllowedOrigin("https://main.d3ezz3muzp1rz5.amplifyapp.com"); // 배포 시
-        configuration.addAllowedOrigin("https://play-seeso.com"); // 배포 시
-        configuration.addAllowedOrigin("https://www.play-seeso.com"); // 배포 시
-        configuration.addAllowedOrigin("https://play-seeso.com:443"); // 배포 시
-        configuration.addAllowedOrigin("https://www.play-seeso.com:443"); // 배포 시
-        configuration.addAllowedOrigin("https://walbu.shop"); // 배포 시
-        configuration.addAllowedOrigin("https://walbu.shop:443"); // 배포 시
-        //configuration.addAllowedOrigin("http://saintrabby.shop.s3-website.ap-northeast-2.amazonaws.com"); // 배포 시
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
