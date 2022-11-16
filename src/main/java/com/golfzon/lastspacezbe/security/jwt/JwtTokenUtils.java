@@ -19,7 +19,7 @@ public final class JwtTokenUtils {
     private static final int JWT_TOKEN_VALID_MILLI_SEC = JWT_TOKEN_VALID_SEC * 1000;
 
     public static final String CLAIM_EXPIRED_DATE = "EXPIRED_DATE";
-    public static final String CLAIM_USER_NAME = "USER_EMAIL";
+    public static final String CLAIM_EMAIL = "USER_EMAIL";
     public static final String UID = "UID";
     public static final String NICKNAME = "NICKNAME";
     public static final String IMAGE = "IMAGE";
@@ -31,13 +31,13 @@ public final class JwtTokenUtils {
 
         try {
             accessToken = JWT.create()
-                    .withIssuer("sparta")
-                    .withClaim(CLAIM_USER_NAME, member.getEmail())
+                    .withIssuer("spacez")
+                    .withClaim(CLAIM_EMAIL, member.getEmail())
                      // 토큰 만료 일시 = 현재 시간 + 토큰 유효기간)
                     .withClaim(CLAIM_EXPIRED_DATE, new Date(System.currentTimeMillis() + JWT_TOKEN_VALID_MILLI_SEC))
-                    .withClaim(UID, member.getMember_id())
-                    .withClaim(NICKNAME, member.getMember_name())
-                    .withClaim(IMAGE, member.getImg_name())
+                    .withClaim(UID, member.getMemberId())
+                    .withClaim(NICKNAME, member.getMemberName())
+                    .withClaim(IMAGE, member.getImgName())
                     .withClaim(AUTHORITY, member.getAuthority())
                     .sign(generateAlgorithm());
             System.out.println("accessToken 생성 : "+ accessToken);
