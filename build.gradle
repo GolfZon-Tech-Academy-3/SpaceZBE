@@ -46,6 +46,13 @@ dependencies {
     implementation 'io.springfox:springfox-swagger-ui:2.8.0'
     implementation 'javax.xml.bind:jaxb-api:2.3.0'
 
+    //S3 연결 라이브러리
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.5.RELEASE'
+
+    //이메일 인증
+    implementation 'javax.mail:mail:1.4.7'
+    implementation 'org.springframework.boot:spring-boot-starter-mail:1.4.7.RELEASE'
+
 
 
 

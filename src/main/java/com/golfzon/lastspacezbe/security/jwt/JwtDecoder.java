@@ -29,10 +29,10 @@ public class JwtDecoder {
             throw new IllegalArgumentException("유효한 토큰이 아닙니다. 만료되었습니다. 재로그인해주세요.");
         }
 
-        String username = decodedJWT
-                .getClaim(CLAIM_USER_NAME)
+        String email = decodedJWT
+                .getClaim(CLAIM_EMAIL)
                 .asString();
-        return username;
+        return email;
     }
 
     private Optional<DecodedJWT> isValidToken(String token) {

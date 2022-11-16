@@ -1,5 +1,6 @@
 package com.golfzon.lastspacezbe.member.entity;
 
+import com.golfzon.lastspacezbe.member.dto.SignupRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_member")
     @SequenceGenerator(sequenceName = "seq_member", allocationSize = 1, name="seq_member")
     @Column
-    private long member_id;
+    private long memberId;
 
     @Column(nullable = false)
     private String email;
@@ -25,13 +26,21 @@ public class Member {
     private String password;
 
     @Column(nullable = false)
-    private String member_name;
+    private String memberName;
 
     @Column
     private String authority;
 
     @Column
-    private String img_name;
+    private String imgName;
+
+    public Member(SignupRequestDto signupRequestDto) {
+        this.email = signupRequestDto.getEmail();
+        this.password = signupRequestDto.getPassword();
+        this.memberName = signupRequestDto.getMemberName();
+        this.authority = signupRequestDto.getAuthority();
+        this.imgName = signupRequestDto.getImgName();
+    }
 
 
 //    @Column
