@@ -154,6 +154,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/");
 
 
+        // 예약 관리 AP
+        skipPathList.add("GET,/reservation/**");
+        skipPathList.add("POST,/reservation/**");
+        skipPathList.add("PUT,/reservation/**");
+        skipPathList.add("DELETE,/reservation/**");
+
         FilterSkipMatcher matcher = new FilterSkipMatcher(
                 skipPathList,
                 "/**"
