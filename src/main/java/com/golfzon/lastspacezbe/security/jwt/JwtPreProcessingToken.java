@@ -21,3 +21,4 @@ public class JwtPreProcessingToken extends UsernamePasswordAuthenticationToken {
         );
     }
 }
+

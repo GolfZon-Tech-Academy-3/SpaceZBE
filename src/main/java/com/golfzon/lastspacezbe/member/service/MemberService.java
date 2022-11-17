@@ -13,7 +13,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Optional;
@@ -31,18 +30,20 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailSender;
+    private final MemberS3Service memberS3Service;
 
+    public static String[] profileImages = new String[]{"img_0001.png", "img_0002.png", "img_0003.png"};
 
     //회원가입
     public void signup(SignupRequestDto signupRequestDto) {
         log.info("signup()...");
         log.info("{}", signupRequestDto);
 
-        String[] images = new String[]{"img_0001.png", "img_0002.png", "img_0003.png"};
+
         // 아이디 중복확인
         checkEmail(signupRequestDto.getEmail());
         // 기본이미지 저장(1,2,3 중 랜덤으로 저장)
-        signupRequestDto.setImgName(images[new Random().nextInt(2)]);
+        signupRequestDto.setImgName("https://spacez3.s3.ap-northeast-2.amazonaws.com/"+profileImages[new Random().nextInt(2)]);
         // 비밀번호 암호화
         signupRequestDto.setPassword(passwordEncoder.encode(signupRequestDto.getPassword()));
         memberRepository.save(new Member(signupRequestDto));
@@ -107,4 +108,19 @@ public class MemberService {
         return flag;
     }
 
+    //회원정보 수정
+    public void updateMember(SignupRequestDto signupRequestDto, Member member) {
+        log.info("updateMember()...");
+        log.info("signupRequestDto:{}", signupRequestDto);
+        log.info("member:{}", member);
+
+        // 프로필이미지 S3에 저장
+        if(signupRequestDto.getMultipartFile() != null){
+            String imageUrl = memberS3Service.update(member.getMemberId(), signupRequestDto.getMultipartFile());
+            member.setImgName(imageUrl);
+        }
+        member.setMemberName(signupRequestDto.getMemberName());
+        // Update member info.
+        memberRepository.save(member);
+    }
 }
