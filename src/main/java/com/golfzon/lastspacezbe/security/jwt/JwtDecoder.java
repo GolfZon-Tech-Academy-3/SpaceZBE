@@ -13,9 +13,13 @@ import java.util.Optional;
 
 import static com.golfzon.lastspacezbe.security.jwt.JwtTokenUtils.*;
 
+
 @Component
 public class JwtDecoder {
+
+
     private final Logger log = LoggerFactory.getLogger(this.getClass());
+
     public String decodeUsername(String token) {
         DecodedJWT decodedJWT = isValidToken(token)
                 .orElseThrow(() -> new IllegalArgumentException("유효한 토큰이 아닙니다."));
@@ -26,13 +30,14 @@ public class JwtDecoder {
 
         Date now = new Date();
         if (expiredDate.before(now)) {
-            throw new IllegalArgumentException("유효한 토큰이 아닙니다. 만료되었습니다. 재로그인해주세요.");
+            throw new IllegalArgumentException("유효한 토큰이 아닙니다.");
         }
 
-        String email = decodedJWT
-                .getClaim(CLAIM_EMAIL)
+        String username = decodedJWT
+                .getClaim(CLAIM_USER_NAME)
                 .asString();
-        return email;
+
+        return username;
     }
 
     private Optional<DecodedJWT> isValidToken(String token) {

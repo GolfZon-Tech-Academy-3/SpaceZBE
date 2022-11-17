@@ -8,6 +8,8 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.golfzon.lastspacezbe.member.entity.Member;
+import com.golfzon.lastspacezbe.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,9 +21,9 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
+import static com.golfzon.lastspacezbe.member.service.MemberService.profileImages;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +43,7 @@ public class MemberS3Service {
 
     private final String bucket = "spacez3";
 
-    //private final TroubleImageRepository troubleImageRepository;
+    private final MemberRepository memberRepository;
 
     @PostConstruct
     public void setS3Client() {
@@ -54,56 +56,44 @@ public class MemberS3Service {
     }
 
     // S3 bucket에 image upload 후, Image names list로 반환
-    public List<String> upload(List<MultipartFile> files) {
+    public String upload(MultipartFile file) {
+        String imageUrl;
+        String fileName = createFileName(file.getOriginalFilename());
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(file.getSize());
+        objectMetadata.setContentType(file.getContentType());
 
-        List<String> imageUrls = new ArrayList<>();
-        for(MultipartFile file : files){
-            String fileName = createFileName(file.getOriginalFilename());
-            ObjectMetadata objectMetadata = new ObjectMetadata();
-            objectMetadata.setContentLength(file.getSize());
-            objectMetadata.setContentType(file.getContentType());
-
-            try (InputStream inputStream = file.getInputStream()) {
-                s3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
-                        .withCannedAcl(CannedAccessControlList.PublicRead));
-                imageUrls.add(s3Client.getUrl(bucket, fileName).toString());
-            } catch (IOException e) {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패하셨습니다");
-            }
+        try (InputStream inputStream = file.getInputStream()) {
+            s3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+            imageUrl = s3Client.getUrl(bucket, fileName).toString();
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패하셨습니다");
         }
-
-        return imageUrls;
+        return imageUrl;
     }
 
 
-//    // 글 수정(+ 기존 s3에 있는 이미지 정보 삭제)
-//    public List<String> update(Long troubleId, List<String> imageUrls, List<MultipartFile> files) {
-//        //이미지 삭제 후 재업로드
-//        delete(troubleId, imageUrls);
-//        return upload(files);
-//    }
-//
-//    //기존 s3에 있는 기존 이미지 정보, DB 정보 삭제
-//    public void delete(Long troubleId, List<String> imageUrls) {   //imageUrls 는 지우면 안되는 것들
-//        List<TroubleImage> savedImages = troubleImageRepository.findAllByTroubleId(troubleId);
-//
-//        //살리고 싶은 이미지에 기존에 저장된 이미지가 포함되어 있다면, 지워야할 이미지에서 지워라!
-//        savedImages.removeIf(savedImage -> imageUrls != null && imageUrls.contains(savedImage.getTroubleImage()));
-//
-//        for (TroubleImage savedImage : savedImages) {
-//            if (!savedImage.getTroubleImage().equals("https://myseesaw.s3.ap-northeast-2.amazonaws.com/TroubleBaicCard.svg")) {
-//                String image = savedImage.getTroubleImage().replace("https://myseesaw.s3.ap-northeast-2.amazonaws.com/", "");
-//                boolean isExistObject = s3Client.doesObjectExist(bucket, image);
-//                System.out.println("지워야할 url 주소 : " + image);
-//                System.out.println("isExistObject : " + isExistObject);
-//                if (isExistObject) {
-//                    s3Client.deleteObject(bucket, image);
-//                }
-//            }
-//            System.out.println(savedImage.getTroubleImage());
-//            troubleImageRepository.deleteById(savedImage.getId());
-//        }
-//    }
+    //기존 s3에 있는 기존 이미지 정보 삭제 후 저장
+    public String update(Long memberId, MultipartFile file) {
+        String imageUrl;
+        List<String> imageUrls = new ArrayList<>(Arrays.asList(profileImages));
+        Optional<Member> member = memberRepository.findById(memberId);
+        if (member.isPresent()) {
+            String savedImage = member.get().getImgName().replace("https://spacez3.s3.ap-northeast-2.amazonaws.com/", "");
+            log.info("지울사진:{}", savedImage);
+            boolean isExistObject = s3Client.doesObjectExist(bucket, savedImage);
+            log.info("사진 S3존재 여부:{}", isExistObject);
+            if (isExistObject & !imageUrls.contains(savedImage)) { //기본이미지가 아니거나 이전 사진이 존재한다면, S3에서 이미지를 삭제한다.
+                s3Client.deleteObject(bucket, savedImage);
+            }
+            //S3에 파일 업로드 후, imageUrl 반환
+            imageUrl = upload(file);
+        } else{
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "존재하지 않는 사용자입니다.");
+        }
+        return imageUrl;
+    }
 
     //파일명 난수화(unique)
     private String createFileName(String fileName) {
