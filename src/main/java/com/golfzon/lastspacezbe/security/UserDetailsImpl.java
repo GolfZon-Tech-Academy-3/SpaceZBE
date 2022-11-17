@@ -1,15 +1,16 @@
 package com.golfzon.lastspacezbe.security;
 
 
-;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
-public class UserDetailsImpl implements UserDetails {
+
+public class UserDetailsImpl implements UserDetails{
 
     private final Member member;
 
@@ -21,13 +22,7 @@ public class UserDetailsImpl implements UserDetails {
         return member;
     }
 
-    public String getMemberName() {
-        return member.getMemberName();
-    }
-
-    public String getEmail() {
-        return member.getEmail();
-    }
+    public String getEmail(){return member.getEmail();}
 
     @Override
     public String getPassword() {
@@ -35,7 +30,9 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     @Override
-    public String getUsername() { return member.getEmail(); }
+    public String getUsername() {
+        return member.getEmail();
+    }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -57,13 +54,21 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
 
-    @Override // 인가를 해주는 부분
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        String authority = member.getAuthority();
+
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(simpleGrantedAuthority);
+
+        return authorities;
     }
 
     @Override
     public String toString() {
-        return "UserDetailsImpl{" + "member=" + member + '}';
+        return "UserDetailsImpl{" +
+                "member=" + member +
+                '}';
     }
 }

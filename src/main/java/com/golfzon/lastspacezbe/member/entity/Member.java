@@ -4,18 +4,22 @@ import com.golfzon.lastspacezbe.member.dto.SignupRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Member {
+public class Member{
 
     @Id //pk설정
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_member")
-    @SequenceGenerator(sequenceName = "seq_member", allocationSize = 1, name="seq_member")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_user")
+    @SequenceGenerator(sequenceName = "seq_user", allocationSize = 1, name="seq_user")
     @Column
     private long memberId;
 
@@ -42,8 +46,19 @@ public class Member {
         this.imgName = signupRequestDto.getImgName();
     }
 
+    @Override
+    public String toString() {
+        return "Member{" +
+                "memberId=" + memberId +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", memberName='" + memberName + '\'' +
+                ", authority='" + authority + '\'' +
+                ", imgName='" + imgName + '\'' +
+                '}';
+    }
 
-//    @Column
+    //    @Column
 //    private MultipartFile multipartFile;
 
 

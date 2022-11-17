@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 public class FilterSkipMatcher implements RequestMatcher {
 
     private final OrRequestMatcher orRequestMatcher;
