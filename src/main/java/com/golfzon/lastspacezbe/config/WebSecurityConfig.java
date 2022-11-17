@@ -69,7 +69,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         ,"/webjars/**"
                         ,"/static/**"
                         ,"/swagger-resources/**"
-                        ,"/v2/api-docs");
+                        ,"/v2/api-docs"
+                        ,"/h2-console");
     }
 
     @Override
@@ -152,7 +153,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/image/**");
         skipPathList.add("GET,/api/main/**");
         skipPathList.add("GET,/");
-
 
         // 예약 관리 AP
         skipPathList.add("GET,/reservation/**");
