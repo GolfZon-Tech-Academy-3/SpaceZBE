@@ -42,8 +42,8 @@ dependencies {
     implementation 'commons-io:commons-io:2.8.0'
 
     // springfox-swagger2
-    implementation 'io.springfox:springfox-swagger2:2.8.0'
-    implementation 'io.springfox:springfox-swagger-ui:2.8.0'
+    implementation 'io.springfox:springfox-swagger2:2.9.2'
+    implementation 'io.springfox:springfox-swagger-ui:2.9.2'
     implementation 'javax.xml.bind:jaxb-api:2.3.0'
 
     //S3 연결 라이브러리
@@ -53,7 +53,9 @@ dependencies {
     implementation 'javax.mail:mail:1.4.7'
     implementation 'org.springframework.boot:spring-boot-starter-mail:1.4.7.RELEASE'
 
-
+    //문자 인증
+    implementation 'net.nurigo:javaSDK:2.2'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
 
 
