@@ -18,7 +18,7 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     // 예약하기
-    @PostMapping("/post")
+    @PostMapping(value = "/post",produces="text/plain;charset=UTF-8")
     public ResponseEntity<String> reserve(
             @RequestBody ReservationRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -28,13 +28,25 @@ public class ReservationController {
          return ResponseEntity.ok()
                 .body("result : 예약완료");
     }
-    // 예약 취소하기
-    @PutMapping("/cancel")
-    public ResponseEntity<String> cancel(
+    // 오피스 예약 취소하기
+    @PutMapping("/office-cancel")
+    public ResponseEntity<String> officeCancel(
             @RequestParam Long reservationId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        reservationService.cancel(reservationId);
+        reservationService.officeCancel(reservationId);
+
+        return ResponseEntity.ok()
+                .body("result : 예약취소 완료");
+    }
+
+    // 데스크 회의실 예약 취소하기
+    @PutMapping("/desk-cancel")
+    public ResponseEntity<String> deskCancel(
+            @RequestParam Long reservationId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        reservationService.deskCancel(reservationId);
 
         return ResponseEntity.ok()
                 .body("result : 예약취소 완료");

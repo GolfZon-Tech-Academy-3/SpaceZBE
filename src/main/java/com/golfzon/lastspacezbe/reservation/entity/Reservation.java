@@ -2,6 +2,7 @@ package com.golfzon.lastspacezbe.reservation.entity;
 
 import com.golfzon.lastspacezbe.member.entity.Member;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @SequenceGenerator(sequenceName = "seq_reservation", allocationSize = 1, name="seq_reservation")

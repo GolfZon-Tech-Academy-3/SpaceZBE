@@ -68,7 +68,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         ,"/error"
                         ,"/swagger-ui/**"
                         ,"/swagger-resources/**"
-                        ,"/v2/api-docs");
+                        ,"/v2/api-docs"
+                        ,"/h2-console");
     }
 
     @Override
@@ -142,8 +143,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/basic.js");
 
         skipPathList.add("GET,/favicon.ico");
-
-        // 예약 관리 AP
+        
+        // 예약 관리 API 허용
         skipPathList.add("GET,/reservation/**");
         skipPathList.add("POST,/reservation/**");
         skipPathList.add("PUT,/reservation/**");
