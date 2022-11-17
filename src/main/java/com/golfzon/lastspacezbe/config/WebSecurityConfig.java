@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -19,6 +20,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -60,8 +62,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // h2-console 사용에 대한 허용 (CSRF, FrameOptions 무시)
         web
                 .ignoring()
-                .antMatchers("/h2-console/**", "/favicon.ico")
-                .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**");
+                .antMatchers("/h2-console/**")
+                .antMatchers(
+                        "/favicon.ico"
+                        ,"/error"
+                        ,"/swagger-ui/**"
+                        ,"/swagger-resources/**"
+                        ,"/v2/api-docs"
+                        ,"/h2-console");
     }
 
     @Override
@@ -122,7 +130,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // Static 정보 접근 허용
         skipPathList.add("GET,/images/**");
-        skipPathList.add("GET,/templates/index.html");
         skipPathList.add("GET,/css/**");
 
         // h2-console 허용
@@ -137,7 +144,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         skipPathList.add("GET,/favicon.ico");
 
-        // 예약 관리 AP
+        // 예약 관리 API 허용
         skipPathList.add("GET,/reservation/**");
         skipPathList.add("POST,/reservation/**");
         skipPathList.add("PUT,/reservation/**");
@@ -168,9 +175,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000"); // local 테스트 시
-        configuration.addAllowedOrigin("http://192.168.0.24:3000"); // local 테스트 시
         configuration.addAllowedOrigin("*"); // local 테스트 시
-        //configuration.addAllowedOrigin("https://main.d3ezz3muzp1rz5.amplifyapp.com"); // 배포 시
+        configuration.addAllowedOrigin("https://main.d3ezz3muzp1rz5.amplifyapp.com"); // 배포 시
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
