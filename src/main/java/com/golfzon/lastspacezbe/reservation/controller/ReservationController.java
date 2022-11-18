@@ -56,5 +56,17 @@ public class ReservationController {
                 .body("result : 예약취소 완료");
     }
 
+
+    //핸드폰 인증번호 보내기
+    @GetMapping(value = "/phoneCheck")
+    public String sendSMS(@RequestParam("phone") String userPhoneNumber) { // 휴대폰 문자보내기
+        log.info("phone:{}",userPhoneNumber);
+        int randomNumber = (int)((Math.random()* (9999 - 1000 + 1)) + 1000);//난수 생성
+
+        reservationService.certifiedPhoneNumber(userPhoneNumber,randomNumber);
+
+        return Integer.toString(randomNumber);
+    }
+
 }
 

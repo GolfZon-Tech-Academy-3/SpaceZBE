@@ -5,15 +5,29 @@ import com.golfzon.lastspacezbe.reservation.entity.Reservation;
 import com.golfzon.lastspacezbe.reservation.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.java_sdk.api.Message;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReservationService {
+
+    @Value("${service.message.apiKey}")
+    private String api_key;
+
+    @Value("${service.message.secretKey}")
+    private String api_secret;
+
+    @Value("${service.message.sender}")
+    private String sender;
 
     private final ReservationRepository reservationRepository;
 
@@ -63,5 +77,25 @@ public class ReservationService {
 
         reservationRepository.save(reservation); // 002 예약상태 저장
 
+    }
+
+    public void certifiedPhoneNumber(String userPhoneNumber, int randomNumber) {
+        Message coolsms = new Message(api_key, api_secret);
+
+        // 4 params(to, from, type, text) are mandatory. must be filled
+        HashMap<String, String> params = new HashMap<>();
+        params.put("to", userPhoneNumber);    // 수신전화번호
+        params.put("from", sender);    // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
+        params.put("type", "SMS");
+        params.put("text", "[TEST] 인증번호는" + "["+randomNumber+"]" + "입니다."); // 문자 내용 입력
+        params.put("app_version", "spacez app 1.0"); // application name and version
+
+        try {
+            JSONObject obj = coolsms.send(params);
+            System.out.println(obj.toString());
+        } catch (CoolsmsException e) {
+            System.out.println(e.getMessage());
+            System.out.println(e.getCode());
+        }
     }
 }
