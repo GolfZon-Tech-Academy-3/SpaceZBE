@@ -59,6 +59,7 @@ public class MemberController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("principal:{}",principal);
         Member  member = ((UserDetailsImpl)principal).getMember();
+        log.info("member?:{}",member);
 
         //@CurrentSecurityContext(expression = "authentication.principal.usernamePasswordAuthenticationToken") UserDetailsImpl userDetails
 //        log.info("principal:{}",principal);
@@ -67,7 +68,6 @@ public class MemberController {
 
 //        log.info("과연 token?:{}", token);
 //        UserDetailsImpl userDetails = (UserDetailsImpl) token.getPrincipal();
-        log.info("member?:{}",member);
         memberService.updateMember(signupRequestDto, member);
         return ResponseEntity.ok()
                 .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
