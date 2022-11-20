@@ -43,6 +43,8 @@ public class Reservation {
     @CreationTimestamp
     LocalDateTime reserveTime;
 
+    @Column(name = "company_id")
+    Long companyId;
 //    @ManyToOne
 //    @JoinColumn(name = "member_id", nullable = false)
 //    private Member member;
