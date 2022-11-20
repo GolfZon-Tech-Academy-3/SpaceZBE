@@ -4,11 +4,16 @@ import com.golfzon.lastspacezbe.reservation.entity.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 
 public interface ReservationRepository extends JpaRepository<Reservation,Long> {
 
     // 예약취소
     Reservation findAllByReservationId(Long reservationId);
+
+    // 오늘 예약 조회용
+    List<Reservation> findAllByCompanyId(Long companyId);
     // 예약한 시간
     Reservation findByReservationId(Long reservationId);
 

@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -97,5 +99,27 @@ public class ReservationService {
             System.out.println(e.getMessage());
             System.out.println(e.getCode());
         }
+    }
+
+    public int todayReserve(Long companyId) {
+        int reserveCount = 0; // 금일 예약 수
+        // 업체 번호로 예약 가져오기.
+        List<Reservation> reservations = reservationRepository.findAllByCompanyId(companyId);
+        // 빈 리스트
+        List<Reservation> reservationList = new ArrayList<>();
+
+        LocalDateTime currentDateTime = LocalDateTime.now(); // 오늘 날짜
+        String today = currentDateTime.toString().substring(0,9);
+        for (Reservation data: reservations
+             ) {
+            // 예약 시작 날짜가 오늘 날짜와 같은지
+            if(data.getStartDate().contains(today)){
+                reservationList.add(data);
+            }
+        }
+        // 카운트
+        reserveCount = reservationList.size();
+
+        return reserveCount;
     }
 }
