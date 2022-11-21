@@ -1,5 +1,6 @@
 package com.golfzon.lastspacezbe.reservation.service;
 
+import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import com.golfzon.lastspacezbe.reservation.entity.Reservation;
 import com.golfzon.lastspacezbe.reservation.repository.ReservationRepository;
@@ -34,10 +35,10 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
 
     // 예약하기
-    public void reserve(ReservationRequestDto requestDto){
-
+    public void reserve(ReservationRequestDto requestDto, Member member){
+        log.info("member : {}",member);
         // 선결제
-        Reservation reservation = new Reservation(
+        Reservation reservation = new Reservation(member.getMemberId(),
                 requestDto.getReservationName(),requestDto.getStartDate(),requestDto.getEndDate(),
         "001", "002", requestDto.getPrice(),"000","imp","prepay","postPay");
         // 저장
@@ -101,25 +102,4 @@ public class ReservationService {
         }
     }
 
-    public int todayReserve(Long companyId) {
-        int reserveCount = 0; // 금일 예약 수
-        // 업체 번호로 예약 가져오기.
-        List<Reservation> reservations = reservationRepository.findAllByCompanyId(companyId);
-        // 빈 리스트
-        List<Reservation> reservationList = new ArrayList<>();
-
-        LocalDateTime currentDateTime = LocalDateTime.now(); // 오늘 날짜
-        String today = currentDateTime.toString().substring(0,9);
-        for (Reservation data: reservations
-             ) {
-            // 예약 시작 날짜가 오늘 날짜와 같은지
-            if(data.getStartDate().contains(today)){
-                reservationList.add(data);
-            }
-        }
-        // 카운트
-        reserveCount = reservationList.size();
-
-        return reserveCount;
-    }
 }

@@ -143,22 +143,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/favicon.ico");
 
         // 예약 관리 API 허용
-        skipPathList.add("GET,/reservation/**");
-        skipPathList.add("POST,/reservation/**");
-        skipPathList.add("PUT,/reservation/**");
-        skipPathList.add("DELETE,/reservation/**");
+//        skipPathList.add("GET,/reservation/**");
+//        skipPathList.add("POST,/reservation/**");
+//        skipPathList.add("PUT,/reservation/**");
+//        skipPathList.add("DELETE,/reservation/**");
 
         // 사무 공간 API 허용
-        skipPathList.add("GET,/space/**");
-        skipPathList.add("POST,/space/**");
-        skipPathList.add("PUT,/space/**");
-        skipPathList.add("DELETE,/space/**");
+//        skipPathList.add("GET,/space/**");
+//        skipPathList.add("POST,/space/**");
+//        skipPathList.add("PUT,/space/**");
+//        skipPathList.add("DELETE,/space/**");
 
         // 백오피스
         skipPathList.add("GET,/back-office/**");
-        skipPathList.add("POST,/back-office/**");
-        skipPathList.add("PUT,/back-office/**");
-        skipPathList.add("DELETE,/back-office/**");
+//        skipPathList.add("POST,/back-office/**");
+//        skipPathList.add("PUT,/back-office/**");
+//        skipPathList.add("DELETE,/back-office/**");
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(
                 skipPathList,

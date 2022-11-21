@@ -45,14 +45,20 @@ public class Reservation {
 
     @Column(name = "company_id")
     Long companyId;
+
+    @Column(name = "member_id")
+    Long memberId;
+
+
 //    @ManyToOne
 //    @JoinColumn(name = "member_id", nullable = false)
 //    private Member member;
 
     // reserveTime 을 제외한 생성자
-    public Reservation(String reservationName, String startDate, String endDate,
+    public Reservation(Long memberId,String reservationName, String startDate, String endDate,
                        String status, String payStatus, int price, String prepay,
                        String impUid, String prepayUid, String postpayUid ) {
+        this.memberId = memberId;
         this.reservationName = reservationName;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -68,5 +74,25 @@ public class Reservation {
     // 예약 취소 생성자
     public Reservation(Long reservationId) {
         this.reservationId = reservationId;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "reservationId=" + reservationId +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", status='" + status + '\'' +
+                ", payStatus='" + payStatus + '\'' +
+                ", price=" + price +
+                ", prepay='" + prepay + '\'' +
+                ", impUid='" + impUid + '\'' +
+                ", prepayUid='" + prepayUid + '\'' +
+                ", postpayUid='" + postpayUid + '\'' +
+                ", reservationName='" + reservationName + '\'' +
+                ", reserveTime=" + reserveTime +
+                ", companyId=" + companyId +
+                ", memberId=" + memberId +
+                '}';
     }
 }
