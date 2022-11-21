@@ -1,5 +1,6 @@
 package com.golfzon.lastspacezbe.reservation.controller;
 
+import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import com.golfzon.lastspacezbe.reservation.service.ReservationService;
 import com.golfzon.lastspacezbe.security.UserDetailsImpl;
@@ -8,7 +9,11 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -22,11 +27,25 @@ public class ReservationController {
 
     // 예약하기
     @ApiOperation(value = "예약", notes = "예약 처리입니다.")
-    @PostMapping(value = "/post",produces="text/plain;charset=UTF-8")
+    @PostMapping(value = "/post")
     public ResponseEntity<String> reserve(
-            @RequestBody ReservationRequestDto requestDto) {
+            @RequestBody ReservationRequestDto requestDto){
+//        Object aaa = SecurityContextHolder.getContext().getAuthentication().getDetails();
+//        log.info("aaa:{}",aaa);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
+        log.info("member?:{}",member);
 
-         reservationService.reserve(requestDto);
+//@CurrentSecurityContext(expression = "authentication.principal.usernamePasswordAuthenticationToken") UserDetailsImpl userDetails
+//        log.info("principal:{}",principal);
+//        log.info("principal.getName():{}",((UserDetailsImpl) principal).getMember());
+//        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+//
+//        log.info("과연 token?:{}", token);
+//        UserDetailsImpl userDetails = (UserDetailsImpl) token.getPrincipal();
+
+         reservationService.reserve(requestDto, member);
 //         log.info("result : {}",result);
          return ResponseEntity.ok()
                 .body("result : 예약완료");

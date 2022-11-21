@@ -17,13 +17,24 @@ public class ReservBackOfficeController {
     private final ReservationService reservationService;
 
     // 오늘 업체 예약 수
-    @GetMapping("/reservation/count")
-    public ResponseEntity<Integer> todayReserve(@RequestParam Long companyId) {
+    @GetMapping("/reservation/count/{companyId}")
+    public ResponseEntity<Integer> todayReserve(@PathVariable(name="companyId") Long companyId) {
 
         // 예약 수
         int reserveCount = reservationService.todayReserve(companyId);
 
         return ResponseEntity.ok()
                 .body(reserveCount);
+    }
+
+    // 오늘 업체 예약 취소 수
+    @GetMapping("/cancel/count/{companyId}")
+    public ResponseEntity<Integer> todayCancel(@PathVariable(name="companyId") Long companyId) {
+
+        // 예약 취소 수
+        int cancelCount = reservationService.todayCancel(companyId);
+
+        return ResponseEntity.ok()
+                .body(cancelCount);
     }
 }
