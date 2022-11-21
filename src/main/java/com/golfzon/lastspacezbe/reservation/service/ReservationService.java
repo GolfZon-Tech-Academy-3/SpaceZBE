@@ -1,5 +1,6 @@
 package com.golfzon.lastspacezbe.reservation.service;
 
+import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import com.golfzon.lastspacezbe.reservation.entity.Reservation;
 import com.golfzon.lastspacezbe.reservation.repository.ReservationRepository;
@@ -34,10 +35,10 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
 
     // 예약하기
-    public void reserve(ReservationRequestDto requestDto){
-
+    public void reserve(ReservationRequestDto requestDto, Member member){
+        log.info("member : {}",member);
         // 선결제
-        Reservation reservation = new Reservation(
+        Reservation reservation = new Reservation(member.getMemberId(),
                 requestDto.getReservationName(),requestDto.getStartDate(),requestDto.getEndDate(),
         "001", "002", requestDto.getPrice(),"000","imp","prepay","postPay");
         // 저장
@@ -101,6 +102,7 @@ public class ReservationService {
         }
     }
 
+    // 금일 업체 예약 수
     public int todayReserve(Long companyId) {
         int reserveCount = 0; // 금일 예약 수
         // 업체 번호로 예약 가져오기.
@@ -109,11 +111,15 @@ public class ReservationService {
         List<Reservation> reservationList = new ArrayList<>();
 
         LocalDateTime currentDateTime = LocalDateTime.now(); // 오늘 날짜
-        String today = currentDateTime.toString().substring(0,9);
+        String today = currentDateTime.toString().substring(0,10);
+        log.info("today substring : {}", today);
+
         for (Reservation data: reservations
              ) {
+
             // 예약 시작 날짜가 오늘 날짜와 같은지
-            if(data.getStartDate().contains(today)){
+            if(data.getStartDate().contains(today) && data.getStatus().equals("001")){
+            log.info("data : {}", data.getStartDate());
                 reservationList.add(data);
             }
         }
@@ -121,5 +127,35 @@ public class ReservationService {
         reserveCount = reservationList.size();
 
         return reserveCount;
+    }
+
+    public int todayCancel(Long companyId) {
+
+        log.info("companyId : {}", companyId);
+        int cancelCount = 0;
+        // 업체 번호로 예약 가져오기.
+        List<Reservation> reservations = reservationRepository.findAllByCompanyId(companyId);
+        // 빈 리스트
+        List<Reservation> reservationList = new ArrayList<>();
+
+        LocalDateTime currentDateTime = LocalDateTime.now(); // 오늘 날짜
+        String today = currentDateTime.toString().substring(0,10);
+        log.info("today substring : {}", today);
+        log.info("reservations : {}", reservations.get(0).toString());
+
+        for (Reservation data: reservations
+        ) {
+            log.info("data : {}", data);
+            // 예약 시작 날짜가 오늘 날짜와 같고 status 가 002 상태일 때
+            if(data.getStartDate().contains(today) && data.getStatus().equals("002")){
+                log.info("data startdate : {}", data.getStartDate());
+                log.info("data status : {}", data.getStatus());
+                reservationList.add(data);
+            }
+        }
+        
+        cancelCount = reservationList.size();
+
+        return cancelCount;
     }
 }
