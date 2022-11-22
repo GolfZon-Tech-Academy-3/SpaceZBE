@@ -17,6 +17,9 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
     List<Reservation> findAllByCompanyId(Long companyId);
     // 예약한 시간
     Reservation findByReservationId(Long reservationId);
+    // 현재시간 기준 이후의 예약들 조회
+    @Query(nativeQuery = true, value = "select * from reservation where space_id = ?1 and (to_date(start_date, 'YYYY-MM-DD HH24:MI')>= to_date(TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI'), 'YYYY-MM-DD HH24:MI'))")
+    List<Reservation> findReservedTime(Long spaceId);
 
     // 나의 예약 현황(마이페이지)
     List<Reservation> findAllByMemberId(Long memberId);

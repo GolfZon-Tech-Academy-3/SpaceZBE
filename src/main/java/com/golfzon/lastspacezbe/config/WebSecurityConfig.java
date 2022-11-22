@@ -1,8 +1,10 @@
 package com.golfzon.lastspacezbe.config;
 
 
+import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.security.FilterSkipMatcher;
 import com.golfzon.lastspacezbe.security.FormLoginSuccessHandler;
+import com.golfzon.lastspacezbe.security.UserDetailsImpl;
 import com.golfzon.lastspacezbe.security.filter.FormLoginFilter;
 import com.golfzon.lastspacezbe.security.filter.JwtAuthFilter;
 import com.golfzon.lastspacezbe.security.jwt.HeaderTokenExtractor;
@@ -18,6 +20,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;

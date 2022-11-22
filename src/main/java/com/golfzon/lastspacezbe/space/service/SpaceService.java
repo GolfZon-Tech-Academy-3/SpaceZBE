@@ -8,7 +8,9 @@ import com.golfzon.lastspacezbe.space.entity.Space;
 import com.golfzon.lastspacezbe.space.repository.SpaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +43,8 @@ public class SpaceService {
 
     public void spaceUpdate(Long spaceId, SpaceRequestDto requestDto) {
 
-        Space space = spaceRepository.findAllBySpaceId(spaceId);
+        Space space = spaceRepository.findById(spaceId)
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 spaceId는 존재하지 않습니다."));
         space.setSpaceName(requestDto.getSpaceName());
         space.setPrice(requestDto.getPrice());
         space.setFacilities(requestDto.getFacilities());

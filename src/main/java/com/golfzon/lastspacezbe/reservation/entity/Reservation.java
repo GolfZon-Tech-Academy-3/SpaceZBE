@@ -1,6 +1,6 @@
 package com.golfzon.lastspacezbe.reservation.entity;
 
-import com.golfzon.lastspacezbe.member.entity.Member;
+import com.golfzon.lastspacezbe.space.entity.Space;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,6 +49,9 @@ public class Reservation {
     @Column(name = "member_id")
     Long memberId;
 
+    @Column(name = "space_id")
+    Long spaceId;
+
 
 //    @ManyToOne
 //    @JoinColumn(name = "member_id", nullable = false)
@@ -57,7 +60,7 @@ public class Reservation {
     // reserveTime 을 제외한 생성자
     public Reservation(Long memberId,String reservationName, String startDate, String endDate,
                        String status, String payStatus, int price, String prepay,
-                       String impUid, String prepayUid, String postpayUid ) {
+                       String impUid, String prepayUid, String postpayUid, Long spaceId, Long companyId) {
         this.memberId = memberId;
         this.reservationName = reservationName;
         this.startDate = startDate;
@@ -69,6 +72,8 @@ public class Reservation {
         this.impUid = impUid;
         this.prepayUid = prepayUid;
         this.postpayUid = postpayUid;
+        this.spaceId = spaceId;
+        this.companyId = companyId;
     }
 
     // 예약 취소 생성자
