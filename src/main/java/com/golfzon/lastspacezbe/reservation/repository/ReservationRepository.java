@@ -1,5 +1,6 @@
 package com.golfzon.lastspacezbe.reservation.repository;
 
+import com.golfzon.lastspacezbe.reservation.dto.ReservationResponseDto;
 import com.golfzon.lastspacezbe.reservation.entity.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,10 +13,13 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
     // 예약취소
     Reservation findAllByReservationId(Long reservationId);
 
-    // 오늘 예약 조회용
+    // 업체 예약 현황용 (백오피스)
     List<Reservation> findAllByCompanyId(Long companyId);
     // 예약한 시간
     Reservation findByReservationId(Long reservationId);
+
+    // 나의 예약 현황(마이페이지)
+    List<Reservation> findAllByMemberId(Long memberId);
 
 //    @Query(value = "SELECT r (TO_DATE(TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') - TO_DATE(r.reserveTime,'YYYY-MM-DD HH24:MI'))*24 from Reservation r where r.reservationId=?1")
 //    float findByOneTime(Long reservationId);
