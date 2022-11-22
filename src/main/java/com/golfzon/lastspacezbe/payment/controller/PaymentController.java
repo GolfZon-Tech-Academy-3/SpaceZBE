@@ -70,7 +70,7 @@ public class PaymentController {
 //		ReservationVO vo2 = service.reserve(vo);
 //		logger.info("reserve result: {}", vo2);
 		
-		return 1;
+		return flag;
 	}
 
 //	// 보증금 결제, 결제완료 버튼 클릭 -> 현민님과 합칠 부분

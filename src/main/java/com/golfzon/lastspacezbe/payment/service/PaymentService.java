@@ -7,17 +7,16 @@ import com.golfzon.lastspacezbe.payment.entity.RefundVO;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import com.golfzon.lastspacezbe.space.entity.Space;
 import com.golfzon.lastspacezbe.space.repository.SpaceRepository;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.ParseException;
@@ -114,9 +113,11 @@ public class PaymentService {
         if (vo2.isPresent()) {
             int price2 = vo2.get().getPrice() * getReserveTime(vo.getStartDate(), vo.getEndDate());
             int depositPrice = (int) (price2 * 0.2);
-            log.info("계산되어야할 돈: {}", depositPrice);
+            log.info("price2:{}",price2);
+            log.info("계산되어야할 depositPrice: {}", depositPrice);
             if (price == depositPrice) {
-                vo.setPrice(price2 - depositPrice - vo.getMileage());
+                vo.setPrice(price2 - depositPrice);
+                log.info("예약될 가격:{}",vo.getPrice());
                 reserve(vo);
                 flag = 1;
             }
@@ -141,13 +142,15 @@ public class PaymentService {
                 // 일치하지 않을 시, 오류로 계산된 금액 환불처리
                 refund(new RefundVO(vo.getPrepayUid(), "계산된 금액과 일치하지 않습니다.", price, vo.getMemberId()));
                 flag = 0;
+            } else{
+                vo.setPrice(price);
             }
         }
         return flag;
     }
 
     // 후불결제 예약
-    public int reserve(ReservationRequestDto vo) { // ReservationVO 로 반환해야함.
+    public int reserve(ReservationRequestDto vo) {
         int flag = 0;
         String token = getAccessToken();
         String merchant_uid = getRanStr();
@@ -176,7 +179,6 @@ public class PaymentService {
 
         log.info("response:{}", response);
         log.info("response:{}", response.getBody());
-        log.info("response:{}", response.getBody().toString());
         // HTTP 응답 (JSON) -> 액세스 토큰 파싱
         String responseBody = Objects.requireNonNull(response.getBody()).toString();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -284,6 +286,7 @@ public class PaymentService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        log.info("time:{}hr",time);
         return time;
     }
 

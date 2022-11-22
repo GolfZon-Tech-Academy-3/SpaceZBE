@@ -15,13 +15,13 @@ public class ReservationRequestDto {
     String startDate; // 이용 시간 날짜
     String endDate; // 이용 마감 날짜
     int price; // 가격
-
-    String impUid; //import 결제 고유아이디
-    String merchantUid; //server에서 보내주는 구매 아이디
+    String prepay; // 선결제 or 보증금결제 or 후결제 000 001 002
     Long spaceId; //사무공간 번호
     int mileage; //사용할 마일리지
-    private String prepayUid; // 선결제, 보증금으로 결제한 우리가 제공한 merchant_uid(구매번호)
-    private String postpayUid; // 후결제 예약한 우리가 제공한 merchant_uid(구매번호)
+
+    String impUid; //import 결제 고유아이디
+    String prepayUid; // 선결제, 보증금으로 결제한 서버가 제공한 merchant_uid(구매번호)
+    String postpayUid; // 후결제 예약한 서버가 제공한 merchant_uid(구매번호)
 
     Long memberId;
 
@@ -32,10 +32,10 @@ public class ReservationRequestDto {
                 ", startDate='" + startDate + '\'' +
                 ", endDate='" + endDate + '\'' +
                 ", price=" + price +
-                ", impUid='" + impUid + '\'' +
-                ", merchantUid='" + merchantUid + '\'' +
+                ", prepay='" + prepay + '\'' +
                 ", spaceId=" + spaceId +
                 ", mileage=" + mileage +
+                ", impUid='" + impUid + '\'' +
                 ", prepayUid='" + prepayUid + '\'' +
                 ", postpayUid='" + postpayUid + '\'' +
                 ", memberId=" + memberId +
