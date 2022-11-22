@@ -21,7 +21,7 @@ public class Member{
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_user")
     @SequenceGenerator(sequenceName = "seq_user", allocationSize = 1, name="seq_user")
     @Column
-    private long memberId;
+    private Long memberId;
 
     @Column(nullable = false)
     private String email;
