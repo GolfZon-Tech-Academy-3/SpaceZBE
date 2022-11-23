@@ -21,9 +21,10 @@ public class Space {
     @Column(name = "space_id")
     Long spaceId; // 예약 번호
 
-    @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company;
+//    @ManyToOne
+//    @JoinColumn(name = "company_id", nullable = false)
+    @Column(name = "company_id")
+    Long companyId;
 
     @Column(name = "space_name")
     String spaceName; // 사무공간 이름

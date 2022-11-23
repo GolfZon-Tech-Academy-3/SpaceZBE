@@ -9,8 +9,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InquiryRequestDto {
+public class InquiryResponseDto {
 
     String inquiries; // 문의 내용
     String answers; // 답변 내용
+    String inquiryTime; //문의 날짜
+    String type; // 공간타입
+    String spaceName; // 사무공간 이호
+
+    Long memberId; // 회원번호
+    String memberName; // 회원 닉네임
+
+    String isAnswer; // 답변 유무
+
 }
