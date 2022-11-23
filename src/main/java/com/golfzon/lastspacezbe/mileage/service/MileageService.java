@@ -1,7 +1,5 @@
 package com.golfzon.lastspacezbe.mileage.service;
 
-import com.golfzon.lastspacezbe.member.repository.MemberRepository;
-import com.golfzon.lastspacezbe.mileage.dto.ProfileDTO;
 import com.golfzon.lastspacezbe.mileage.entity.Mileage;
 import com.golfzon.lastspacezbe.mileage.repository.MileageRepository;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
@@ -85,23 +83,6 @@ public class MileageService{
 		log.info("mileage:{}", mileage);
 
 		mileageRepository.save(mileage);
-	}
-
-	// 사용자 프로필 조회 - memberId 만 알면 됨.
-	
-	public ProfileDTO selectAll(Long memberId) {
-		log.info("selectAll");
-		log.info("memberId:{}", memberId);
-
-		ProfileDTO dto = new ProfileDTO();
-		
-//		Member member = memberRepository.findById(memberId)
-//				.orElseThrow(()->new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 memberId는 존재하지 않습니다."));
-//		dto.setEmail(vo.getEmail());
-//		dto.setImgname(vo.getImgname());
-//		dto.setMembername(vo.getMembername());
-		
-		return dto;
 	}
 
 	// 사용자 마일리지 조회
