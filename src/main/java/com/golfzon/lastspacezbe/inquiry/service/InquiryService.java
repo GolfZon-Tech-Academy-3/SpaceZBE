@@ -1,12 +1,20 @@
 package com.golfzon.lastspacezbe.inquiry.service;
 
+import com.golfzon.lastspacezbe.inquiry.dto.InquiryResponseDto;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.inquiry.dto.InquiryRequestDto;
 import com.golfzon.lastspacezbe.inquiry.entity.Inquiry;
 import com.golfzon.lastspacezbe.inquiry.repository.InquiryRepository;
+import com.golfzon.lastspacezbe.member.repository.MemberRepository;
+import com.golfzon.lastspacezbe.space.entity.Space;
+import com.golfzon.lastspacezbe.space.repository.SpaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -14,10 +22,12 @@ import org.springframework.stereotype.Service;
 public class InquiryService {
 
     private final InquiryRepository inquiryRepository;
+    private final SpaceRepository spaceRepository;
+    private final MemberRepository memberRepository;
 
     // 문의 작성하기
-    public void inquiry(Long spaceId, InquiryRequestDto requestDto, Member member){
-        Inquiry inquiry = new Inquiry(spaceId,member,requestDto.getInquiries());
+    public void inquiry(Long spaceId, InquiryRequestDto requestDto, Member member) {
+        Inquiry inquiry = new Inquiry(spaceId, member, requestDto.getInquiries());
 
         inquiryRepository.save(inquiry); // 문의내용 저장
     }
@@ -31,7 +41,7 @@ public class InquiryService {
         );
 
         Long inquiryMemberId = inquiry.getMember().getMemberId();
-        if(!member.getMemberId().equals(inquiryMemberId)){
+        if (!member.getMemberId().equals(inquiryMemberId)) {
             throw new IllegalArgumentException("작성자가 아닙니다.");
         }
         // 삭제
@@ -57,4 +67,5 @@ public class InquiryService {
         inquiry.setAnswers(""); // 답변 초기화
         inquiryRepository.save(inquiry); // 변경사항 저장
     }
+
 }
