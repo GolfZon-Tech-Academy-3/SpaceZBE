@@ -37,4 +37,24 @@ public class InquiryService {
         // 삭제
         inquiryRepository.deleteById(inquiryId);
     }
+
+    // 답변 작성하기 / 수정하기
+    public void answerPost(Long inquiryId, InquiryRequestDto requestDto, Member member) {
+
+        Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 문의글이 없습니다.")
+        );
+
+        inquiry.setAnswers(requestDto.getAnswers()); // 답변 넣기
+        inquiryRepository.save(inquiry); // 변경사항 저장
+    }
+
+    public void answerDelete(Long inquiryId, Member member) {
+        Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 문의글이 없습니다.")
+        );
+
+        inquiry.setAnswers(""); // 답변 초기화
+        inquiryRepository.save(inquiry); // 변경사항 저장
+    }
 }

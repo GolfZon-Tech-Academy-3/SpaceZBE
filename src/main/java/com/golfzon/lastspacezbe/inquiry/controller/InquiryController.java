@@ -49,4 +49,35 @@ public class InquiryController {
         return ResponseEntity.ok()
                 .body("result : 문의 내용 삭제 완료");
     }
+
+    // 답변 작성하기 / 수정하기
+    @PutMapping(value = "/answer/{inquiryId}", produces="text/plain;charset=UTF-8")
+    public ResponseEntity<String> answerPost(@PathVariable(name="inquiryId") Long inquiryId,
+                                          @RequestBody InquiryRequestDto requestDto) {
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
+        log.info("member?:{}",member);
+
+        inquiryService.answerPost(inquiryId,requestDto,member);
+
+        return ResponseEntity.ok()
+                .body("result : 답변 작성완료");
+    }
+
+    // 답변 삭제
+    @PutMapping(value = "/answer/delete/{inquiryId}", produces="text/plain;charset=UTF-8")
+    public ResponseEntity<String> answerDelete(@PathVariable(name="inquiryId") Long inquiryId){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
+        log.info("member?:{}",member);
+
+        inquiryService.answerDelete(inquiryId,member);
+
+        return ResponseEntity.ok()
+                .body("result : 답변 삭제완료");
+    }
+
 }
