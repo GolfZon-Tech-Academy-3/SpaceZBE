@@ -1,8 +1,8 @@
 package com.golfzon.lastspacezbe.reservation.service;
 
 import com.golfzon.lastspacezbe.member.entity.Member;
-import com.golfzon.lastspacezbe.mileage.entity.Mileage;
 import com.golfzon.lastspacezbe.mileage.service.MileageService;
+import com.golfzon.lastspacezbe.payment.dto.RefundDto;
 import com.golfzon.lastspacezbe.payment.service.PaymentService;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationSpaceDto;
@@ -56,7 +56,9 @@ public class ReservationService {
 
         Reservation reservation = new Reservation(member.getMemberId(),
                 requestDto.getReservationName(), requestDto.getStartDate(), requestDto.getEndDate(),
-                "001", "002", requestDto.getPrice(), "000", requestDto.getImpUid(), "prepay", "postPay", requestDto.getSpaceId(), space.getCompanyId());
+                "001", "002", requestDto.getPrice(), "000",
+                requestDto.getImpUid(), "prepay", "postPay", requestDto.getMileage(),
+                requestDto.getSpaceId(), space.getCompanyId());
 
         int flag = 0;
         // 선결제(000) or 보증금결제(001) or 후결제(002)
@@ -120,18 +122,26 @@ public class ReservationService {
 
     // 오피스 예약 취소하기
     public void officeCancel(Long reservationId) {
-
+        log.info("reservationId:{}",reservationId);
         Reservation reservation = reservationRepository.findAllByReservationId(reservationId);
-        reservation.setStatus("002"); // 예약상태를 예약 취소로 바꾸기
-        reservationRepository.save(reservation); // 002 예약상태 저장
-
+        // 예약 상태 확인
+        if(!reservation.getStatus().equals("001")){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"취소가능한 상태가 아닙니다.");
+        } else {
+            // 예약된 결제 취소하기
+            String postpayUid = reservation.getPostpayUid();
+            paymentService.refund(new RefundDto(postpayUid, "후결제 예약취소", 0, reservation.getMemberId()));
+            reservation.setStatus("002"); // 예약상태를 예약 취소로 바꾸기
+            reservationRepository.save(reservation); // 002 예약상태 저장
+            // 사용한 마일리지 환급
+            mileageService.refundMileage(reservation);
+        }
     }
 
     // 데스크/회의실 예약 취소하기
     public void deskCancel(Long reservationId) {
 
         Reservation reservation = reservationRepository.findAllByReservationId(reservationId);
-        reservation.setStatus("002"); // 예약상태를 예약 취소로 바꾸기
         // 예약한 시간
         LocalDateTime reserveTime = reservationRepository.findByReservationId(reservationId).getReserveTime();
         // 현재 시간
@@ -143,17 +153,50 @@ public class ReservationService {
         log.info("currentTime : {}", currentDateTime);
         log.info("Time check : {}초", duration.getSeconds());
 
-        // 예약한지 1시간 이내
-        if (duration.getSeconds() <= 3600) {
+        // 예약 상태 확인
+        if(!reservation.getStatus().equals("001")){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"취소가능한 상태가 아닙니다.");
+        } else {
 
+            // 선결제인 경우, 시간에 관계없이 전체 환불
+            if (reservation.getPrepay().equals("000")) {
+                String prepayUid = reservation.getPrepayUid();
+                paymentService.refund(new RefundDto(prepayUid, "선결제 결제취소", reservation.getPrice(), reservation.getMemberId()));
+                reservation.setPayStatus("000");  //000 결제 취소
+                // 마일리지 취소
+                mileageService.cancelMileage(reservation);
+                log.info("마일리지 취소, 회수 완료");
+                // 사용한 마일리지 환급
+                mileageService.refundMileage(reservation);
+
+            // 후결제인 경우, 1시간이내만 보증금 전부 환불
+            } else {
+                // 예약한지 1시간 이내
+                if (duration.getSeconds() <= 3600) {
+                    log.info("{} : 예약한지 1시간이 지나지 않았습니다. (전체 환불 가능)", duration);
+                    String prepayUid = reservation.getPrepayUid();
+                    paymentService.refund(
+                            new RefundDto(prepayUid, "보증금결제 취소", (int) ((reservation.getPrice()+reservation.getMileage()) * 0.2), reservation.getMemberId()));
+                    String postpayUid = reservation.getPostpayUid();
+                    paymentService.refund(new RefundDto(postpayUid, "후결제 예약취소", 0, reservation.getMemberId()));
+                    reservation.setPayStatus("004"); //004 보증금 결제취소
+                    // 사용한 마일리지 환급
+                    mileageService.refundMileage(reservation);
+                    log.info("마일리지 환급 완료");
+                }
+                // 예약한지 1시간 이후
+                else if (duration.getSeconds() > 3600) {
+                    log.info("{} : 예약한지 1시간이 지났습니다. (선결제만 전체 환불 가능)", duration);
+                    String postpayUid = reservation.getPostpayUid();
+                    paymentService.refund(new RefundDto(postpayUid, "후결제 예약취소", 0, reservation.getMemberId()));
+                    // 사용한 마일리지 환급
+                    mileageService.refundMileage(reservation);
+                    log.info("마일리지 환급 완료");
+                }
+            }
+            reservation.setStatus("002"); // 예약상태를 예약 취소로 바꾸기
+            reservationRepository.save(reservation); // 002 예약상태 저장
         }
-        // 예약한지 1시간 이후
-        else if (duration.getSeconds() > 3600) {
-
-        }
-
-        reservationRepository.save(reservation); // 002 예약상태 저장
-
     }
 
     // 핸드폰 인증번호 보내기

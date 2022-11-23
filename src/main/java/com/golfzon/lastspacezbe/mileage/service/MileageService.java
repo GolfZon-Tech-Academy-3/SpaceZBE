@@ -3,6 +3,7 @@ package com.golfzon.lastspacezbe.mileage.service;
 import com.golfzon.lastspacezbe.mileage.entity.Mileage;
 import com.golfzon.lastspacezbe.mileage.repository.MileageRepository;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
+import com.golfzon.lastspacezbe.reservation.entity.Reservation;
 import com.golfzon.lastspacezbe.space.entity.Space;
 import com.golfzon.lastspacezbe.space.repository.SpaceRepository;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +66,7 @@ public class MileageService{
 
 	// 마일리지 취소
 	
-	public void cancelMileage(ReservationRequestDto vo) {
+	public void cancelMileage(Reservation vo) {
 		log.info("deleteMileage");
 		log.info("vo:{}", vo);
 
@@ -102,13 +103,11 @@ public class MileageService{
 	}
 
 	// 사용한 마일리지 환급
-	public void refundMileage(ReservationRequestDto vo) {
+	public void refundMileage(Reservation vo) {
 		log.info("refundMileage");
 		log.info("vo:{}", vo);
 		List<Mileage> mileages = mileageRepository.findAllBySpaceId(vo.getSpaceId());
-		
-		int flag = 0;
-		
+
 		if(mileages.size()>0) {
 			for (Mileage mileage : mileages) {
 				if(mileage.getStatus().equals("사용")) {
