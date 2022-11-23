@@ -27,19 +27,19 @@ public class PaymentController {
 
 
 	// 결제 상세페이지 -> 창현님과 합칠 부분
-	@RequestMapping(value = "/reservation/selectOne", method = RequestMethod.GET)
-	public String pay(Model model) {
-
-		// 주문번호 고유값 설정 위해, 난수생성 -> 이것은 공간 등록 시 생성되어 추가되어야 한다.
-		char random_alphabet = (char) ((Math.random() * 26) + 97);
-		// merchant_uid : 고유값 -> 프론트에서 받아서 결제완료 버튼 클릭 시, VO Data로 다시 넘어와야 함.
-		String merchant_uid = String.valueOf(random_alphabet) + System.currentTimeMillis();
-		logger.info("merchantid:{}", merchant_uid);
-
-		model.addAttribute("merchant_uid", merchant_uid);
-
-		return "testPayment";
-	}
+//	@RequestMapping(value = "/reservation/selectOne", method = RequestMethod.GET)
+//	public String pay(Model model) {
+//
+//		// 주문번호 고유값 설정 위해, 난수생성 -> 이것은 공간 등록 시 생성되어 추가되어야 한다.
+//		char random_alphabet = (char) ((Math.random() * 26) + 97);
+//		// merchant_uid : 고유값 -> 프론트에서 받아서 결제완료 버튼 클릭 시, VO Data로 다시 넘어와야 함.
+//		String merchant_uid = String.valueOf(random_alphabet) + System.currentTimeMillis();
+//		logger.info("merchantid:{}", merchant_uid);
+//
+//		model.addAttribute("merchant_uid", merchant_uid);
+//
+//		return "testPayment";
+//	}
 
 	// 선결제, 결제완료 버튼 클릭 -> 현민님과 합칠 부분
 	@RequestMapping(value = "/reservation/payOK", method = RequestMethod.POST)
@@ -86,16 +86,16 @@ public class PaymentController {
 		return flag;
 	}
 	
-	// 결제취소 버튼 클릭 -> 현민님과 합칠 부분
-	@RequestMapping(value = "/reservation/refund", method = RequestMethod.POST, produces = "application/json; charset=utf8")
-	public String refund(@RequestBody RefundVO vo) {
-		// 매개변수값으로 custom_uid, merchant_uid가 들어와야한다.
-		vo.setMemberId(1);
-		logger.info("VO:{}", vo);
-
-		System.out.println(paymentService.refund(vo));
-
-		return "testPayment";
-	}
+//	// 결제취소 버튼 클릭 -> 현민님과 합칠 부분
+//	@RequestMapping(value = "/reservation/refund", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+//	public String refund(@RequestBody RefundVO vo) {
+//		// 매개변수값으로 custom_uid, merchant_uid가 들어와야한다.
+//		vo.setMemberId(1);
+//		logger.info("VO:{}", vo);
+//
+//		System.out.println(paymentService.refund(vo));
+//
+//		return "testPayment";
+//	}
 
 }
