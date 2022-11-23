@@ -3,7 +3,7 @@ package com.golfzon.lastspacezbe.payment.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.golfzon.lastspacezbe.payment.entity.RefundVO;
+import com.golfzon.lastspacezbe.payment.dto.RefundDto;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import com.golfzon.lastspacezbe.space.entity.Space;
 import com.golfzon.lastspacezbe.space.repository.SpaceRepository;
@@ -140,7 +140,7 @@ public class PaymentService {
             // 가격 비교
             if (price != price2) {
                 // 일치하지 않을 시, 오류로 계산된 금액 환불처리
-                refund(new RefundVO(vo.getPrepayUid(), "계산된 금액과 일치하지 않습니다.", price, vo.getMemberId()));
+                refund(new RefundDto(vo.getPrepayUid(), "계산된 금액과 일치하지 않습니다.", price, vo.getMemberId()));
                 flag = 0;
             } else{
                 vo.setPrice(price);
@@ -203,7 +203,7 @@ public class PaymentService {
     }
 
     // 예약 취소 시, 환불
-    public int refund(RefundVO vo) {
+    public int refund(RefundDto vo) {
         int flag = 0;
         log.info("vo:{}", vo);
 
