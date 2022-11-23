@@ -12,5 +12,5 @@ import lombok.Setter;
 public class InquiryRequestDto {
 
     String inquiries; // 문의 내용
-
+    String answers; // 답변 내용
 }
