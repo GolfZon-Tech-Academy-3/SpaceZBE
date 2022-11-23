@@ -56,7 +56,7 @@ public class ReservationService {
 
         Reservation reservation = new Reservation(member.getMemberId(),
                 requestDto.getReservationName(), requestDto.getStartDate(), requestDto.getEndDate(),
-                "001", "002", requestDto.getPrice(), "000", requestDto.getImpUid(), "prepay", "postPay", requestDto.getSpaceId(), space.getCompany().getCompanyId());
+                "001", "002", requestDto.getPrice(), "000", requestDto.getImpUid(), "prepay", "postPay", requestDto.getSpaceId(), space.getCompanyId());
 
         int flag = 0;
         // 선결제(000) or 보증금결제(001) or 후결제(002)

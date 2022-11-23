@@ -158,7 +158,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        skipPathList.add("DELETE,/space/**");
 
         // 백오피스
-        skipPathList.add("GET,/back-office/**");
+//        skipPathList.add("GET,/back-office/**");
 //        skipPathList.add("POST,/back-office/**");
 //        skipPathList.add("PUT,/back-office/**");
 //        skipPathList.add("DELETE,/back-office/**");
