@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -30,5 +32,26 @@ public class Company {
     String info; // 업체 장소 소개
     String rules; // 이용 규칙
     String location; //업체 위치
+    String summary; // 소개 요약
+    String approveStatus; //승인 상태(활동중, 승인대기, 활동중지)
+    int likeCount; // 관심등록수
 
+    @CreationTimestamp
+    LocalDateTime createdTime;
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "companyId=" + companyId +
+                ", member=" + member +
+                ", companyName='" + companyName + '\'' +
+                ", info='" + info + '\'' +
+                ", rules='" + rules + '\'' +
+                ", location='" + location + '\'' +
+                ", summary='" + summary + '\'' +
+                ", approveStatus='" + approveStatus + '\'' +
+                ", likeCount=" + likeCount +
+                ", createdTime=" + createdTime +
+                '}';
+    }
 }

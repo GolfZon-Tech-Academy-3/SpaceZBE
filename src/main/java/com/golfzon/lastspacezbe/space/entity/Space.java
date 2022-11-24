@@ -1,6 +1,5 @@
 package com.golfzon.lastspacezbe.space.entity;
 
-import com.golfzon.lastspacezbe.company.entity.Company;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

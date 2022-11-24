@@ -46,9 +46,9 @@ public class ReservationController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("principal:{}",principal);
         //test
-        Member member = new Member();
-        member.setMemberId(1L);
-        //Member member = ((UserDetailsImpl)principal).getMember();
+//        Member member = new Member();
+//        member.setMemberId(1L);
+        Member member = ((UserDetailsImpl)principal).getMember();
         log.info("member?:{}",member);
 
          reservationService.reserve(requestDto, member);

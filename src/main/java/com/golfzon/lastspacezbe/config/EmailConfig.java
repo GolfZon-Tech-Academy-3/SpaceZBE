@@ -56,6 +56,8 @@ public class EmailConfig {
         properties.put("mail.smtp.auth", auth);
         properties.put("mail.smtp.starttls.enable", starttls);
         properties.put("mail.smtp.debug", debug);
+        properties.put("mail.smtp.ssl.protocols","TLSv1.2");
+        properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
         mailSender.setHost(host);
         mailSender.setUsername(username);
