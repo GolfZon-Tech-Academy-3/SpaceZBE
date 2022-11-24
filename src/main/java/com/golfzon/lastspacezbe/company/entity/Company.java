@@ -30,5 +30,7 @@ public class Company {
     String info; // 업체 장소 소개
     String rules; // 이용 규칙
     String location; //업체 위치
+    String summary; // 소개 요약
+    String approveStatus; //승인 상태(활동중, 승인대기, 활동중지)
 
 }
