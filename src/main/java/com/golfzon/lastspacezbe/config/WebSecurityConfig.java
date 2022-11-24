@@ -153,7 +153,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // 사무 공간 API 허용
 //        skipPathList.add("GET,/space/**");
-//        skipPathList.add("POST,/space/**");
+        skipPathList.add("POST,/space/**");
 //        skipPathList.add("PUT,/space/**");
 //        skipPathList.add("DELETE,/space/**");
 

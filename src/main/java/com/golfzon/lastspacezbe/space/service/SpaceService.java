@@ -5,13 +5,17 @@ import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.member.repository.MemberRepository;
 import com.golfzon.lastspacezbe.space.dto.SpaceRequestDto;
 import com.golfzon.lastspacezbe.space.entity.Space;
+import com.golfzon.lastspacezbe.space.entity.SpaceImage;
+import com.golfzon.lastspacezbe.space.repository.SpaceImageRepository;
 import com.golfzon.lastspacezbe.space.repository.SpaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +26,9 @@ public class SpaceService {
 
     private final SpaceRepository spaceRepository;
     private final MemberRepository memberRepository;
+    private final SpaceImageRepository spaceImageRepository;
+    private final SpaceS3Service spaceS3Service;
+
 
     public void spaceRegister(SpaceRequestDto requestDto){
 
@@ -35,10 +42,25 @@ public class SpaceService {
 //        );
 //        log.info("company : {}",company);
 
+        List<String> imagePaths = new ArrayList<>();
+        if(requestDto.getFiles() == null){
+            imagePaths.add("");
+        } else {
+            imagePaths.addAll(spaceS3Service.upload(requestDto.getFiles()));
+        }
+
         Space space = new Space(requestDto.getSpaceName(),requestDto.getFacilities(),requestDto.getType(),
-                requestDto.getPrice(),requestDto.getOpenTime(), requestDto.getCloseTime(), requestDto.getBreakOpen(), requestDto.getBreakClose());
+                requestDto.getPrice(),requestDto.getOpenTime(), requestDto.getCloseTime(),
+                requestDto.getBreakOpen(), requestDto.getBreakClose(),requestDto.getCompanyId());
+
         // 등록 정보 저장
         spaceRepository.save(space);
+
+        log.info("spaceId : {}", space.getSpaceId());
+        for (String imagePath : imagePaths){
+            SpaceImage spaceImage = new SpaceImage(imagePath, space);
+            spaceImageRepository.save(spaceImage);
+        }
     }
 
     public void spaceUpdate(Long spaceId, SpaceRequestDto requestDto) {
