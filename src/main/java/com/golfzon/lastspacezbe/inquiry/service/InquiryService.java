@@ -1,6 +1,7 @@
 package com.golfzon.lastspacezbe.inquiry.service;
 
 import com.golfzon.lastspacezbe.inquiry.dto.InquiryResponseDto;
+import com.golfzon.lastspacezbe.inquiry.dto.InquiryTotalResponseDto;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.inquiry.dto.InquiryRequestDto;
 import com.golfzon.lastspacezbe.inquiry.entity.Inquiry;
@@ -59,6 +60,7 @@ public class InquiryService {
         inquiryRepository.save(inquiry); // 변경사항 저장
     }
 
+    // 답변삭제
     public void answerDelete(Long inquiryId, Member member) {
         Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 문의글이 없습니다.")
@@ -68,4 +70,27 @@ public class InquiryService {
         inquiryRepository.save(inquiry); // 변경사항 저장
     }
 
+    // 문의 내역
+    public List<InquiryTotalResponseDto> totalInquiry(Long spaceId) {
+
+        List<Inquiry> inquiries = inquiryRepository.findAllBySpaceId(spaceId);
+        List<InquiryTotalResponseDto> responseDtos = new ArrayList<>();
+
+        for (Inquiry data : inquiries
+        ) {
+            Optional<Member> member = memberRepository.findById(data.getMember().getMemberId());
+
+            InquiryTotalResponseDto totalResponseDto = new InquiryTotalResponseDto();
+            totalResponseDto.setInquiries(data.getInquiries()); // 문의내용
+            totalResponseDto.setAnswers(data.getAnswers()); // 답변내용
+            totalResponseDto.setInquiryTime(data.getInquiriesTime().toString().substring(0,10)+" "
+            +data.getInquiriesTime().toString().substring(11,16)); // 문의 날짜
+            totalResponseDto.setImagePath(member.get().getImgName()); // 프로필 이미지
+            totalResponseDto.setMemberName(member.get().getMemberName()); // 회원 이름
+
+            responseDtos.add(totalResponseDto);
+        }
+
+        return responseDtos;
+    }
 }
