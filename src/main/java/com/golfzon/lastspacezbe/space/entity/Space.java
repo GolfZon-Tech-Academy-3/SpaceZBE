@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Setter
 @Getter
@@ -45,9 +46,13 @@ public class Space {
     @Column(name = "break_close")
     String breakClose; // 쉬는 마감시간 (청소)
 
+//     사무공간 이미지
+    @OneToMany(mappedBy = "space", cascade = CascadeType.ALL)
+    private List<SpaceImage> spaceImages;
+
     public Space(String spaceName, String facilities, String type, int price,
-                 String openTime, String closeTime, String breakOpen, String breakClose) {
-//        this.company = company;
+                 String openTime, String closeTime, String breakOpen,
+                 String breakClose,Long companyId) {
         this.spaceName = spaceName;
         this.facilities = facilities;
         this.type = type;
@@ -56,6 +61,7 @@ public class Space {
         this.closeTime = closeTime;
         this.breakOpen = breakOpen;
         this.breakClose = breakClose;
+        this.companyId = companyId;
     }
 
 }

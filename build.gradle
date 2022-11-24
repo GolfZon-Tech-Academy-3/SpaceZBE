@@ -57,7 +57,6 @@ dependencies {
     implementation 'net.nurigo:javaSDK:2.2'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
-
     testCompileOnly 'junit:junit:4.12'
     testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.3.1'
 
