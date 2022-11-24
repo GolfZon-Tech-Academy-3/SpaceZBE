@@ -57,6 +57,8 @@ public class ReservMypageService {
         responseDto.setStatus(data.getStatus());
         responseDto.setReserveTime(data.getReserveTime().toString().substring(0, 10)
                                     +" "+data.getReserveTime().toString().substring(11, 16));
+        responseDto.setSpaceId(data.getSpaceId()); // 공간 번호
+        responseDto.setCompanyId(data.getCompanyId()); // 업체 번호
         reservationResponseDtos.add(responseDto);
     }
 }

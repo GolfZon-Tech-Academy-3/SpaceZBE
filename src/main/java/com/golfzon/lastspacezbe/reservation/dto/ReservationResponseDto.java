@@ -19,4 +19,7 @@ public class ReservationResponseDto {
     String payStatus; // 결제 상태
     String status; // 예약상태
     String reserveTime; // 예약했을 때 시간
+
+    Long spaceId; // 공간번호
+    Long companyId; // 업체번호
 }
