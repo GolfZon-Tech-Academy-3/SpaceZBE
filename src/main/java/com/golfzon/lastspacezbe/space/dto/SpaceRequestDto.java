@@ -1,11 +1,14 @@
 package com.golfzon.lastspacezbe.space.dto;
 
+import com.golfzon.lastspacezbe.space.entity.SpaceImage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Column;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,6 +24,10 @@ public class SpaceRequestDto {
     String closeTime; // 마감시간
     String breakOpen; // 쉬는 시작시간 (청소)
     String breakClose; // 쉬는 마감시간 (청소)
+
+    Long companyId;
+
+    List<MultipartFile> files; // 이미지
 
     @Override
     public String toString() {

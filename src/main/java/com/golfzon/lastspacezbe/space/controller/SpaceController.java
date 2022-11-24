@@ -14,11 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Slf4j
-//@Api(tags = "Space 컨트롤러")
+@Api(tags = "Space 컨트롤러")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/space")
@@ -26,10 +28,11 @@ public class SpaceController {
 
     private final SpaceService spaceService;
 
-//    @ApiOperation(value = "사무공간 등록", notes = "백오피스페이지에서 사무공간 등록기능입니다.")
+    @ApiOperation(value = "사무공간 등록", notes = "백오피스페이지에서 사무공간 등록기능입니다.")
     @PostMapping(value = "/post")
-    public ResponseEntity<String> space(@RequestBody SpaceRequestDto requestDto) {
+    public ResponseEntity<String> space( SpaceRequestDto requestDto) {
 
+//@RequestPart(value = "files", required = false) List<MultipartFile> files
 //        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        log.info("principal:{}", principal);
 //        Member member = ((UserDetailsImpl) principal).getMember();
@@ -39,7 +42,6 @@ public class SpaceController {
         spaceService.spaceRegister(requestDto);
 
         return ResponseEntity.ok()
-                .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .body("result : 사무공간 등록완료");
     }
 
