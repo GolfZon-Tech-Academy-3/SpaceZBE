@@ -26,9 +26,9 @@ public class ReservationController {
     // /reservation/details?spaceId=1
     // 예약하기
     @ApiOperation(value = "예약폼 페이지", notes = "예약하기 폼 페이지입니다.")
-    @GetMapping(value = "/details")
+    @GetMapping(value = "/details/{spaceId}")
     public ResponseEntity<ReservationSpaceDto> getDetails(
-            @RequestParam(value = "spaceId") Long spaceId){
+            @PathVariable(value = "spaceId") Long spaceId){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("principal:{}",principal);
         Member member = ((UserDetailsImpl)principal).getMember();
@@ -58,9 +58,9 @@ public class ReservationController {
 
     // 오피스 예약 취소하기
     @ApiOperation(value = "예약취소", notes = "예약취소 처리입니다.")
-    @PutMapping("/office-cancel")
+    @PutMapping("/office-cancel/{reservationId}")
     public ResponseEntity<String> officeCancel(
-            @RequestParam Long reservationId) {
+            @PathVariable(name = "reservationId") Long reservationId) {
 
         reservationService.officeCancel(reservationId);
 
@@ -69,9 +69,9 @@ public class ReservationController {
     }
 
     // 데스크 회의실 예약 취소하기
-    @PutMapping("/desk-cancel")
+    @PutMapping("/desk-cancel/{reservationId}")
     public ResponseEntity<String> deskCancel(
-            @RequestParam Long reservationId) {
+            @PathVariable(name="reservationId") Long reservationId) {
 
         reservationService.deskCancel(reservationId);
 
