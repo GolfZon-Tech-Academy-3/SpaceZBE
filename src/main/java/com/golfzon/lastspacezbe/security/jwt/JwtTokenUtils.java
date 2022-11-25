@@ -23,6 +23,7 @@ public final class JwtTokenUtils {
     public static final String CLAIM_USER_NAME = "USER_EMAIL";
     public static final String CLAIM_NICK_NAME = "NICK_NAME";
     public static final String CLAIM_AUTHORITY = "AUTHORITY";
+    public static final String CLAIM_IMAGE_NAME = "IMAGE_NAME";
     public static final String JWT_SECRET = "jwt_secret_!@#$%";
 
     public static String generateJwtToken(UserDetailsImpl userDetails) {
@@ -33,6 +34,7 @@ public final class JwtTokenUtils {
                     .withClaim(CLAIM_USER_NAME, userDetails.getUsername())
                     .withClaim(CLAIM_NICK_NAME, userDetails.getMember().getMemberName())
                     .withClaim(CLAIM_AUTHORITY, userDetails.getMember().getAuthority())
+                    .withClaim(CLAIM_IMAGE_NAME, userDetails.getMember().getImgName())
                     // 토큰 만료 일시 = 현재 시간 + 토큰 유효기간)
                     .withClaim(CLAIM_EXPIRED_DATE, new Date(System.currentTimeMillis() + JWT_TOKEN_VALID_MILLI_SEC))
                     .sign(generateAlgorithm());

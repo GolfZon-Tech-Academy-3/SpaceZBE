@@ -1,5 +1,6 @@
 package com.golfzon.lastspacezbe.review.entity;
 
+import com.golfzon.lastspacezbe.review.dto.ReviewDto;
 import com.golfzon.lastspacezbe.space.entity.SpaceImage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,4 +41,24 @@ public class Review {
     LocalDateTime reviewTime;
 
 
+    public Review(ReviewDto requestDto, Long memberId) {
+        this.spaceId = requestDto.getSpaceId();
+        this.companyId = requestDto.getCompanyId();
+        this.memberId = memberId;
+        this.content = requestDto.getContent();
+        this.rating = requestDto.getRating();
+    }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "reviewId=" + reviewId +
+                ", spaceId=" + spaceId +
+                ", companyId=" + companyId +
+                ", memberId=" + memberId +
+                ", content='" + content + '\'' +
+                ", rating=" + rating +
+                ", reviewTime=" + reviewTime +
+                '}';
+    }
 }

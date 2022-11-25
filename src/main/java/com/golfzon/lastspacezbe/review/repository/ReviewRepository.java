@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review,Long> {
     List<Review> findAllBySpaceId(Long spaceId);
+
+    List<Review> findAllByCompanyId(Long companyId);
 }
