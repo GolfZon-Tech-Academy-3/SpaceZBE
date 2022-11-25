@@ -98,11 +98,12 @@ public class CompanyService {
     // return될 업체 정보들 반환
     public List<MainResponseDto> getCompanyInfo(List<Company> companyList, Long memberId) {
         List<MainResponseDto> companyInfo = new ArrayList<>();
-        MainResponseDto dto = new MainResponseDto();
+
 
         int lowPrice = 0; // 최저가격
 
         for (Company company : companyList) {
+            MainResponseDto dto = new MainResponseDto();
             Set<String> types = new HashSet<>(); // 등록된 type들
 
             dto.setCompanyId(company.getCompanyId());

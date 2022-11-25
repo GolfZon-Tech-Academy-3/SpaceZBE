@@ -48,8 +48,8 @@ public class CompanyController {
 
     // 업체 상세페이지
     @ApiOperation(value = "업체정보 조회", notes = "업체 상세페이지 조회기능입니다.")
-    @GetMapping(value = "/details")
-    public ResponseEntity<CompanyResponseDto> companyInfo(@RequestParam(name = "companyId") Long companyId) {
+    @GetMapping(value = "/details/{companyId}")
+    public ResponseEntity<CompanyResponseDto> companyInfo(@PathVariable(name = "companyId") Long companyId) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("principal:{}",principal);
         Member member = ((UserDetailsImpl)principal).getMember();
@@ -61,7 +61,7 @@ public class CompanyController {
 
     // 업체 북마크
     @ApiOperation(value = "업체관심등록", notes = "업체 관심등록/취소 기능입니다.")
-    @PostMapping(value = "/{companyId}/like")
+    @PostMapping(value = "/like/{companyId}")
     public ResponseEntity<Boolean> companyLike(@PathVariable(name = "companyId") Long companyId) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("principal:{}",principal);

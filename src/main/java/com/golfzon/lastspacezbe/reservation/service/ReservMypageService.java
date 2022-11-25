@@ -3,11 +3,13 @@ package com.golfzon.lastspacezbe.reservation.service;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationResponseDto;
 import com.golfzon.lastspacezbe.reservation.entity.Reservation;
 import com.golfzon.lastspacezbe.reservation.repository.ReservationRepository;
+import com.golfzon.lastspacezbe.review.dto.ReviewDto;
+import com.golfzon.lastspacezbe.review.entity.Review;
+import com.golfzon.lastspacezbe.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import java.util.List;
 public class ReservMypageService {
 
     private final ReservationRepository reservationRepository;
+    private final ReviewRepository reviewRepository;
 
     // 예약 이력
     public List<ReservationResponseDto> totalReserveSelectAll(Long memberId) {
@@ -59,6 +62,10 @@ public class ReservMypageService {
                                     +" "+data.getReserveTime().toString().substring(11, 16));
         responseDto.setSpaceId(data.getSpaceId()); // 공간 번호
         responseDto.setCompanyId(data.getCompanyId()); // 업체 번호
+        Review review = reviewRepository.findBySpaceId(data.getSpaceId());
+        if(review != null){
+            responseDto.setReview(new ReviewDto(review));
+        }
         reservationResponseDtos.add(responseDto);
     }
 }
