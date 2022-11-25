@@ -1,5 +1,6 @@
 package com.golfzon.lastspacezbe.review.dto;
 
+import com.golfzon.lastspacezbe.review.entity.Review;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,12 @@ public class ReviewDto {
     String type;
     String spaceName;
     String content;
+
+    public ReviewDto(Review review) {
+        this.reviewId = review.getReviewId();
+        this.rating = review.getRating();
+        this.content = review.getContent();
+    }
 
     @Override
     public String toString() {
