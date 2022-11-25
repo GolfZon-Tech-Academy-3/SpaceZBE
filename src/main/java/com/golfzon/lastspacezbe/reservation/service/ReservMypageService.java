@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +60,8 @@ public class ReservMypageService {
         responseDto.setStatus(data.getStatus());
         responseDto.setReserveTime(data.getReserveTime().toString().substring(0, 10)
                                     +" "+data.getReserveTime().toString().substring(11, 16));
+        responseDto.setSpaceId(data.getSpaceId()); // 공간 번호
+        responseDto.setCompanyId(data.getCompanyId()); // 업체 번호
         Review review = reviewRepository.findBySpaceId(data.getSpaceId());
         if(review != null){
             responseDto.setReview(new ReviewDto(review));

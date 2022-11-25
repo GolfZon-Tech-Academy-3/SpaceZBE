@@ -21,4 +21,7 @@ public class ReservationResponseDto {
     String status; // 예약상태
     String reserveTime; // 예약했을 때 시간
     ReviewDto review; // 작성한 리뷰, 없을시 null
+
+    Long spaceId; // 공간번호
+    Long companyId; // 업체번호
 }
