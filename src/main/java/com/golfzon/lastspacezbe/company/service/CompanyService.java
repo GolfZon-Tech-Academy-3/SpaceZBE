@@ -86,30 +86,26 @@ public class CompanyService {
     public List<MainResponseDto> getHotCompany(Long memberId) {
         List<Company> companyList = companyRepository.findTop8ByOrderByLikeCountDesc();
         log.info("companyList.size:{}",companyList.size());
-        return getCompanyInfo(companyList, memberId);
+        return getCompanyInfo(companyList, memberId, "hotCompany");
     }
     // 최신등록 장소 4개 가져오기
     @Transactional
     public List<MainResponseDto> getNewCompany(Long memberId) {
         List<Company> companyList = companyRepository.findTop4ByOrderByCreatedTimeDesc();
-        return getCompanyInfo(companyList, memberId);
+        return getCompanyInfo(companyList, memberId, "newCompany");
     }
 
     // return될 업체 정보들 반환
-    public List<MainResponseDto> getCompanyInfo(List<Company> companyList, Long memberId) {
+    public List<MainResponseDto> getCompanyInfo(List<Company> companyList, Long memberId, String type) {
         List<MainResponseDto> companyInfo = new ArrayList<>();
 
 
         int lowPrice = 0; // 최저가격
 
+
         for (Company company : companyList) {
             MainResponseDto dto = new MainResponseDto();
             Set<String> types = new HashSet<>(); // 등록된 type들
-
-            dto.setCompanyId(company.getCompanyId());
-            dto.setCompanyName(company.getCompanyName());
-            dto.setCompanyLike(checkLike(company, memberId));
-            dto.setLocation(company.getLocation().split(" ")[1]);
 
             List<Space> spaces = spaceRepository.findAllByCompanyId(company.getCompanyId());
             if (!spaces.isEmpty()) {
@@ -133,10 +129,15 @@ public class CompanyService {
                         dto.setAvgReview(Math.floor(sum / reviews.size() * 10) / 10);
                     }
                 }
+                if(type.equals("hotCompany") & dto.getAvgReview()==0) continue; //리뷰 점수가 0이면 continue
+            } else continue; //공간이 등록되어 있지 않으면, continue
 
-            }
-            dto.setLowPrice(lowPrice);
-            dto.setTypes(types);
+            dto.setCompanyId(company.getCompanyId()); //업체번호
+            dto.setCompanyName(company.getCompanyName()); //업체이름
+            dto.setCompanyLike(checkLike(company, memberId)); //업체 관심등록수
+            dto.setLocation(company.getLocation().split(" ")[1]); //업체 위치
+            dto.setLowPrice(lowPrice); //업체 최저가
+            dto.setTypes(types); //업체 타입들
             companyInfo.add(dto);
         }
         return companyInfo;
