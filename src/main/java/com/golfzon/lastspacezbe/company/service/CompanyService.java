@@ -2,10 +2,14 @@ package com.golfzon.lastspacezbe.company.service;
 
 import com.golfzon.lastspacezbe.company.Dto.CompanyResponseDto;
 import com.golfzon.lastspacezbe.company.Dto.MainResponseDto;
+import com.golfzon.lastspacezbe.company.dto.CompanyJoinResponseDto;
+import com.golfzon.lastspacezbe.company.dto.CompanyRequestDto;
 import com.golfzon.lastspacezbe.company.entity.Company;
 import com.golfzon.lastspacezbe.company.entity.CompanyLike;
 import com.golfzon.lastspacezbe.company.repository.CompanyLikeRepository;
 import com.golfzon.lastspacezbe.company.repository.CompanyRepository;
+import com.golfzon.lastspacezbe.member.entity.Member;
+import com.golfzon.lastspacezbe.member.repository.MemberRepository;
 import com.golfzon.lastspacezbe.review.entity.Review;
 import com.golfzon.lastspacezbe.review.repository.ReviewRepository;
 import com.golfzon.lastspacezbe.space.entity.Space;
@@ -30,6 +34,26 @@ public class CompanyService {
     private final ReviewRepository reviewRepository;
     private final CompanyLikeRepository companyLikeRepository;
 
+    private final MemberRepository memberRepository;
+
+    private final CompanyS3Service companyS3Service;
+
+    // 업체 등록 (신청)
+    public void companyPost(CompanyRequestDto companyRequestDto, Member member) {
+
+        Company company = new Company(
+                member,companyRequestDto.getCompanyName(),companyRequestDto.getInfo(),companyRequestDto.getRules(),
+                companyRequestDto.getLocation(),companyRequestDto.getDetails(),companyRequestDto.getSummary(),"000"
+        );
+
+        if(companyRequestDto.getMultipartFile() != null){
+            String imageUrl = companyS3Service.upload(companyRequestDto.getMultipartFile());
+            company.setImageName(imageUrl);
+        }
+
+        companyRepository.save(company);
+
+    }
     // 업체 정보 가져오기
     @Transactional
     public CompanyResponseDto getCompanyInfo(Long companyId, Long memberId) {
@@ -140,5 +164,34 @@ public class CompanyService {
             companyInfo.add(dto);
         }
         return companyInfo;
+    }
+
+    // 업체 신청 목록 보기
+    public List<CompanyJoinResponseDto> companySelectAll(Member member) {
+
+//        Member member1 = memberRepository.findById(member.getMemberId()).orElseThrow(){
+//
+//        }
+        List<CompanyJoinResponseDto> companyJoinResponseDtos = new ArrayList<>();
+
+        List<Company> companies = companyRepository.findAll();
+        for (Company data: companies
+             ) {
+            CompanyJoinResponseDto responseDto = new CompanyJoinResponseDto();
+            responseDto.setCompanyName(data.getCompanyName()); // 업체명
+            responseDto.setInfo(data.getInfo()); // 업체 정보
+            responseDto.setLocation(data.getLocation()); // 업체 위치
+            responseDto.setDetails(data.getDetails()); // 업체 상세정보
+            responseDto.setApproveStatus(data.getApproveStatus()); // 업체 활동 상태
+            responseDto.setImageName(data.getImageName()); // 업체 이미지
+
+            responseDto.setEmail(member.getEmail()); // 회원 이메일
+            responseDto.setMemberName(member.getMemberName()); // 회원 이름
+            responseDto.setProfileImage(member.getImgName()); // 프로필 이미지
+
+            companyJoinResponseDtos.add(responseDto);
+        }
+
+        return companyJoinResponseDtos;
     }
 }
