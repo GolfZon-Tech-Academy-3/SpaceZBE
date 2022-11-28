@@ -2,6 +2,8 @@ package com.golfzon.lastspacezbe.company.controller;
 
 import com.golfzon.lastspacezbe.company.Dto.CompanyResponseDto;
 import com.golfzon.lastspacezbe.company.Dto.MainResponseDto;
+import com.golfzon.lastspacezbe.company.dto.CompanyJoinResponseDto;
+import com.golfzon.lastspacezbe.company.dto.CompanyRequestDto;
 import com.golfzon.lastspacezbe.company.Dto.SearchRequestDto;
 import com.golfzon.lastspacezbe.company.service.CompanyService;
 import com.golfzon.lastspacezbe.member.entity.Member;
@@ -29,6 +31,67 @@ import java.util.Optional;
 public class CompanyController {
 
     private final CompanyService companyService;
+
+    // 업체 등록 (신청)
+    @ApiOperation(value = "업체 등록", notes = "업체 등록이 가능합니다.")
+    @PostMapping(value = "/post")
+    public ResponseEntity<String> companyPost(CompanyRequestDto companyRequestDto) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
+
+        // 업체 등록 service
+        companyService.companyPost(companyRequestDto,member);
+
+
+        return ResponseEntity.ok()
+                .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
+                .body("result : 업체 관리자로 신청 완료");
+    }
+
+    // 업체 신청 목록보기
+    @ApiOperation(value = "업체 신청 목록 조회", notes = "업체 신청 목록 조회기능입니다.")
+    @GetMapping(value = "/manager/list")
+    public ResponseEntity<List<CompanyJoinResponseDto>> companySelectAll() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
+
+        List<CompanyJoinResponseDto> responseDtos = companyService.companySelectAll(member);
+        // 업체 신청 목록보기
+        return ResponseEntity.ok()
+                .body(responseDtos);
+    }
+
+    @ApiOperation(value = "업체 관리자로 승인", notes = "업체관리자로 승인 기능입니다.")
+    @PutMapping(value = "/approve/{companyId}")
+    public ResponseEntity<String> approve(@PathVariable(name = "companyId") Long companyId) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
+
+        companyService.approve(companyId);
+
+        // 업체 신청 목록보기
+        return ResponseEntity.ok()
+                .body("result : 승인완료");
+    }
+
+    @ApiOperation(value = "업체 관리자로 승인 거부 ", notes = "업체관리자 신청 거부 기능입니다.")
+    @PutMapping(value = "/disapprove/{companyId}")
+    public ResponseEntity<String> disapprove(@PathVariable(name = "companyId") Long companyId) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
+
+        companyService.disapprove(companyId);
+
+        // 업체 신청 목록보기
+        return ResponseEntity.ok()
+                .body("result : 승인거부");
+    }
+
+
 
     // 메인페이지
     @ApiOperation(value = "업체정보 조회", notes = "업체 상세페이지 조회기능입니다.")

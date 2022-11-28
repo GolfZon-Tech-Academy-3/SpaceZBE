@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class InquiryResponseDto {
 
+    Long inquiryId; // 문의 번호
     String inquiries; // 문의 내용
     String answers; // 답변 내용
     String inquiryTime; //문의 날짜

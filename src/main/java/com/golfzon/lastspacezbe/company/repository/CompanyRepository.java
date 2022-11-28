@@ -16,6 +16,13 @@ public interface CompanyRepository extends JpaRepository<Company,Long> {
     List<Company> findTop8ByOrderByLikeCountDesc();
     // 최근 등록된 순으로 4개 가져오기
     List<Company> findTop4ByOrderByCreatedTimeDesc();
+
+    // 승인 거절용 찾기
+    Company findByCompanyId(Long companyId);
+
+    // jwt companyId 넣기
+    Company findByMember(Member member);
+
     // 최근 등록된 순으로 Paging 처리해서 가져오기
     List<Company> findAllByOrderByCreatedTimeDesc(Pageable pageable);
 
@@ -39,5 +46,4 @@ public interface CompanyRepository extends JpaRepository<Company,Long> {
             )
     List<Company> findAllByCompanyIdOrderByCreatedTimeDesc(Pageable pageable, @Param("companyIds") Set<Long> companyIds);
 
-    Company findByMember(Member member);
 }

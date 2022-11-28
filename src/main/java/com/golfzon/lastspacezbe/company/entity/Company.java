@@ -31,13 +31,28 @@ public class Company {
     String companyName; // 업체명
     String info; // 업체 장소 소개
     String rules; // 이용 규칙
-    String location; //업체 위치
+    String location; // 업체 위치
+
+    String details; // 상세 주소
     String summary; // 소개 요약
     String approveStatus; //승인 상태(활동중, 승인대기, 활동중지)
     int likeCount; // 관심등록수
 
+    String imageName; // 이미지 이름
     @CreationTimestamp
-    LocalDateTime createdTime;
+    LocalDateTime createdTime; // 업체 등록 날짜
+
+    public Company(Member member, String companyName, String info,
+                   String rules, String location, String details, String summary, String approveStatus) {
+        this.member = member;
+        this.companyName = companyName;
+        this.info = info;
+        this.rules = rules;
+        this.location = location;
+        this.details = details;
+        this.summary = summary;
+        this.approveStatus = approveStatus;
+    }
 
     public Company(Long companyId) {
         this.companyId = companyId;

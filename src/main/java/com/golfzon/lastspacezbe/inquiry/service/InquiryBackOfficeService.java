@@ -41,9 +41,11 @@ public class InquiryBackOfficeService {
 //                log.info("memberId : {}", dataInquiry.getMember().getMemberId());
 
                 InquiryResponseDto inquiryResponseDto = new InquiryResponseDto();
+                inquiryResponseDto.setInquiryId(dataInquiry.getInquiryId()); // 문의 번호
                 inquiryResponseDto.setInquiries(dataInquiry.getInquiries()); // 문의내용
                 inquiryResponseDto.setAnswers(dataInquiry.getAnswers()); // 답변 내용
-                inquiryResponseDto.setInquiryTime(dataInquiry.getInquiriesTime().toString()); // 문의 날짜
+                inquiryResponseDto.setInquiryTime(dataInquiry.getInquiriesTime().toString().substring(0,10)+" "+
+                        dataInquiry.getInquiriesTime().toString().substring(11,16)); // 문의 날짜
                 inquiryResponseDto.setType(dataSpace.getType()); // 사무공간타입
                 inquiryResponseDto.setSpaceName(dataSpace.getSpaceName()); // 사무공간 이름
                 inquiryResponseDto.setMemberId(dataInquiry.getMember().getMemberId());
