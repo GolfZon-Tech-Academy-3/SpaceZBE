@@ -27,11 +27,12 @@ public final class JwtTokenUtils {
     public static final String CLAIM_AUTHORITY = "AUTHORITY";
     public static final String CLAIM_IMAGE_NAME = "IMAGE_NAME";
     public static final String CLAIM_USER_ID = "MEMBER_ID";
+    public static final String CLAIM_COMPANY_ID = "COMPANY_ID";
     public static final String JWT_SECRET = "jwt_secret_!@#$%";
 
     public static String generateJwtToken(UserDetailsImpl userDetails) {
         String token = null;
-
+        System.out.println(userDetails.getCompany().getCompanyId());
         try {
             token = JWT.create()
                     .withIssuer("spacez")
@@ -40,13 +41,14 @@ public final class JwtTokenUtils {
                     .withClaim(CLAIM_AUTHORITY, userDetails.getMember().getAuthority())
                     .withClaim(CLAIM_IMAGE_NAME, userDetails.getMember().getImgName())
                     .withClaim(CLAIM_USER_ID, userDetails.getMember().getMemberId())
+                    .withClaim(CLAIM_COMPANY_ID, userDetails.getCompany().getCompanyId())
                     // 토큰 만료 일시 = 현재 시간 + 토큰 유효기간)
                     .withClaim(CLAIM_EXPIRED_DATE, new Date(System.currentTimeMillis() + JWT_TOKEN_VALID_MILLI_SEC))
                     .sign(generateAlgorithm());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
+        System.out.println(token);
         return token;
     }
 

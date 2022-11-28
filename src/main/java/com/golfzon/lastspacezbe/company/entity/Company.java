@@ -54,6 +54,10 @@ public class Company {
         this.approveStatus = approveStatus;
     }
 
+    public Company(Long companyId) {
+        this.companyId = companyId;
+    }
+
     @Override
     public String toString() {
         return "Company{" +
