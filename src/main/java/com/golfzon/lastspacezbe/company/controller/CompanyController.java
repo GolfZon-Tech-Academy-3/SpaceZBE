@@ -61,6 +61,34 @@ public class CompanyController {
                 .body(responseDtos);
     }
 
+    @ApiOperation(value = "업체 관리자로 승인", notes = "업체관리자로 승인 기능입니다.")
+    @PutMapping(value = "/approve/{companyId}")
+    public ResponseEntity<String> approve(@PathVariable(name = "companyId") Long companyId) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
+
+        companyService.approve(companyId);
+
+        // 업체 신청 목록보기
+        return ResponseEntity.ok()
+                .body("result : 승인완료");
+    }
+
+    @ApiOperation(value = "업체 관리자로 승인 거부 ", notes = "업체관리자 신청 거부 기능입니다.")
+    @PutMapping(value = "/disapprove/{companyId}")
+    public ResponseEntity<String> disapprove(@PathVariable(name = "companyId") Long companyId) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
+
+        companyService.disapprove(companyId);
+
+        // 업체 신청 목록보기
+        return ResponseEntity.ok()
+                .body("result : 승인거부");
+    }
+
     
 
     // 메인페이지

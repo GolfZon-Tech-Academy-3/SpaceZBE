@@ -11,4 +11,7 @@ public interface CompanyRepository extends JpaRepository<Company,Long> {
     List<Company> findTop8ByOrderByLikeCountDesc();
     // 최근 등록된 순으로 4개 가져오기
     List<Company> findTop4ByOrderByCreatedTimeDesc();
+
+    // 승인 거절용 찾기
+    Company findByCompanyId(Long companyId);
 }

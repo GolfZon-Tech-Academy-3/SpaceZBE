@@ -194,4 +194,23 @@ public class CompanyService {
 
         return companyJoinResponseDtos;
     }
+
+    // 업체관리자로 승인하기
+    public void approve(Long companyId) {
+        Company company = companyRepository.findByCompanyId(companyId);
+
+        company.setApproveStatus("001"); // 활동상태 활동중으로 변경
+
+        companyRepository.save(company); // 저장.
+
+    }
+
+    // 업체관리자 승인 거부
+    public void disapprove(Long companyId) {
+        Company company = companyRepository.findByCompanyId(companyId);
+
+        company.setApproveStatus("002"); // 활동상태 활동 정지로 변경
+
+        companyRepository.save(company); // 저장.
+    }
 }
