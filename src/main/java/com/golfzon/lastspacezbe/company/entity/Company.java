@@ -39,6 +39,10 @@ public class Company {
     @CreationTimestamp
     LocalDateTime createdTime;
 
+    public Company(Long companyId) {
+        this.companyId = companyId;
+    }
+
     @Override
     public String toString() {
         return "Company{" +

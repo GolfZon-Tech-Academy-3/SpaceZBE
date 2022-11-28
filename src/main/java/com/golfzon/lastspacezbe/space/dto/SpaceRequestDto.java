@@ -1,13 +1,11 @@
 package com.golfzon.lastspacezbe.space.dto;
 
-import com.golfzon.lastspacezbe.space.entity.SpaceImage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.Column;
 import java.util.List;
 
 @Getter

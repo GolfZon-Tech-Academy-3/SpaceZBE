@@ -2,6 +2,7 @@ package com.golfzon.lastspacezbe.company.controller;
 
 import com.golfzon.lastspacezbe.company.Dto.CompanyResponseDto;
 import com.golfzon.lastspacezbe.company.Dto.MainResponseDto;
+import com.golfzon.lastspacezbe.company.Dto.SearchRequestDto;
 import com.golfzon.lastspacezbe.company.service.CompanyService;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.security.UserDetailsImpl;
@@ -18,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Api(tags = "Company 컨트롤러")
@@ -70,6 +72,65 @@ public class CompanyController {
         return ResponseEntity.ok()
                 .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .body(companyService.companyLike(companyId, member.getMemberId()));
+    }
+
+    // 업체 전체조회(최신 등록순)
+    //1. 타입별로 검색->지역(native query, like="%?1%")
+    //2. company의 space loop를 돌면서, 해당 spaceId의 resveration을 가져오는데 해당 날짜에 해당하는 예약만 get
+    //3. 예약 가능한 시간의 리스트에서 reservation된 시간을 뺌/ size>0 이면 add
+    //4. 날짜+시간을 검색 시, isExsist 이면 add
+    // 메인페이지
+    @ApiOperation(value = "업체정보 전체조회", notes = "업체 전체보기 조회기능입니다.")
+    @GetMapping(value = "/total")
+    public ResponseEntity<Map<String, Object>> totalCompany(@RequestBody Optional<SearchRequestDto> searchDto, @RequestParam(name = "page") int page) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
+
+        // 업체 상세보기 service
+        return ResponseEntity.ok()
+                .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
+                .body(companyService.getTotalCompany(searchDto, page, member.getMemberId()));
+    }
+
+    @ApiOperation(value = "업체정보 오피스 조회", notes = "오피스를 등록한 업체 전체보기 조회기능입니다.")
+    @GetMapping(value = "/office")
+    public ResponseEntity<Map<String, Object>> totalOffice(@RequestBody Optional<SearchRequestDto> searchDto, @RequestParam(name = "page") int page) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
+
+        // 업체 상세보기 service
+        return ResponseEntity.ok()
+                .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
+                .body(companyService.getTotalOffice(searchDto, page, member.getMemberId()));
+    }
+
+
+    @ApiOperation(value = "업체정보 데스크 조회", notes = "데스크를 등록한 업체 전체보기 조회기능입니다.")
+    @GetMapping(value = "/desk")
+    public ResponseEntity<Map<String, Object>> totalDesk(@RequestBody Optional<SearchRequestDto> searchDto, @RequestParam(name = "page") int page) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
+
+        // 업체 상세보기 service
+        return ResponseEntity.ok()
+                .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
+                .body(companyService.getTotalDesk(searchDto, page, member.getMemberId()));
+    }
+
+    @ApiOperation(value = "업체정보 회의실 조회", notes = "회의실를 등록한 업체 전체보기 조회기능입니다.")
+    @GetMapping(value = "/meeting-room")
+    public ResponseEntity<Map<String, Object>> totalMeetingRoom(@RequestBody Optional<SearchRequestDto> searchDto, @RequestParam(name = "page") int page) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
+
+        // 업체 상세보기 service
+        return ResponseEntity.ok()
+                .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
+                .body(companyService.getTotalMeetingRoom(searchDto, page, member.getMemberId()));
     }
 
 }

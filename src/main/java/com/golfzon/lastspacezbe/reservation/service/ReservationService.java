@@ -229,6 +229,16 @@ public class ReservationService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 spaceId는 존재하지 않습니다."));
 
         // 2. 예약된 시간 찾기
+        List<String> reservedTimes = getReservedTimes(spaceId);
+
+        // 3. 총 마일리지 찾기
+        int totalMileage = mileageService.getTotalScore(member.getMemberId());
+
+        return new ReservationSpaceDto(space, reservedTimes, totalMileage);
+    }
+
+    // 예약된 시간 찾기
+    public List<String> getReservedTimes(Long spaceId){
         List<String> reservedTimes = new ArrayList<>();
         List<Reservation> reservations = reservationRepository.findReservedTime(spaceId);
         // 포맷변경 (년월일 시분)
@@ -255,10 +265,7 @@ public class ReservationService {
         }
         //오름차순으로 정렬
         Collections.sort(reservedTimes);
-
-        // 3. 총 마일리지 찾기
-        int totalMileage = mileageService.getTotalScore(member.getMemberId());
-
-        return new ReservationSpaceDto(space, reservedTimes, totalMileage);
+        return reservedTimes;
     }
+
 }

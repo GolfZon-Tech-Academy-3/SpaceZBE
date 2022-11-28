@@ -9,12 +9,17 @@ import com.golfzon.lastspacezbe.space.entity.Space;
 import com.golfzon.lastspacezbe.space.repository.SpaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -26,15 +31,23 @@ public class ReviewService {
     private final SpaceRepository spaceRepository;
 
     // 업체에 등록된 리뷰 가져오기
-    public List<ReviewDto> spaceReviews(Long companyId) {
+    public Map<String, Object> spaceReviews(Long companyId, int page) {
         log.info("companyId:{}",companyId);
 
-        List<Review> reviewList = reviewRepository.findAllByCompanyId(companyId);
+        Map<String, Object> map = new HashMap<>();
+
+        Pageable pageable = PageRequest.of(page -1, 5);
+        List<Review> reviewList = reviewRepository.findAllByCompanyIdOrderByReviewTimeDesc(pageable, companyId);
+        map.put("totalCount", reviewList.size()); // 총 리뷰 개수
         List<ReviewDto> reviews = new ArrayList<>();
 
         if(reviewList.size()>0){
             for (Review review:reviewList) {
+                log.info("review:{}",review);
                 ReviewDto dto = new ReviewDto();
+                dto.setReviewId(review.getReviewId()); //리뷰번호
+                dto.setCompanyId(review.getCompanyId()); //업체번호
+                dto.setSpaceId(review.getSpaceId()); //공간번호
                 dto.setRating(review.getRating()); //별점
                 dto.setContent(review.getContent()); //리뷰내용
                 Member member = memberRepository.findById(review.getMemberId())
@@ -48,8 +61,8 @@ public class ReviewService {
                 reviews.add(dto);
             }
         }
-
-        return reviews;
+        map.put("reviews",reviews);
+        return map;
     }
 
     // 리뷰 등록

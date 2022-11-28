@@ -1,12 +1,11 @@
 package com.golfzon.lastspacezbe.security;
 
 
+import com.golfzon.lastspacezbe.company.entity.Company;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -15,12 +14,18 @@ public class UserDetailsImpl implements UserDetails{
 
     private final Member member;
 
-    public UserDetailsImpl(Member member) {
+    private final Company company;
+
+    public UserDetailsImpl(Member member, Company company) {
         this.member = member;
+        this.company = company;
     }
 
     public Member getMember() {
         return member;
+    }
+    public Company getCompany() {
+        return company;
     }
 
     public String getEmail(){return member.getEmail();}

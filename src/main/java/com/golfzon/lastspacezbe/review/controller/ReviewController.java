@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Api(tags = "Review 컨트롤러")
@@ -30,9 +31,11 @@ public class ReviewController {
 
     @ApiOperation(value = "리뷰 조회", notes = "업체 상세페이지에서 리뷰 보기입니다.")
     @GetMapping(value = "/total/{companyId}")
-    public ResponseEntity<List<ReviewDto>> spaceReviews(@PathVariable(name="companyId") Long companyId){
+    public ResponseEntity<Map<String, Object>> spaceReviews(
+            @PathVariable(name="companyId") Long companyId,
+            @RequestParam(value="page") int page){
         return ResponseEntity.ok()
-                .body(reviewService.spaceReviews(companyId));
+                .body(reviewService.spaceReviews(companyId, page));
     }
 
     @ApiOperation(value = "리뷰 등록", notes = "마이페이지에서 리뷰 등록기능입니다.")
