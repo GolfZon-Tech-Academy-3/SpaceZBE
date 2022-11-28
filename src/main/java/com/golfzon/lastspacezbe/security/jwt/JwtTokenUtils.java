@@ -2,13 +2,15 @@ package com.golfzon.lastspacezbe.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.golfzon.lastspacezbe.company.entity.Company;
+import com.golfzon.lastspacezbe.company.repository.CompanyRepository;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.security.UserDetailsImpl;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
 
 public final class JwtTokenUtils {
-
     private static final int SEC = 1;
     private static final int MINUTE = 60 * SEC;
     private static final int HOUR = 60 * MINUTE;
@@ -29,6 +31,7 @@ public final class JwtTokenUtils {
 
     public static String generateJwtToken(UserDetailsImpl userDetails) {
         String token = null;
+
         try {
             token = JWT.create()
                     .withIssuer("spacez")
