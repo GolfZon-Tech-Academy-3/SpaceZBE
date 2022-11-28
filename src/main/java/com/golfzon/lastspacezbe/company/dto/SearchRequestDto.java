@@ -1,4 +1,4 @@
-package com.golfzon.lastspacezbe.company.Dto;
+package com.golfzon.lastspacezbe.company.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

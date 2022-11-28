@@ -1,10 +1,10 @@
 package com.golfzon.lastspacezbe.company.service;
 
-import com.golfzon.lastspacezbe.company.Dto.CompanyResponseDto;
-import com.golfzon.lastspacezbe.company.Dto.MainResponseDto;
+import com.golfzon.lastspacezbe.company.dto.CompanyResponseDto;
+import com.golfzon.lastspacezbe.company.dto.MainResponseDto;
 import com.golfzon.lastspacezbe.company.dto.CompanyJoinResponseDto;
 import com.golfzon.lastspacezbe.company.dto.CompanyRequestDto;
-import com.golfzon.lastspacezbe.company.Dto.SearchRequestDto;
+import com.golfzon.lastspacezbe.company.dto.SearchRequestDto;
 import com.golfzon.lastspacezbe.company.entity.Company;
 import com.golfzon.lastspacezbe.company.entity.CompanyLike;
 import com.golfzon.lastspacezbe.company.repository.CompanyLikeRepository;
