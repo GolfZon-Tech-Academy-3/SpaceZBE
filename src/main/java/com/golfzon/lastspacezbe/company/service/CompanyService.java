@@ -20,6 +20,7 @@ import com.golfzon.lastspacezbe.space.entity.SpaceImage;
 import com.golfzon.lastspacezbe.space.repository.SpaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -135,7 +136,7 @@ public class CompanyService {
         log.info("searchDto:{}", searchDto);
         log.info("memberId:{}", memberId);
 
-        List<Company> companyList;
+        Page<Company> companyList;
         if (searchDto.isPresent()) {
             Set<Long> companyIdList = companyRepository.findAllCompanyIds();
             companyList = searchCompany(searchDto, companyIdList, page);
@@ -146,11 +147,12 @@ public class CompanyService {
             log.info("companyList:{}", companyList);
         }
 
-        log.info("companyList.size:{}", companyList.size());
-        List<MainResponseDto> dtos = getCompanyInfo(companyList, memberId, "totalCompany");
+        log.info("companyList.size:{}", companyList.getTotalElements());
+        List<MainResponseDto> dtos = getCompanyInfo(companyList.toList(), memberId, "totalCompany");
         Map<String, Object> map = new HashMap<>();
-        map.put("totalSize", dtos.size());
-        map.put("totalCompany", dtos);
+        map.put("totalSize", companyList.getTotalElements());
+        map.put("totalPage", companyList.getTotalPages());
+        map.put("company", dtos);
         return map;
     }
 
@@ -159,22 +161,23 @@ public class CompanyService {
         log.info("searchDto:{}", searchDto);
         log.info("memberId:{}", memberId);
 
-        List<Company> companyList;
+        Page<Company> companyList;
         if (searchDto.isPresent()) {
             Set<Long> companyIdList = spaceRepository.findAllCompanyIdByOffice();
             companyList = searchCompany(searchDto, companyIdList, page);
             log.info("companyIdList:{}", companyIdList);
         } else {
             Pageable pageable = PageRequest.of(page - 1, 9);
-            List<Long> companyIdList = spaceRepository.findAllOfficeCompany(pageable);
-            companyList = companyRepository.findAllByCompanyId(companyIdList);
+            List<Long> companyIdList = spaceRepository.findAllOfficeCompany();
+            companyList = companyRepository.findAllCompany(companyIdList, pageable);
             log.info("companyList:{}", companyList);
         }
-        log.info("companyList.size:{}", companyList.size());
-        List<MainResponseDto> dtos = getCompanyInfo(companyList, memberId, "officeCompany");
+        log.info("companyList.size:{}", companyList.getTotalElements());
+        List<MainResponseDto> dtos = getCompanyInfo(companyList.toList(), memberId, "officeCompany");
         Map<String, Object> map = new HashMap<>();
-        map.put("totalSize", dtos.size());
-        map.put("officeCompany", dtos);
+        map.put("totalSize", companyList.getTotalElements());
+        map.put("totalPage", companyList.getTotalPages());
+        map.put("company", dtos);
         return map;
     }
 
@@ -183,22 +186,23 @@ public class CompanyService {
         log.info("searchDto:{}", searchDto);
         log.info("memberId:{}", memberId);
 
-        List<Company> companyList;
+        Page<Company> companyList;
         if (searchDto.isPresent()) {
             Set<Long> companyIdList = spaceRepository.findAllCompanyIdByDesk();
             companyList = searchCompany(searchDto, companyIdList, page);
             log.info("companyIdList:{}", companyIdList);
         } else {
             Pageable pageable = PageRequest.of(page - 1, 9);
-            List<Long> companyIdList = spaceRepository.findAllByDeskOrderByCompanyIdDesc(pageable);
-            companyList = companyRepository.findAllByCompanyId(companyIdList);
+            List<Long> companyIdList = spaceRepository.findAllByDeskOrderByCompanyIdDesc();
+            companyList = companyRepository.findAllCompany(companyIdList, pageable);
             log.info("companyList:{}", companyList);
         }
-        log.info("companyList.size:{}", companyList.size());
+        log.info("companyList.size:{}", companyList.getTotalElements());
         Map<String, Object> map = new HashMap<>();
-        List<MainResponseDto> dtos = getCompanyInfo(companyList, memberId, "deskCompany");
-        map.put("totalSize", dtos.size());
-        map.put("deskCompany", dtos);
+        List<MainResponseDto> dtos = getCompanyInfo(companyList.toList(), memberId, "deskCompany");
+        map.put("totalSize", companyList.getTotalElements());
+        map.put("totalPage", companyList.getTotalPages());
+        map.put("company", dtos);
         return map;
     }
 
@@ -207,22 +211,23 @@ public class CompanyService {
         log.info("searchDto:{}", searchDto);
         log.info("memberId:{}", memberId);
 
-        List<Company> companyList;
+        Page<Company> companyList;
         if (searchDto.isPresent()) {
             Set<Long> companyIdList = spaceRepository.findAllCompanyIdByMeetingRoom();
             companyList = searchCompany(searchDto, companyIdList, page);
             log.info("companyIdList:{}", companyIdList);
         } else {
             Pageable pageable = PageRequest.of(page - 1, 9);
-            List<Long> companyIdList = spaceRepository.findAllByMeetingRoomOrderByCompanyIdDesc(pageable);
-            companyList = companyRepository.findAllByCompanyId(companyIdList);
+            List<Long> companyIdList = spaceRepository.findAllByMeetingRoomOrderByCompanyIdDesc();
+            companyList = companyRepository.findAllCompany(companyIdList, pageable);
             log.info("companyList:{}", companyList);
         }
-        log.info("companyList.size:{}", companyList.size());
+        log.info("companyList.size:{}", companyList.getTotalElements());
         Map<String, Object> map = new HashMap<>();
-        List<MainResponseDto> dtos = getCompanyInfo(companyList, memberId, "meetingRoomCompany");
-        map.put("totalSize", dtos.size());
-        map.put("meetingRoomCompany", dtos);
+        List<MainResponseDto> dtos = getCompanyInfo(companyList.toList(), memberId, "meetingRoomCompany");
+        map.put("totalSize", companyList.getTotalElements());
+        map.put("totalPage", companyList.getTotalPages());
+        map.put("company", dtos);
         return map;
     }
 
@@ -323,7 +328,7 @@ public class CompanyService {
     }
 
     // 검색
-    public List<Company> searchCompany(Optional<SearchRequestDto> searchDto, Set<Long> companyIds, int page) {
+    public Page<Company> searchCompany(Optional<SearchRequestDto> searchDto, Set<Long> companyIds, int page) {
         if (searchDto.get().getLocation() != null) {
             log.info("지역 검색:{}", searchDto.get().getLocation());
             log.info("companyIds:{}", companyIds);

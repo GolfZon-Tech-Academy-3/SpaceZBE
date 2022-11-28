@@ -1,6 +1,7 @@
 package com.golfzon.lastspacezbe.space.repository;
 
 import com.golfzon.lastspacezbe.space.entity.Space;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,9 +23,8 @@ public interface SpaceRepository extends JpaRepository<Space,Long> {
     // 오피스로 등록된 공간 등록된 순으로 9개씩 조회
     @Query
             (value = "select distinct company_id from space where type like '오피스' order by company_id desc",
-            countQuery = "select distinct company_id from space where type like '오피스' order by company_id desc",
             nativeQuery = true)
-    List<Long> findAllOfficeCompany(Pageable pageable);
+    List<Long> findAllOfficeCompany();
 
     // 데스크로 등록된 공간 모두 조회
     @Query
@@ -34,9 +34,8 @@ public interface SpaceRepository extends JpaRepository<Space,Long> {
     // 데스크로 등록된 공간 등록된 순으로 9개씩 조회
     @Query
             (value = "select distinct company_id from space where type like '데스크' order by company_id desc",
-                    countQuery = "select distinct company_id from space where type like '데스크' order by company_id desc",
                     nativeQuery = true)
-    List<Long> findAllByDeskOrderByCompanyIdDesc(Pageable pageable);
+    List<Long> findAllByDeskOrderByCompanyIdDesc();
 
     // 회의실로 등록된 공간 모두 조회
     @Query
@@ -46,8 +45,7 @@ public interface SpaceRepository extends JpaRepository<Space,Long> {
     // 회의실로 등록된 공간 등록된 순으로 9개씩 조회
     @Query
             (value = "select distinct company_id from space where type like '%회의실%' order by company_id desc",
-                    countQuery = "select distinct company_id from space where type like '%회의실%' order by company_id desc",
                     nativeQuery = true)
-    List<Long> findAllByMeetingRoomOrderByCompanyIdDesc(Pageable pageable);
+    List<Long> findAllByMeetingRoomOrderByCompanyIdDesc();
 
 }
