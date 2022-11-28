@@ -1,6 +1,7 @@
 package com.golfzon.lastspacezbe.company.repository;
 
 import com.golfzon.lastspacezbe.company.entity.Company;
+import com.golfzon.lastspacezbe.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,4 +15,7 @@ public interface CompanyRepository extends JpaRepository<Company,Long> {
 
     // 승인 거절용 찾기
     Company findByCompanyId(Long companyId);
+
+    // jwt companyId 넣기
+    Company findByMember(Member member);
 }
