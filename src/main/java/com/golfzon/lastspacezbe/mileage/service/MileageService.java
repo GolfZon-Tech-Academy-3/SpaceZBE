@@ -1,18 +1,23 @@
 package com.golfzon.lastspacezbe.mileage.service;
 
+import com.golfzon.lastspacezbe.mileage.dto.MileageDto;
 import com.golfzon.lastspacezbe.mileage.entity.Mileage;
 import com.golfzon.lastspacezbe.mileage.repository.MileageRepository;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import com.golfzon.lastspacezbe.reservation.entity.Reservation;
 import com.golfzon.lastspacezbe.space.entity.Space;
 import com.golfzon.lastspacezbe.space.repository.SpaceRepository;
+import edu.emory.mathcs.backport.java.util.LinkedList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -126,4 +131,27 @@ public class MileageService{
 		}
 	}
 
+    public Map<String, Object> getMileageInfo(Long memberId, String type) {
+		log.info("getMileageInfo");
+		log.info("memberId:{}", memberId);
+		log.info("type:{}", type);
+		Map<String, Object> map = new HashMap<>();
+		List<Mileage> mileages = mileageRepository.findAllByMemberId(memberId);
+		log.info("mileages.size:{}", mileages.size());
+		int totalScore = 0;
+		int cancleScore = 0;
+		List<MileageDto> dtos = new ArrayList<>();
+		for (Mileage mileage : mileages) {
+			MileageDto dto = new MileageDto(mileage);
+			dtos.add(dto);
+			totalScore += mileage.getScore();
+		}
+
+		map.put("totalScore", totalScore);
+		map.put("mileages", dtos);
+		log.info("map:{}", map);
+
+
+		return map;
+    }
 }
