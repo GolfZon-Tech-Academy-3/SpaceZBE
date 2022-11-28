@@ -2,6 +2,7 @@ package com.golfzon.lastspacezbe.company.repository;
 
 import com.golfzon.lastspacezbe.company.entity.Company;
 import com.golfzon.lastspacezbe.member.entity.Member;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,7 +24,11 @@ public interface CompanyRepository extends JpaRepository<Company,Long> {
     // jwt companyId 넣기
     Company findByMember(Member member);
 
-    // 최근 등록된 순으로 Paging 처리해서 가져오기
+    // 최근 등록된 순으로 가져오기
+    @Query
+            (nativeQuery = true,
+                    value = "select * from company order by created_time desc"
+            )
     List<Company> findAllByOrderByCreatedTimeDesc(Pageable pageable);
 
     @Query
@@ -46,4 +51,9 @@ public interface CompanyRepository extends JpaRepository<Company,Long> {
             )
     List<Company> findAllByCompanyIdOrderByCreatedTimeDesc(Pageable pageable, @Param("companyIds") Set<Long> companyIds);
 
+    @Query
+            (nativeQuery = true,
+                    value = "select company_id from company"
+            )
+    Set<Long> findAllCompanyIds();
 }

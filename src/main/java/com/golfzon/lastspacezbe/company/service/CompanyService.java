@@ -51,11 +51,11 @@ public class CompanyService {
     public void companyPost(CompanyRequestDto companyRequestDto, Member member) {
 
         Company company = new Company(
-                member,companyRequestDto.getCompanyName(),companyRequestDto.getInfo(),companyRequestDto.getRules(),
-                companyRequestDto.getLocation(),companyRequestDto.getDetails(),companyRequestDto.getSummary(),"000"
+                member, companyRequestDto.getCompanyName(), companyRequestDto.getInfo(), companyRequestDto.getRules(),
+                companyRequestDto.getLocation(), companyRequestDto.getDetails(), companyRequestDto.getSummary(), "000"
         );
 
-        if(companyRequestDto.getMultipartFile() != null){
+        if (companyRequestDto.getMultipartFile() != null) {
             String imageUrl = companyS3Service.upload(companyRequestDto.getMultipartFile());
             company.setImageName(imageUrl);
         }
@@ -63,6 +63,7 @@ public class CompanyService {
         companyRepository.save(company);
 
     }
+
     // 업체 정보 가져오기
     public CompanyResponseDto getCompanyInfo(Long companyId, Long memberId) {
         // 업체 정보
@@ -129,6 +130,102 @@ public class CompanyService {
         return getCompanyInfo(companyList, memberId, "newCompany");
     }
 
+    // 전체 업체 조회
+    public Map<String, Object> getTotalCompany(Optional<SearchRequestDto> searchDto, int page, Long memberId) {
+        log.info("searchDto:{}", searchDto);
+        log.info("memberId:{}", memberId);
+
+        List<Company> companyList;
+        if (searchDto.isPresent()) {
+            Set<Long> companyIdList = companyRepository.findAllCompanyIds();
+            companyList = searchCompany(searchDto, companyIdList, page);
+            log.info("companyIdList:{}", companyIdList);
+        } else {
+            Pageable pageable = PageRequest.of(page - 1, 9);
+            companyList = companyRepository.findAllByOrderByCreatedTimeDesc(pageable);
+            log.info("companyList:{}", companyList);
+        }
+
+        log.info("companyList.size:{}", companyList.size());
+        List<MainResponseDto> dtos = getCompanyInfo(companyList, memberId, "totalCompany");
+        Map<String, Object> map = new HashMap<>();
+        map.put("totalSize", dtos.size());
+        map.put("totalCompany", dtos);
+        return map;
+    }
+
+    // 전체 오피스 조회
+    public Map<String, Object> getTotalOffice(Optional<SearchRequestDto> searchDto, int page, Long memberId) {
+        log.info("searchDto:{}", searchDto);
+        log.info("memberId:{}", memberId);
+
+        List<Company> companyList;
+        if (searchDto.isPresent()) {
+            Set<Long> companyIdList = spaceRepository.findAllCompanyIdByOffice();
+            companyList = searchCompany(searchDto, companyIdList, page);
+            log.info("companyIdList:{}", companyIdList);
+        } else {
+            Pageable pageable = PageRequest.of(page - 1, 9);
+            List<Long> companyIdList = spaceRepository.findAllOfficeCompany(pageable);
+            companyList = companyRepository.findAllByCompanyId(companyIdList);
+            log.info("companyList:{}", companyList);
+        }
+        log.info("companyList.size:{}", companyList.size());
+        List<MainResponseDto> dtos = getCompanyInfo(companyList, memberId, "officeCompany");
+        Map<String, Object> map = new HashMap<>();
+        map.put("totalSize", dtos.size());
+        map.put("officeCompany", dtos);
+        return map;
+    }
+
+    // 전체 데스크 조회
+    public Map<String, Object> getTotalDesk(Optional<SearchRequestDto> searchDto, int page, Long memberId) {
+        log.info("searchDto:{}", searchDto);
+        log.info("memberId:{}", memberId);
+
+        List<Company> companyList;
+        if (searchDto.isPresent()) {
+            Set<Long> companyIdList = spaceRepository.findAllCompanyIdByDesk();
+            companyList = searchCompany(searchDto, companyIdList, page);
+            log.info("companyIdList:{}", companyIdList);
+        } else {
+            Pageable pageable = PageRequest.of(page - 1, 9);
+            List<Long> companyIdList = spaceRepository.findAllByDeskOrderByCompanyIdDesc(pageable);
+            companyList = companyRepository.findAllByCompanyId(companyIdList);
+            log.info("companyList:{}", companyList);
+        }
+        log.info("companyList.size:{}", companyList.size());
+        Map<String, Object> map = new HashMap<>();
+        List<MainResponseDto> dtos = getCompanyInfo(companyList, memberId, "deskCompany");
+        map.put("totalSize", dtos.size());
+        map.put("deskCompany", dtos);
+        return map;
+    }
+
+    // 전체 회의실 조회
+    public Map<String, Object> getTotalMeetingRoom(Optional<SearchRequestDto> searchDto, int page, Long memberId) {
+        log.info("searchDto:{}", searchDto);
+        log.info("memberId:{}", memberId);
+
+        List<Company> companyList;
+        if (searchDto.isPresent()) {
+            Set<Long> companyIdList = spaceRepository.findAllCompanyIdByMeetingRoom();
+            companyList = searchCompany(searchDto, companyIdList, page);
+            log.info("companyIdList:{}", companyIdList);
+        } else {
+            Pageable pageable = PageRequest.of(page - 1, 9);
+            List<Long> companyIdList = spaceRepository.findAllByMeetingRoomOrderByCompanyIdDesc(pageable);
+            companyList = companyRepository.findAllByCompanyId(companyIdList);
+            log.info("companyList:{}", companyList);
+        }
+        log.info("companyList.size:{}", companyList.size());
+        Map<String, Object> map = new HashMap<>();
+        List<MainResponseDto> dtos = getCompanyInfo(companyList, memberId, "meetingRoomCompany");
+        map.put("totalSize", dtos.size());
+        map.put("meetingRoomCompany", dtos);
+        return map;
+    }
+
     // return될 업체 정보들 반환
     public List<MainResponseDto> getCompanyInfo(List<Company> companyList, Long memberId, String type) {
         List<MainResponseDto> companyInfo = new ArrayList<>();
@@ -177,48 +274,6 @@ public class CompanyService {
         return companyInfo;
     }
 
-    // 전체 업체 정보가져오기
-    public Map<String, Object> getTotalCompany(Optional<SearchRequestDto> searchDto, int page, Long memberId) {
-        log.info("searchDto:{}", searchDto);
-        log.info("memberId:{}", memberId);
-        Set<Long> companyIds = new HashSet<>();
-        if (searchDto.isPresent()) {
-            if (!searchDto.get().getLocation().isEmpty()) {
-                log.info("지역 검색:{}",searchDto.get().getLocation());
-                companyIds = companyRepository.findAllByLocation("%" + searchDto.get().getLocation() + "%");
-            }
-            if (!searchDto.get().getTime().isEmpty()) {
-                log.info("날짜+시간 검색:{}",searchDto.get().getDate()+" "+searchDto.get().getTime());
-                List<Space> spaces = spaceRepository.findAll();
-                for (Space space : spaces) {
-                    // 예약 가능한 시간 구하기
-                    if (getTimes(space, searchDto).contains(searchDto.get().getTime())) {
-                        companyIds.add(space.getCompanyId());
-                    } else companyIds.remove(space.getCompanyId());
-                }
-            }
-            if (!searchDto.get().getDate().isEmpty() & searchDto.get().getTime().isEmpty()) {
-                log.info("날짜 검색:{}",searchDto.get().getDate());
-                List<Space> spaces = spaceRepository.findAll();
-                for (Space space : spaces) {
-                    // 예약 가능한 시간 구하기
-                    List<String> times = getTimes(space, searchDto);
-                    if (times.size() > 0) companyIds.add(space.getCompanyId());
-                }
-            }
-        }
-        log.info("companyIds:{}",companyIds);
-        Map<String, Object> map = new HashMap<>();
-        Pageable pageable = PageRequest.of(page - 1, 9);
-        List<Company> companyList = companyRepository.findAllByCompanyIdOrderByCreatedTimeDesc(pageable, companyIds);
-
-        log.info("companyList.size:{}", companyList.size());
-        List<MainResponseDto> dtos = getCompanyInfo(companyList, memberId, "totalCompany");
-        map.put("totalSize", dtos.size());
-        map.put("totalCompany", dtos);
-        return map;
-    }
-
     // 예약 가능한 시간 조회(같은 날짜)
     public List<String> getTimes(Space space, Optional<SearchRequestDto> searchDto) {
         List<String> times = new ArrayList<>();
@@ -263,62 +318,59 @@ public class CompanyService {
                 times.remove(reservedTime.split(" ")[1]);
             }
         }
-        log.info("예약 가능한 시간들:{}",times);
+        log.info("예약 가능한 시간들:{}", times);
         return times;
     }
 
-
-    // 전체 오피스 조회
-    public Map<String, Object> getTotalOffice(Optional<SearchRequestDto> searchDto, int page, Long memberId) {
-        log.info("searchDto:{}", searchDto);
-        log.info("memberId:{}", memberId);
-
-        Map<String, Object> map = new HashMap<>();
+    // 검색
+    public List<Company> searchCompany(Optional<SearchRequestDto> searchDto, Set<Long> companyIds, int page) {
+        if (searchDto.get().getLocation() != null) {
+            log.info("지역 검색:{}", searchDto.get().getLocation());
+            log.info("companyIds:{}", companyIds);
+            Set<Long> companyIds2 = companyRepository.findAllByLocation("%" + searchDto.get().getLocation() + "%");
+            log.info("companyIds2:{}", companyIds2);
+            //타입별 공간에서 지역이 안 맞을 시 제거
+            Set<Long> finalCompanyIds = companyIds;
+            companyIds2.removeIf(companyId -> !finalCompanyIds.contains(companyId));
+            companyIds = companyIds2;
+            log.info("companyIds2:{}", companyIds2);
+        }
+        if (searchDto.get().getTime() != null) {
+            log.info("날짜+시간 검색:{}", searchDto.get().getDate() + " " + searchDto.get().getTime());
+            Set<Long> companyIds2 = new HashSet<>();
+            List<Space> spaces = spaceRepository.findAll();
+            for (Space space : spaces) {
+                // 예약 가능한 시간 구하기
+                if (getTimes(space, searchDto).contains(searchDto.get().getTime())) {
+                    if (searchDto.get().getLocation() == null) { //시간, 날짜만 검색 시 모두 add
+                        companyIds2.add(space.getCompanyId());
+                    } else if (companyIds.contains(space.getCompanyId())) { //지역검색 시, 지역 내 날짜, 시간 검색
+                        companyIds2.add(space.getCompanyId());
+                    }
+                }
+            }
+            companyIds = companyIds2;
+        } else if (searchDto.get().getDate() != null & searchDto.get().getTime() == null) {
+            log.info("날짜 검색:{}", searchDto.get().getDate());
+            List<Space> spaces = spaceRepository.findAll();
+            Set<Long> companyIds2 = new HashSet<>();
+            for (Space space : spaces) {
+                // 예약 가능한 시간 구하기
+                List<String> times = getTimes(space, searchDto);
+                if (times.size() > 0) {
+                    if (searchDto.get().getLocation() == null) { //날짜만 검색 시 모두 add
+                        companyIds2.add(space.getCompanyId());
+                    } else if (companyIds.contains(space.getCompanyId())) { //지역검색 시, 지역 내 날짜 검색
+                        companyIds2.add(space.getCompanyId());
+                    }
+                }
+            }
+            companyIds = companyIds2;
+        }
+        log.info("companyIds:{}", companyIds);
         Pageable pageable = PageRequest.of(page - 1, 9);
-        List<Long> companyIdList = spaceRepository.findAllByOfficeOrderByCompanyIdDesc(pageable);
-
-        log.info("companyIdList:{}", companyIdList);
-        List<Company> companyList = companyRepository.findAllByCompanyId(companyIdList);
-        List<MainResponseDto> dtos = getCompanyInfo(companyList, memberId, "officeCompany");
-        map.put("totalSize", dtos.size());
-        map.put("officeCompany", dtos);
-        return map;
+        return companyRepository.findAllByCompanyIdOrderByCreatedTimeDesc(pageable, companyIds);
     }
-
-    // 전체 데스크 조회
-    public Map<String, Object> getTotalDesk(Optional<SearchRequestDto> searchDto, int page, Long memberId) {
-        log.info("searchDto:{}", searchDto);
-        log.info("memberId:{}", memberId);
-
-        Map<String, Object> map = new HashMap<>();
-        Pageable pageable = PageRequest.of(page - 1, 9);
-        List<Long> companyIdList = spaceRepository.findAllByDeskOrderByCompanyIdDesc(pageable);
-
-        log.info("companyIdList:{}", companyIdList);
-        List<Company> companyList = companyRepository.findAllByCompanyId(companyIdList);
-        List<MainResponseDto> dtos = getCompanyInfo(companyList, memberId, "deskCompany");
-        map.put("totalSize", dtos.size());
-        map.put("deskCompany", dtos);
-        return map;
-    }
-
-    // 전체 회의실 조회
-    public Map<String, Object> getTotalMeetingRoom(Optional<SearchRequestDto> searchDto, int page, Long memberId) {
-        log.info("searchDto:{}", searchDto);
-        log.info("memberId:{}", memberId);
-
-        Map<String, Object> map = new HashMap<>();
-        Pageable pageable = PageRequest.of(page - 1, 9);
-        List<Long> companyIdList = spaceRepository.findAllByMeetingRoomOrderByCompanyIdDesc(pageable);
-
-        log.info("companyIdList:{}", companyIdList);
-        List<Company> companyList = companyRepository.findAllByCompanyId(companyIdList);
-        List<MainResponseDto> dtos = getCompanyInfo(companyList, memberId, "meetingRoomCompany");
-        map.put("totalSize", dtos.size());
-        map.put("meetingRoomCompany", dtos);
-        return map;
-    }
-
 
     // 업체 신청 목록 보기
     public List<CompanyJoinResponseDto> companySelectAll(Member member) {
@@ -329,8 +381,8 @@ public class CompanyService {
         List<CompanyJoinResponseDto> companyJoinResponseDtos = new ArrayList<>();
 
         List<Company> companies = companyRepository.findAll();
-        for (Company data: companies
-             ) {
+        for (Company data : companies
+        ) {
             CompanyJoinResponseDto responseDto = new CompanyJoinResponseDto();
             responseDto.setCompanyName(data.getCompanyName()); // 업체명
             responseDto.setInfo(data.getInfo()); // 업체 정보
