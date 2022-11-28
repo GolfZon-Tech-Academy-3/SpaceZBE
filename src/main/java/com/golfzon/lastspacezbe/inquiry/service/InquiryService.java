@@ -66,7 +66,7 @@ public class InquiryService {
                 () -> new IllegalArgumentException("해당하는 문의글이 없습니다.")
         );
 
-        inquiry.setAnswers(""); // 답변 초기화
+        inquiry.setAnswers(null); // 답변 초기화
         inquiryRepository.save(inquiry); // 변경사항 저장
     }
 
