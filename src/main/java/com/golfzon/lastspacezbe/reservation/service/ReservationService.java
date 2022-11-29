@@ -56,7 +56,7 @@ public class ReservationService {
 
         Reservation reservation = new Reservation(member.getMemberId(),
                 requestDto.getReservationName(), requestDto.getStartDate(), requestDto.getEndDate(),
-                "001", "002", requestDto.getPrice(), "000",
+                "001", "002", requestDto.getPrice(), requestDto.getPrepay(),
                 requestDto.getImpUid(), "prepay", "postPay", requestDto.getMileage(),
                 requestDto.getSpaceId(), space.getCompanyId());
 

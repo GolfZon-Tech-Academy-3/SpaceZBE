@@ -51,6 +51,12 @@ public class CompanyService {
     // 업체 등록 (신청)
     public void companyPost(CompanyRequestDto companyRequestDto, Member member) {
 
+        //예외처리
+        Company isCompany = companyRepository.findByMember(member);
+        if(isCompany != null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"해당 아이디로 업체를 이미 등록하였습니다.");
+        }
+        //업체 등록
         Company company = new Company(
                 member, companyRequestDto.getCompanyName(), companyRequestDto.getInfo(), companyRequestDto.getRules(),
                 companyRequestDto.getLocation(), companyRequestDto.getDetails(), companyRequestDto.getSummary(), "000"
