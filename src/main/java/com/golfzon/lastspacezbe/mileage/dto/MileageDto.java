@@ -20,15 +20,15 @@ public class MileageDto {
 	private String spaceName;
 	private int score;
 	private String status;
-	LocalDateTime mileageDate;
+	String mileageDate;
 
-	public MileageDto(Mileage mileage){
+	public MileageDto(Mileage mileage, String mileageDate){
 		this.mileageId = mileage.getMileageId();
 		this.spaceId = mileage.getSpaceId();
 		this.spaceName = mileage.getSpaceName();
 		this.score = mileage.getScore();
 		this.status = mileage.getStatus();
-		this.mileageDate = mileage.getMileageDate();
+		this.mileageDate = mileageDate;
 	}
 
 	@Override
