@@ -22,22 +22,22 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "reservation_id")
     Long reservationId; // 예약 번호
-    @Column(name = "start_date")
+    @Column(name = "start_date", nullable=false)
     String startDate; // 이용 시작 날짜
-    @Column(name = "end_date")
+    @Column(name = "end_date", nullable=false)
     String endDate; // 이용 끝 날짜
     String status; // 예약 상태
-    @Column(name = "pay_status")
+    @Column(name = "pay_status", nullable=false)
     String payStatus; // 결제 상태
     int price; // 이용 가격
     String prepay; // 결제종류 (선결제, 보증금 결제, 후결제)
-    @Column(name = "imp_uid")
+    @Column(name = "imp_uid", nullable=false)
     String impUid;
-    @Column(name = "prepay_uid")
+    @Column(name = "prepay_uid", nullable=false)
     String prepayUid;
-    @Column(name = "postpay_uid")
+    @Column(name = "postpay_uid", nullable=false)
     String postpayUid;
-    @Column(name = "reservation_name")
+    @Column(name = "reservation_name", nullable=false)
     String reservationName;
 
     @CreationTimestamp
@@ -52,7 +52,7 @@ public class Reservation {
     @Column(name = "space_id")
     Long spaceId;
 
-    @Column(name = "mileage")
+    @Column(name = "mileage", nullable=false)
     int mileage;
 
 

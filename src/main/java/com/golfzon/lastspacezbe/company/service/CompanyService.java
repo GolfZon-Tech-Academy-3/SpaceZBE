@@ -274,6 +274,7 @@ public class CompanyService {
             dto.setLocation(company.getLocation().split(" ")[1]); //업체 위치
             dto.setLowPrice(lowPrice); //업체 최저가
             dto.setTypes(types); //업체 타입들
+            dto.setDetails(company.getDetails()); // 상세주소
             companyInfo.add(dto);
         }
         return companyInfo;
@@ -315,7 +316,7 @@ public class CompanyService {
         }
 
         // 2. 예약된 시간 구하기
-        List<String> reservedTimes = reservationService.getReservedTimes(space.getSpaceId());
+        List<String> reservedTimes = reservationService.getReservedTimes(space);
 
         // 3. 예약 가능한 시간 있는지 확인
         for (String reservedTime : reservedTimes) {

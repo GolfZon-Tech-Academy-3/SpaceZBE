@@ -52,7 +52,7 @@ public class ReservationService {
 
         // companyId 조회
         Space space = spaceRepository.findById(requestDto.getSpaceId())
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.BAD_REQUEST,"해당 spaceId는 존재하지 않습니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 spaceId는 존재하지 않습니다."));
 
         Reservation reservation = new Reservation(member.getMemberId(),
                 requestDto.getReservationName(), requestDto.getStartDate(), requestDto.getEndDate(),
@@ -72,7 +72,7 @@ public class ReservationService {
                 // payStatus: 결제 전 001, 결제 완료 002, 결제 취소 000, 보증금 결제완료 003, 보증금 결제취소 004
                 reservation.setPayStatus("002");
                 reservation.setPrice(requestDto.getPrice());
-                log.info("reservation:{}",reservation);
+                log.info("reservation:{}", reservation);
                 // 마일리지 사용 및 적립
                 if (flag == 1) {
                     // 마일리지 사용
@@ -87,16 +87,21 @@ public class ReservationService {
                 break;
             //보증금결제
             case "001":
+                int originalPrice = requestDto.getPrice();
                 flag = paymentService.depositOK(requestDto);
+                reservation.setPrice(originalPrice);
                 reservation.setPrepayUid(requestDto.getPrepayUid());
                 reservation.setPostpayUid(requestDto.getPostpayUid());
                 //보증금 결제완료 003
                 reservation.setPayStatus("003");
-                reservation.setPrice(requestDto.getPrice()-requestDto.getMileage());
-                // 마일리지 사용
-                if (requestDto.getMileage() > 0) {
-                    mileageService.updateMileage(requestDto);
-                    log.info("마일리지 사용 완료");
+                reservation.setPrice(requestDto.getPrice() - requestDto.getMileage());
+                // 저장
+                if (flag == 1) {
+                    // 마일리지 사용
+                    if (requestDto.getMileage() > 0) {
+                        mileageService.updateMileage(requestDto);
+                        log.info("마일리지 사용 완료");
+                    }
                 }
                 break;
             //후결제
@@ -106,27 +111,33 @@ public class ReservationService {
                 reservation.setPostpayUid(requestDto.getPostpayUid());
                 // 결제 전 001
                 reservation.setPayStatus("001");
-                reservation.setPrice(requestDto.getPrice()-requestDto.getMileage());
-                // 마일리지 사용
-                if (requestDto.getMileage() > 0) {
-                    mileageService.updateMileage(requestDto);
-                    log.info("마일리지 사용 완료");
+                reservation.setPrice(requestDto.getPrice() - requestDto.getMileage());
+                // 저장
+                if (flag == 1) {
+                    // 마일리지 사용
+                    if (requestDto.getMileage() > 0) {
+                        mileageService.updateMileage(requestDto);
+                        log.info("마일리지 사용 완료");
+                    }
                 }
                 break;
         }
         // 저장
-        if(flag==1){
+        if (flag == 1) {
+            // 예약 저장
             reservationRepository.save(reservation);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "결제가 제대로 이루어지지 않았습니다.");
         }
     }
 
     // 오피스 예약 취소하기
     public void officeCancel(Long reservationId) {
-        log.info("reservationId:{}",reservationId);
+        log.info("reservationId:{}", reservationId);
         Reservation reservation = reservationRepository.findAllByReservationId(reservationId);
         // 예약 상태 확인
-        if(!reservation.getStatus().equals("001")){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"취소가능한 상태가 아닙니다.");
+        if (!reservation.getStatus().equals("001")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "취소가능한 상태가 아닙니다.");
         } else {
             // 예약된 결제 취소하기
             String postpayUid = reservation.getPostpayUid();
@@ -154,8 +165,8 @@ public class ReservationService {
         log.info("Time check : {}초", duration.getSeconds());
 
         // 예약 상태 확인
-        if(!reservation.getStatus().equals("001")){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"취소가능한 상태가 아닙니다.");
+        if (!reservation.getStatus().equals("001")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "취소가능한 상태가 아닙니다.");
         } else {
 
             // 선결제인 경우, 시간에 관계없이 전체 환불
@@ -169,14 +180,14 @@ public class ReservationService {
                 // 사용한 마일리지 환급
                 mileageService.refundMileage(reservation);
 
-            // 후결제인 경우, 1시간이내만 보증금 전부 환불
+                // 후결제인 경우, 1시간이내만 보증금 전부 환불
             } else {
                 // 예약한지 1시간 이내
                 if (duration.getSeconds() <= 3600) {
                     log.info("{} : 예약한지 1시간이 지나지 않았습니다. (전체 환불 가능)", duration);
                     String prepayUid = reservation.getPrepayUid();
                     paymentService.refund(
-                            new RefundDto(prepayUid, "보증금결제 취소", (int) ((reservation.getPrice()+reservation.getMileage()) * 0.2), reservation.getMemberId()));
+                            new RefundDto(prepayUid, "보증금결제 취소", (int) ((reservation.getPrice() + reservation.getMileage()) * 0.2), reservation.getMemberId()));
                     String postpayUid = reservation.getPostpayUid();
                     paymentService.refund(new RefundDto(postpayUid, "후결제 예약취소", 0, reservation.getMemberId()));
                     reservation.setPayStatus("004"); //004 보증금 결제취소
@@ -229,38 +240,62 @@ public class ReservationService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 spaceId는 존재하지 않습니다."));
 
         // 2. 예약된 시간 찾기
-        List<String> reservedTimes = getReservedTimes(spaceId);
+        List<String> reservedTimes = getReservedTimes(space);
 
         // 3. 총 마일리지 찾기
         int totalMileage = mileageService.getTotalScore(member.getMemberId());
 
-        return new ReservationSpaceDto(space, reservedTimes, totalMileage);
+        return new ReservationSpaceDto(space, reservedTimes, totalMileage, paymentService.getMerchantUid());
     }
 
     // 예약된 시간 찾기
-    public List<String> getReservedTimes(Long spaceId){
+    public List<String> getReservedTimes(Space space) {
+        log.info("getReservedTimes");
         List<String> reservedTimes = new ArrayList<>();
-        List<Reservation> reservations = reservationRepository.findReservedTime(spaceId);
-        // 포맷변경 (년월일 시분)
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        List<Reservation> reservations = reservationRepository.findReservedTime(space.getSpaceId());
+        log.info("reservation.size:{}", reservations.size());
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
-        // 예약된 시간 1시간 간격으로 더하기
-        for (Reservation reservation : reservations) {
-            try {
-                Date startDate = formatter.parse(reservation.getStartDate());
-                startCal.setTime(startDate);
-                String time;
-                Date endDate = formatter.parse(reservation.getEndDate());
-                endCal.setTime(endDate);
-                // 이용시작 시간부터 이용종료 시간 전까지 시간 더하기
-                while (startCal.before(endCal)) {
-                    time = formatter.format(startCal.getTime());
-                    reservedTimes.add(time);
-                    startCal.add(Calendar.HOUR, +1);
+        // 포맷변경 (년월일 시분)
+        if (space.getType().equals("오피스")) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+            // 예약된 날짜 하루 간격으로 더하기
+            for (Reservation reservation : reservations) {
+                try {
+                    Date startDate = formatter.parse(reservation.getStartDate());
+                    startCal.setTime(startDate);
+                    String time;
+                    Date endDate = formatter.parse(reservation.getEndDate());
+                    endCal.setTime(endDate);
+                    // 이용시작 시간부터 이용종료 시간 전까지 시간 더하기
+                    while (startCal.before(endCal)) {
+                        time = formatter.format(startCal.getTime());
+                        reservedTimes.add(time.split(" ")[0]);
+                        startCal.add(Calendar.DATE, +1);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-            } catch (ParseException e) {
-                e.printStackTrace();
+            }
+        } else {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+            // 예약된 시간 1시간 간격으로 더하기
+            for (Reservation reservation : reservations) {
+                try {
+                    Date startDate = formatter.parse(reservation.getStartDate());
+                    startCal.setTime(startDate);
+                    String time;
+                    Date endDate = formatter.parse(reservation.getEndDate());
+                    endCal.setTime(endDate);
+                    // 이용시작 시간부터 이용종료 시간 전까지 시간 더하기
+                    while (startCal.before(endCal)) {
+                        time = formatter.format(startCal.getTime());
+                        reservedTimes.add(time);
+                        startCal.add(Calendar.HOUR, +1);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         }
         //오름차순으로 정렬

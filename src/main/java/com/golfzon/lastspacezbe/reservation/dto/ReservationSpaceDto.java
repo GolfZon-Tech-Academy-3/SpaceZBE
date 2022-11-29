@@ -26,8 +26,9 @@ public class ReservationSpaceDto {
     String breakClose; // 쉬는 마감시간
     List<String> reservedTime; // 예약된 시간들(오늘 기준)
     int mileage; //유저의 사용가능한 마일리지
+    String merchantUid; //상품 고유번호
 
-    public ReservationSpaceDto(Space space, List<String> reservedTimes, int mileage) {
+    public ReservationSpaceDto(Space space, List<String> reservedTimes, int mileage, String merchantUid) {
         this.spaceId = space.getSpaceId();
         this.spaceName = space.getSpaceName();
         this.type = space.getType();
@@ -38,5 +39,6 @@ public class ReservationSpaceDto {
         this.breakClose = space.getBreakClose();
         this.reservedTime = reservedTimes;
         this.mileage = mileage;
+        this.merchantUid = merchantUid;
     }
 }

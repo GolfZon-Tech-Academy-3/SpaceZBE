@@ -42,7 +42,7 @@ public interface CompanyRepository extends JpaRepository<Company,Long> {
 
     @Query
             (nativeQuery = true,
-                    value = "select company_id from company where location like ?1"
+                    value = "select company_id from company where location like :location or company_name like :location"
             )
     Set<Long> findAllByLocation(String location);
 
