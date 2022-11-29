@@ -3,6 +3,7 @@ package com.golfzon.lastspacezbe.space.service;
 import com.golfzon.lastspacezbe.company.entity.Company;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.member.repository.MemberRepository;
+import com.golfzon.lastspacezbe.space.dto.SpaceBackOfficeResponseDto;
 import com.golfzon.lastspacezbe.space.dto.SpaceRequestDto;
 import com.golfzon.lastspacezbe.space.entity.Space;
 import com.golfzon.lastspacezbe.space.entity.SpaceImage;
@@ -77,5 +78,28 @@ public class SpaceService {
         space.setBreakClose(requestDto.getBreakClose());
 
         spaceRepository.save(space);
+    }
+
+    // 백오피스 사무공간 조회
+    public List<SpaceBackOfficeResponseDto> spaceSelectAll(Long companyId) {
+
+        List<SpaceBackOfficeResponseDto> responseDtos = new ArrayList<>();
+
+        List<Space> spaces = spaceRepository.findAllByCompanyId(companyId);
+        for (Space data: spaces
+             ) {
+            SpaceBackOfficeResponseDto responseDto = new SpaceBackOfficeResponseDto();
+            responseDto.setSpaceName(data.getSpaceName());
+            responseDto.setSpaceId(data.getSpaceId());
+            responseDto.setType(data.getType());
+            responseDto.setOpenTime(data.getOpenTime());
+            responseDto.setCloseTime(data.getCloseTime());
+            responseDto.setBreakOpen(data.getBreakOpen());
+            responseDto.setBreakClose(data.getBreakClose());
+
+            responseDtos.add(responseDto);
+        }
+
+        return responseDtos;
     }
 }

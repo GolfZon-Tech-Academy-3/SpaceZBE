@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SpaceResponseDto {
 
-    Long spaceId;
+    Long spaceId; // 공간번호
     String spaceName; // 사무공간 이름
     String facilities; // 편의시설
     String type; // 공간형태
