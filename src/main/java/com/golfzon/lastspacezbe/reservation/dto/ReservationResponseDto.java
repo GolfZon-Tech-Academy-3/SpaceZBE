@@ -22,6 +22,10 @@ public class ReservationResponseDto {
     String payStatus; // 결제 상태
     String status; // 예약상태
     String reserveTime; // 예약했을 때 시간
+    String imageName; // 공간이미지
+    String location; // 장소 주소
+    String details; // 상세주소
+
     ReviewDto review; // 작성한 리뷰, 없을시 null
 
     Long spaceId; // 공간번호
