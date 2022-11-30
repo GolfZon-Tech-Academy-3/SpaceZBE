@@ -17,6 +17,8 @@ public class ReservationResponseDto {
     String startDate; // 이용 시간 날짜
     String endDate; // 이용 마감 날짜
     int price; // 가격
+    String type; // 공간타입
+    String spaceName; // 공간이름
     String payStatus; // 결제 상태
     String status; // 예약상태
     String reserveTime; // 예약했을 때 시간
