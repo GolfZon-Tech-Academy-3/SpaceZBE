@@ -102,4 +102,9 @@ public class SpaceService {
 
         return responseDtos;
     }
+
+    // 사무공간 삭제
+    public void spaceDelete(Long spaceId) {
+        spaceRepository.deleteById(spaceId);
+    }
 }

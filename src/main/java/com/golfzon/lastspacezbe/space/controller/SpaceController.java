@@ -57,4 +57,16 @@ public class SpaceController {
                 .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .body("result : 사무공간 수정완료");
     }
+
+    //사무공간 삭제
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> spaceUpdate(
+            @RequestParam Long spaceId) {
+
+        spaceService.spaceDelete(spaceId);
+
+        return ResponseEntity.ok()
+                .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
+                .body("result : 사무공간 삭제완료");
+    }
 }
