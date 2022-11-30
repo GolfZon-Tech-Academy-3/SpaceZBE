@@ -96,6 +96,7 @@ public class SpaceService {
             responseDto.setCloseTime(data.getCloseTime());
             responseDto.setBreakOpen(data.getBreakOpen());
             responseDto.setBreakClose(data.getBreakClose());
+            responseDto.setFacilities(data.getFacilities());
 
             responseDtos.add(responseDto);
         }
