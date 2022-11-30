@@ -396,6 +396,7 @@ public class CompanyService {
         for (Company data : companies
         ) {
             CompanyJoinResponseDto responseDto = new CompanyJoinResponseDto();
+            responseDto.setCompanyId(data.getCompanyId());
             responseDto.setCompanyName(data.getCompanyName()); // 업체명
             responseDto.setInfo(data.getInfo()); // 업체 정보
             responseDto.setLocation(data.getLocation()); // 업체 위치

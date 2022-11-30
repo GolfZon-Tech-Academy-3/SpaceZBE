@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CompanyJoinResponseDto {
 
+    Long companyId; // 업체번호
     String companyName; // 업체명
     String location; //업체 위치
     String info; // 업체 정보
