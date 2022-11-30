@@ -25,6 +25,12 @@ public class ReservationRequestDto {
 
     Long memberId;
 
+    public ReservationRequestDto(String prepay, String imp_uid, String postpayUid) {
+        this.prepay = prepay;
+        this.impUid = imp_uid;
+        this.postpayUid = postpayUid;
+    }
+
     @Override
     public String toString() {
         return "ReservationRequestDto{" +

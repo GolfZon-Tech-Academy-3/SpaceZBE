@@ -144,7 +144,7 @@ public class CompanyController {
     //4. 날짜+시간을 검색 시, isExsist 이면 add
     // 메인페이지
     @ApiOperation(value = "업체정보 전체조회", notes = "업체 전체보기 조회기능입니다.")
-    @GetMapping(value = "/total")
+    @PostMapping(value = "/total")
     public ResponseEntity<Map<String, Object>> totalCompany(@RequestBody Optional<SearchRequestDto> searchDto, @RequestParam(name = "page") int page) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("principal:{}",principal);
@@ -157,7 +157,7 @@ public class CompanyController {
     }
 
     @ApiOperation(value = "업체정보 오피스 조회", notes = "오피스를 등록한 업체 전체보기 조회기능입니다.")
-    @GetMapping(value = "/office")
+    @PostMapping(value = "/office")
     public ResponseEntity<Map<String, Object>> totalOffice(@RequestBody Optional<SearchRequestDto> searchDto, @RequestParam(name = "page") int page) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("principal:{}",principal);
@@ -171,7 +171,7 @@ public class CompanyController {
 
 
     @ApiOperation(value = "업체정보 데스크 조회", notes = "데스크를 등록한 업체 전체보기 조회기능입니다.")
-    @GetMapping(value = "/desk")
+    @PostMapping(value = "/desk")
     public ResponseEntity<Map<String, Object>> totalDesk(@RequestBody Optional<SearchRequestDto> searchDto, @RequestParam(name = "page") int page) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("principal:{}",principal);
@@ -184,7 +184,7 @@ public class CompanyController {
     }
 
     @ApiOperation(value = "업체정보 회의실 조회", notes = "회의실를 등록한 업체 전체보기 조회기능입니다.")
-    @GetMapping(value = "/meeting-room")
+    @PostMapping(value = "/meeting-room")
     public ResponseEntity<Map<String, Object>> totalMeetingRoom(@RequestBody Optional<SearchRequestDto> searchDto, @RequestParam(name = "page") int page) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("principal:{}",principal);

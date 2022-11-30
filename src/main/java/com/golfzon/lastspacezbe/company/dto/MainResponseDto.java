@@ -19,6 +19,7 @@ public class MainResponseDto {
     Long companyId; // 업체 번호
     String companyName; // 업체명
     String location; //업체 위치
+    String details; //상세주소
     Set<String> types; // 등록된 type들
     Boolean companyLike; // 관심등록 여부(true, false)
     int lowPrice; // 최저가격
@@ -29,7 +30,7 @@ public class MainResponseDto {
    public MainResponseDto(Company company, List<String> spaceImages, List<Space> spaces, Boolean companyLike) {
         this.companyId = company.getCompanyId();
         this.companyName = company.getCompanyName();
-        this.location = company.getLocation();
+        this.details = company.getDetails();
         this.companyLike = companyLike;
     }
 }

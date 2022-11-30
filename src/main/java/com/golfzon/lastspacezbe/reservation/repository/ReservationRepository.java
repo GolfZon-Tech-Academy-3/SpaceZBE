@@ -24,6 +24,8 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
     // 나의 예약 현황(마이페이지)
     List<Reservation> findAllByMemberId(Long memberId);
 
+    Reservation findByImpUid(String imp_uid);
+
 //    @Query(value = "SELECT r (TO_DATE(TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') - TO_DATE(r.reserveTime,'YYYY-MM-DD HH24:MI'))*24 from Reservation r where r.reservationId=?1")
 //    float findByOneTime(Long reservationId);
 //    List<TroubleComment> findAllByNickname(String nickname);

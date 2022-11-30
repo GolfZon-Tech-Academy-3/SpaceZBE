@@ -3,8 +3,12 @@ package com.golfzon.lastspacezbe.payment.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.payment.dto.RefundDto;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
+import com.golfzon.lastspacezbe.reservation.entity.Reservation;
+import com.golfzon.lastspacezbe.reservation.repository.ReservationRepository;
+import com.golfzon.lastspacezbe.reservation.service.ReservationService;
 import com.golfzon.lastspacezbe.space.entity.Space;
 import com.golfzon.lastspacezbe.space.repository.SpaceRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +33,7 @@ import java.util.*;
 public class PaymentService {
 
     private final SpaceRepository spaceRepository;
+    private final ReservationRepository reservationRepository;
 
     @Value("${import.imp_key}")
     private String imp_key;
@@ -71,7 +76,7 @@ public class PaymentService {
     }
 
     // imp_uid로 아임포트 서버에서 결제 및 결제 정보 조회
-    public int getPaymentInfo(ReservationRequestDto vo) {
+    public String getPaymentInfo(ReservationRequestDto vo) {
         String token = getAccessToken();
 
         RestTemplate rt = new RestTemplate();
@@ -97,9 +102,9 @@ public class PaymentService {
             throw new NullPointerException("jsonNode가 null입니다.");
         }
         log.info("price:{}", jsonNode.get("response").get("amount").asText());
-        return Integer.parseInt(jsonNode.get("response").get("amount").asText().split("\\.")[0]);
-
-
+        if(vo.getPrepay().equals("003")) {
+            return jsonNode.get("response").get("status").asText();
+        } else return jsonNode.get("response").get("amount").asText().split("\\.")[0];
     }
 
     // 보증금 결제하기
@@ -107,7 +112,7 @@ public class PaymentService {
         int flag = 0;
 
         // 계산되어야 할 값과 실제 계산된 값이 맞는지 확인.
-        int price = getPaymentInfo(vo);
+        int price = Integer.parseInt( getPaymentInfo(vo));
         log.info("실제 계산된 돈: {}", price);
         Optional<Space> vo2 = spaceRepository.findById(vo.getSpaceId());
         if (vo2.isPresent()) {
@@ -116,7 +121,7 @@ public class PaymentService {
             log.info("price2:{}",price2);
             log.info("계산되어야할 depositPrice: {}", depositPrice);
             if (price == depositPrice) {
-                vo.setPrice(price2 - depositPrice);
+                vo.setPrice(price2 - depositPrice - vo.getMileage());
                 log.info("예약될 가격:{}",vo.getPrice());
                 reserve(vo);
                 flag = 1;
@@ -130,7 +135,7 @@ public class PaymentService {
         int flag = 1;
 
         // 실제 결제된 가격 확인(인증토큰 발급)
-        int price = getPaymentInfo(vo);
+        int price = Integer.parseInt(getPaymentInfo(vo));
         log.info("실제 계산된 돈: {}", price);
         // 계산되어야할 가격 확인
         Optional<Space> vo2 = spaceRepository.findById(vo.getSpaceId());
@@ -162,7 +167,7 @@ public class PaymentService {
         headers.add("Authorization", token);
         // HTTP Body 생성
         Map<String, Object> map = new HashMap<>();
-        map.put("amount", vo.getPrice() - vo.getMileage());
+        map.put("amount", vo.getPrice());
         map.put("schedule_at", getUnixTime(vo.getEndDate()));
         map.put("merchant_uid", merchant_uid);
         JSONArray jsonArray = new JSONArray();
@@ -260,7 +265,7 @@ public class PaymentService {
     public long getUnixTime(String endDate) {
         long unixTime = 0;
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd hh:mm");
         try {
             Date date = formatter.parse(endDate);
             Calendar c = Calendar.getInstance();
@@ -278,7 +283,7 @@ public class PaymentService {
     // 예약된 총 시간 계산
     public int getReserveTime(String startDate, String endDate) {
         int time = 0;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd hh:mm");
         try {
             Date date1 = formatter.parse(startDate);
             Date date2 = formatter.parse(endDate);
@@ -308,4 +313,17 @@ public class PaymentService {
         return String.valueOf(random_alphabet) + System.currentTimeMillis();
     }
 
+    public String changeStatus(HashMap<String, Object> map) {
+        log.info("map:{}",map);
+        String status = getPaymentInfo(new ReservationRequestDto("003", (String) map.get("imp_uid"), (String) map.get("merchant_uid")));
+        log.info("status:{}",status);
+        if(status.equals("paid")){
+            Reservation reservation = reservationRepository.findByImpUid((String) map.get("imp_uid"));
+            reservation.setPayStatus("002");
+            reservationRepository.save(reservation);
+            return "result : 예약결제 완료";
+        } else{
+            return "result : 예약결제 실패";
+        }
+    }
 }

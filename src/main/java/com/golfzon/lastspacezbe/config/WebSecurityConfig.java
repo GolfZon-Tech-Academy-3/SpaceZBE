@@ -147,7 +147,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // 예약 관리 API 허용
 //        skipPathList.add("GET,/reservation/**");
-//        skipPathList.add("POST,/reservation/**");
+        skipPathList.add("POST,/payment/**");
 //        skipPathList.add("PUT,/reservation/**");
 //        skipPathList.add("DELETE,/reservation/**");
 
