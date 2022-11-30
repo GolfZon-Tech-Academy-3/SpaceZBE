@@ -96,6 +96,8 @@ public class SpaceService {
             responseDto.setCloseTime(data.getCloseTime());
             responseDto.setBreakOpen(data.getBreakOpen());
             responseDto.setBreakClose(data.getBreakClose());
+            responseDto.setFacilities(data.getFacilities()); // 편의시설
+            responseDto.setPrice(data.getPrice()); //가격
 
             responseDtos.add(responseDto);
         }

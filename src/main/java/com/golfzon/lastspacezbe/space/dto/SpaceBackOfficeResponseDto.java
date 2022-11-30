@@ -18,5 +18,7 @@ public class SpaceBackOfficeResponseDto {
     String closeTime; // 마감시간
     String breakOpen; // 청소 시작 시간
     String breakClose; // 청소 마감 시간
+    String facilities; // 편의시설
+    int price; // 가격
 
 }
