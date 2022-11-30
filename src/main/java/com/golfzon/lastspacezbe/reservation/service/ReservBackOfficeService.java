@@ -5,6 +5,8 @@ import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationResponseDto;
 import com.golfzon.lastspacezbe.reservation.entity.Reservation;
 import com.golfzon.lastspacezbe.reservation.repository.ReservationRepository;
+import com.golfzon.lastspacezbe.space.entity.Space;
+import com.golfzon.lastspacezbe.space.repository.SpaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.java_sdk.api.Message;
@@ -25,6 +27,7 @@ import java.util.List;
 public class ReservBackOfficeService {
 
     private final ReservationRepository reservationRepository;
+    private final SpaceRepository spaceRepository;
 
     // 금일 업체 예약 수
     public int todayReserve(Long companyId) {
@@ -84,7 +87,7 @@ public class ReservBackOfficeService {
         return cancelCount;
     }
 
-    // 오늘 예약 전체 조회
+    // 예약 전체 조회
     public List<ReservationResponseDto> totalReserveSelectAll(Long companyId) {
 
         List<Reservation> reservations =  reservationRepository.findAllByCompanyId(companyId);
@@ -92,13 +95,29 @@ public class ReservBackOfficeService {
 
         for (Reservation data :reservations
              ) {
+            String type = ""; // 공간 타입
+            String spaceName = ""; // 공간 이름
+
+            // space 공간 타입과 공간 이름 찾기
+            List<Space> spaces = spaceRepository.findAllByCompanyId(companyId);
+            for (Space space: spaces
+                 ) {
+                if(space.getSpaceId().equals(data.getSpaceId())){
+                    type = space.getType();
+                    spaceName = space.getSpaceName();
+                }
+            }
+
             ReservationResponseDto responseDto = new ReservationResponseDto();
             responseDto.setReservationId(data.getReservationId());
             responseDto.setReservationName(data.getReservationName());
             responseDto.setStartDate(data.getStartDate());
             responseDto.setEndDate(data.getEndDate());
             responseDto.setPrice(data.getPrice());
-            responseDto.setPayStatus(data.getPayStatus()); // 결제 상태
+            responseDto.setStatus(data.getStatus()); // 예약 상태
+            responseDto.setType(type); // 공간타입
+            responseDto.setSpaceName(spaceName);
+
             reservationResponseDtos.add(responseDto);
         }
 
