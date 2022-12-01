@@ -1,5 +1,6 @@
 package com.golfzon.lastspacezbe.member.service;
 
+import com.golfzon.lastspacezbe.company.entity.Company;
 import com.golfzon.lastspacezbe.member.dto.SignupRequestDto;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.member.repository.MemberRepository;
@@ -15,6 +16,8 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -122,5 +125,42 @@ public class MemberService {
         member.setMemberName(signupRequestDto.getMemberName());
         // Update member info.
         memberRepository.save(member);
+    }
+
+    //마스터 목록 조회
+    public List<SignupRequestDto> masterList() {
+        List<Member> members = memberRepository.findAllByAuthority("master");
+        List<SignupRequestDto> masters = new ArrayList<>();
+        for (Member member:members) {
+            masters.add(new SignupRequestDto(member));
+        }
+        return masters;
+    }
+
+    //마스터로 승급될 회원 조회
+    public SignupRequestDto memberList(String searchWord) {
+        log.info("searchWord:{}",searchWord);
+        Member member = memberRepository.findMemberBySearchWord(searchWord);
+        log.info("member:{}",member);
+        return new SignupRequestDto(member);
+    }
+
+    public void approve(Long memberId) {
+
+        Member member = memberRepository.findByMemberId(memberId);
+
+        member.setAuthority("master"); // 권한 변경
+
+        memberRepository.save(member); // 저장.
+
+    }
+
+    // 업체관리자 승인 거부
+    public void disapprove(Long memberId) {
+        Member member = memberRepository.findByMemberId(memberId);
+
+        member.setAuthority("member"); // 권한 변경
+
+        memberRepository.save(member); // 저장.
     }
 }

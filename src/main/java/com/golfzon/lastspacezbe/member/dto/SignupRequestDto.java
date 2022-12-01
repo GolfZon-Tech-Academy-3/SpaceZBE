@@ -1,5 +1,6 @@
 package com.golfzon.lastspacezbe.member.dto;
 
+import com.golfzon.lastspacezbe.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,14 @@ public class SignupRequestDto {
     private String authority;
     private String imgName;
     private MultipartFile multipartFile;
+
+    public SignupRequestDto(Member member) {
+        this.memberId = member.getMemberId();
+        this.email = member.getEmail();
+        this.memberName = member.getMemberName();
+        this.authority = member.getAuthority();
+        this.imgName = member.getImgName();
+    }
 
 
     @Override

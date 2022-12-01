@@ -19,6 +19,7 @@ public class MainResponseDto {
     Long companyId; // 업체 번호
     String companyName; // 업체명
     String location; //업체 위치
+    String address; //업체 주소
     String details; //상세주소
     Set<String> types; // 등록된 type들
     Boolean companyLike; // 관심등록 여부(true, false)
