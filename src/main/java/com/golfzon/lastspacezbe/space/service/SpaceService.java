@@ -1,6 +1,7 @@
 package com.golfzon.lastspacezbe.space.service;
 
 import com.golfzon.lastspacezbe.company.entity.Company;
+import com.golfzon.lastspacezbe.company.repository.CompanyRepository;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.member.repository.MemberRepository;
 import com.golfzon.lastspacezbe.space.dto.SpaceBackOfficeResponseDto;
@@ -26,7 +27,7 @@ import java.util.Optional;
 public class SpaceService {
 
     private final SpaceRepository spaceRepository;
-    private final MemberRepository memberRepository;
+    private final CompanyRepository companyRepository;
     private final SpaceImageRepository spaceImageRepository;
     private final SpaceS3Service spaceS3Service;
 

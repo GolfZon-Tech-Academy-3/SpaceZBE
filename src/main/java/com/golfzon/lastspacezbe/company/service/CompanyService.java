@@ -53,8 +53,8 @@ public class CompanyService {
 
         //예외처리
         Company isCompany = companyRepository.findByMember(member);
-        if(isCompany != null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"해당 아이디로 업체를 이미 등록하였습니다.");
+        if (isCompany != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 아이디로 업체를 이미 등록하였습니다.");
         }
         //업체 등록
         Company company = new Company(
@@ -435,4 +435,15 @@ public class CompanyService {
         companyRepository.save(company); // 저장.
     }
 
+    public List<MainResponseDto> companyList(Long memberId) {
+        Set<Long> companyIdList = spaceRepository.findAllCompanyIds();
+        log.info("companyIdList:{}", companyIdList);
+
+        List<Company> companyList = companyRepository.findAllByCompanyIds(companyIdList);
+        log.info("companyList:{}", companyList.size());
+
+        List<MainResponseDto> dtos = getCompanyInfo(companyList, memberId, "totalCompany");
+        log.info("dtos.size():{}", dtos.size());
+        return dtos;
+    }
 }
