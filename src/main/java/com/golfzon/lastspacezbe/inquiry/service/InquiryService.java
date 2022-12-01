@@ -81,6 +81,7 @@ public class InquiryService {
             Optional<Member> member = memberRepository.findById(data.getMember().getMemberId());
 
             InquiryTotalResponseDto totalResponseDto = new InquiryTotalResponseDto();
+            totalResponseDto.setInquiryId(data.getInquiryId()); // 문의 번호
             totalResponseDto.setInquiries(data.getInquiries()); // 문의내용
             totalResponseDto.setAnswers(data.getAnswers()); // 답변내용
             totalResponseDto.setInquiryTime(data.getInquiriesTime().toString().substring(0,10)+" "

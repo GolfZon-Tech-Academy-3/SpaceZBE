@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class InquiryTotalResponseDto {
 
+    Long inquiryId; // 문의 번호
     String memberName; // 회원 닉네임
     String imagePath; // 이미지
     String inquiries; // 문의 내용
