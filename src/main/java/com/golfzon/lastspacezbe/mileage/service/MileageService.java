@@ -146,7 +146,7 @@ public class MileageService {
         List<MileageDto> dtos = new ArrayList<>();
         String mileageDate;
         for (Mileage mileage : mileages) {
-            mileageDate = mileage.getMileageDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
+            mileageDate = mileage.getMileageDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
             if (type.equals("전체")) {
                 MileageDto dto = new MileageDto(mileage, mileageDate);
                 dtos.add(dto);

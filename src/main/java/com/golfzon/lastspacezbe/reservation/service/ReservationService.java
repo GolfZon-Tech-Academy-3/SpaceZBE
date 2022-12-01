@@ -258,7 +258,7 @@ public class ReservationService {
         Calendar endCal = Calendar.getInstance();
         // 포맷변경 (년월일 시분)
         if (space.getType().equals("오피스")) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             // 예약된 날짜 하루 간격으로 더하기
             for (Reservation reservation : reservations) {
                 try {
@@ -278,7 +278,7 @@ public class ReservationService {
                 }
             }
         } else {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             // 예약된 시간 1시간 간격으로 더하기
             for (Reservation reservation : reservations) {
                 try {

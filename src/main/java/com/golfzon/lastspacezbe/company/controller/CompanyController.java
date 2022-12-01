@@ -196,4 +196,17 @@ public class CompanyController {
                 .body(companyService.getTotalMeetingRoom(searchDto, page, member.getMemberId()));
     }
 
+
+
+    //공간이 등록된 업체 모두 조회
+    @GetMapping("/space/list")
+    public ResponseEntity<List<MainResponseDto>> companyList() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
+
+        return ResponseEntity.ok()
+                .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
+                .body(companyService.companyList(member.getMemberId()));
+    }
 }

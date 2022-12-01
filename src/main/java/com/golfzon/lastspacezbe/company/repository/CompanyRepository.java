@@ -58,4 +58,10 @@ public interface CompanyRepository extends JpaRepository<Company,Long> {
                     value = "select company_id from company"
             )
     Set<Long> findAllCompanyIds();
+
+    @Query
+            (nativeQuery = true,
+                    value = "select * from company where company_id in (:companyIds) order by company_id asc"
+            )
+    List<Company> findAllByCompanyIds(@Param("companyIds") Set<Long> companyIdList);
 }
