@@ -282,6 +282,7 @@ public class CompanyService {
             dto.setLowPrice(lowPrice); //업체 최저가
             dto.setTypes(types); //업체 타입들
             dto.setDetails(company.getDetails()); // 상세주소
+            dto.setAddress(company.getLocation()); // 업체 주소
             companyInfo.add(dto);
         }
         return companyInfo;

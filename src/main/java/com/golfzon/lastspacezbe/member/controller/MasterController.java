@@ -38,10 +38,33 @@ public class MasterController {
     //마스터 목록보기
     @ApiOperation(value = "마스터 목록조회", notes = "마스터로 등록된 회원 목록 조회 처리입니다.")
     @GetMapping("/member/list")
-    public ResponseEntity<List<SignupRequestDto>> memberList(@RequestParam(value = "searchWord") String searchWord) {
+    public ResponseEntity<SignupRequestDto> memberList(@RequestParam(value = "searchWord") String searchWord) {
 
         return ResponseEntity.ok()
                 .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .body(memberService.memberList(searchWord));
+    }
+
+
+    @ApiOperation(value = "마스터로 등록", notes = "마스터로 등록 기능입니다.")
+    @PutMapping(value = "/approve/{memberId}")
+    public ResponseEntity<String> approve(@PathVariable(name = "memberId") Long memberId) {
+
+        memberService.approve(memberId);
+
+        // 업체 신청 목록보기
+        return ResponseEntity.ok()
+                .body("result : 승인완료");
+    }
+
+    @ApiOperation(value = "멤버로 변경", notes = "마스터를 멤버로 변경하는 기능입니다.")
+    @PutMapping(value = "/disapprove/{memberId}")
+    public ResponseEntity<String> disapprove(@PathVariable(name = "memberId") Long memberId) {
+
+        memberService.disapprove(memberId);
+
+        // 업체 신청 목록보기
+        return ResponseEntity.ok()
+                .body("result : 승인완료");
     }
 }

@@ -1,5 +1,6 @@
 package com.golfzon.lastspacezbe.member.service;
 
+import com.golfzon.lastspacezbe.company.entity.Company;
 import com.golfzon.lastspacezbe.member.dto.SignupRequestDto;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.member.repository.MemberRepository;
@@ -137,14 +138,29 @@ public class MemberService {
     }
 
     //마스터로 승급될 회원 조회
-    public List<SignupRequestDto> memberList(String searchWord) {
+    public SignupRequestDto memberList(String searchWord) {
         log.info("searchWord:{}",searchWord);
-        List<Member> members = memberRepository.findMemberBySearchWord(searchWord);
-        log.info("members:{}",members.size());
-        List<SignupRequestDto> memberList = new ArrayList<>();
-        for (Member member:members) {
-            memberList.add(new SignupRequestDto(member));
-        }
-        return memberList;
+        Member member = memberRepository.findMemberBySearchWord(searchWord);
+        log.info("member:{}",member);
+        return new SignupRequestDto(member);
+    }
+
+    public void approve(Long memberId) {
+
+        Member member = memberRepository.findByMemberId(memberId);
+
+        member.setAuthority("master"); // 권한 변경
+
+        memberRepository.save(member); // 저장.
+
+    }
+
+    // 업체관리자 승인 거부
+    public void disapprove(Long memberId) {
+        Member member = memberRepository.findByMemberId(memberId);
+
+        member.setAuthority("member"); // 권한 변경
+
+        memberRepository.save(member); // 저장.
     }
 }
