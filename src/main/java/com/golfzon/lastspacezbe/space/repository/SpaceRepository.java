@@ -1,5 +1,6 @@
 package com.golfzon.lastspacezbe.space.repository;
 
+import com.golfzon.lastspacezbe.company.entity.Company;
 import com.golfzon.lastspacezbe.space.entity.Space;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,4 +49,11 @@ public interface SpaceRepository extends JpaRepository<Space,Long> {
                     nativeQuery = true)
     List<Long> findAllByMeetingRoomOrderByCompanyIdDesc();
 
+    // 최근 등록된 순으로 업체 아이디 가져오기
+    @Query
+            (nativeQuery = true,
+                    value = "select company_id from space order by space_id desc",
+                    countQuery = "select company_id from space order by space_id desc"
+            )
+    Set<Long> findAllCompanyIds();
 }

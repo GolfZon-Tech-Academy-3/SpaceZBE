@@ -27,10 +27,10 @@ public interface CompanyRepository extends JpaRepository<Company,Long> {
     // 최근 등록된 순으로 가져오기
     @Query
             (nativeQuery = true,
-                    value = "select * from company order by created_time desc",
-                    countQuery = "select * from company order by created_time desc"
+                    value = "select * from company where company_id in (:companyIdList) order by created_time desc",
+                    countQuery = "select * from company where company_id in (:companyIdList) order by created_time desc"
             )
-    Page<Company> findAllByOrderByCreatedTimeDesc(Pageable pageable);
+    Page<Company> findAllByOrderByCreatedTimeDesc(Pageable pageable, @Param("companyIdList") Set<Long> companyIdList);
 
     @Query
             (nativeQuery = true,
@@ -44,7 +44,7 @@ public interface CompanyRepository extends JpaRepository<Company,Long> {
             (nativeQuery = true,
                     value = "select company_id from company where location like :location or company_name like :location"
             )
-    Set<Long> findAllByLocation(String location);
+    Set<Long> findAllByLocation(@Param("location") String location);
 
     @Query
             (nativeQuery = true,

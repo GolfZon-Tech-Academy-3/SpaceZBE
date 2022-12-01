@@ -15,6 +15,8 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -122,5 +124,27 @@ public class MemberService {
         member.setMemberName(signupRequestDto.getMemberName());
         // Update member info.
         memberRepository.save(member);
+    }
+
+    //마스터 목록 조회
+    public List<SignupRequestDto> masterList() {
+        List<Member> members = memberRepository.findAllByAuthority("master");
+        List<SignupRequestDto> masters = new ArrayList<>();
+        for (Member member:members) {
+            masters.add(new SignupRequestDto(member));
+        }
+        return masters;
+    }
+
+    //마스터로 승급될 회원 조회
+    public List<SignupRequestDto> memberList(String searchWord) {
+        log.info("searchWord:{}",searchWord);
+        List<Member> members = memberRepository.findMemberBySearchWord(searchWord);
+        log.info("members:{}",members.size());
+        List<SignupRequestDto> memberList = new ArrayList<>();
+        for (Member member:members) {
+            memberList.add(new SignupRequestDto(member));
+        }
+        return memberList;
     }
 }
