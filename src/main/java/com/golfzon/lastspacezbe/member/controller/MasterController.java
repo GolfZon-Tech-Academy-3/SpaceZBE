@@ -38,7 +38,7 @@ public class MasterController {
     //멤버 목록보기
     @ApiOperation(value = "멤버 목록조회", notes = "멤버로 등록된 회원 목록 조회 처리입니다.")
     @GetMapping("/member/list")
-    public ResponseEntity<SignupRequestDto> memberList(@RequestParam(value = "searchWord") String searchWord) {
+    public ResponseEntity<List<SignupRequestDto>> memberList(@RequestParam(value = "searchWord") String searchWord) {
 
         return ResponseEntity.ok()
                 .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
