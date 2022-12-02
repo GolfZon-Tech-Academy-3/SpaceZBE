@@ -138,11 +138,15 @@ public class MemberService {
     }
 
     //마스터로 승급될 회원 조회
-    public SignupRequestDto memberList(String searchWord) {
+    public List<SignupRequestDto> memberList(String searchWord) {
         log.info("searchWord:{}",searchWord);
-        Member member = memberRepository.findMemberBySearchWord(searchWord);
-        log.info("member:{}",member);
-        return new SignupRequestDto(member);
+        List<Member> members = memberRepository.findMembers("%"+searchWord+"%");
+        log.info("member:{}",members.size());
+        List<SignupRequestDto> dtos = new ArrayList<>();
+        for (Member member:members) {
+            dtos.add(new SignupRequestDto(member));
+        }
+        return dtos;
     }
 
     public void approve(Long memberId) {
