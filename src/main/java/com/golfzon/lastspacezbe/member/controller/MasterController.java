@@ -35,8 +35,8 @@ public class MasterController {
                 .body(memberService.masterList());
     }
 
-    //마스터 목록보기
-    @ApiOperation(value = "마스터 목록조회", notes = "마스터로 등록된 회원 목록 조회 처리입니다.")
+    //멤버 목록보기
+    @ApiOperation(value = "멤버 목록조회", notes = "멤버로 등록된 회원 목록 조회 처리입니다.")
     @GetMapping("/member/list")
     public ResponseEntity<SignupRequestDto> memberList(@RequestParam(value = "searchWord") String searchWord) {
 

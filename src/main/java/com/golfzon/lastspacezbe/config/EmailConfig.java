@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 @Configuration
-@PropertySource("classpath:aaaapplication.properties")
+@PropertySource("classpath:application.properties")
 @Slf4j
 public class EmailConfig {
 
