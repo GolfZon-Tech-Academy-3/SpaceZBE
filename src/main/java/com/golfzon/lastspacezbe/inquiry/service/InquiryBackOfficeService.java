@@ -30,10 +30,7 @@ public class InquiryBackOfficeService {
         List<InquiryResponseDto> responseDtos = new ArrayList<>();
 
         // 업체의 사무공간 조회
-        List<Space> spaces = spaceRepository.findAllByCompanyId(companyId);
-        for (Space dataSpace : spaces
-        ) {
-            List<Inquiry> inquiries = inquiryRepository.findAllBySpaceId(dataSpace.getSpaceId());
+            List<Inquiry> inquiries = inquiryRepository.findAllByCompanyId(companyId);
             for (Inquiry dataInquiry: inquiries
                  ) {
 //                // 문의한 회원의 닉네임
@@ -46,15 +43,12 @@ public class InquiryBackOfficeService {
                 inquiryResponseDto.setAnswers(dataInquiry.getAnswers()); // 답변 내용
                 inquiryResponseDto.setInquiryTime(dataInquiry.getInquiriesTime().toString().substring(0,10)+" "+
                         dataInquiry.getInquiriesTime().toString().substring(11,16)); // 문의 날짜
-                inquiryResponseDto.setType(dataSpace.getType()); // 사무공간타입
-                inquiryResponseDto.setSpaceName(dataSpace.getSpaceName()); // 사무공간 이름
                 inquiryResponseDto.setMemberId(dataInquiry.getMember().getMemberId());
                 inquiryResponseDto.setMemberName(dataInquiry.getMember().getMemberName()); // 회원 닉네임
                 inquiryResponseDto.setIsAnswer(dataInquiry.getAnswers()!=null ? "true" : "false"); // 답변 유무
 
                 responseDtos.add(inquiryResponseDto);
             }
-        }
         return responseDtos;
     }
 }

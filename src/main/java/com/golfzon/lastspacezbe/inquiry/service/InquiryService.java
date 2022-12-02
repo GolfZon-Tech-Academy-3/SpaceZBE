@@ -27,8 +27,8 @@ public class InquiryService {
     private final MemberRepository memberRepository;
 
     // 문의 작성하기
-    public void inquiry(Long spaceId, InquiryRequestDto requestDto, Member member) {
-        Inquiry inquiry = new Inquiry(spaceId, member, requestDto.getInquiries());
+    public void inquiry(Long companyId, InquiryRequestDto requestDto, Member member) {
+        Inquiry inquiry = new Inquiry(companyId, member, requestDto.getInquiries());
 
         inquiryRepository.save(inquiry); // 문의내용 저장
     }
@@ -71,9 +71,9 @@ public class InquiryService {
     }
 
     // 문의 내역
-    public List<InquiryTotalResponseDto> totalInquiry(Long spaceId) {
+    public List<InquiryTotalResponseDto> totalInquiry(Long companyId) {
 
-        List<Inquiry> inquiries = inquiryRepository.findAllBySpaceId(spaceId);
+        List<Inquiry> inquiries = inquiryRepository.findAllByCompanyId(companyId);
         List<InquiryTotalResponseDto> responseDtos = new ArrayList<>();
 
         for (Inquiry data : inquiries

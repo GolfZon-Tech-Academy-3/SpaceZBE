@@ -25,8 +25,8 @@ public class InquiryController {
     private final InquiryService inquiryService;
 
     // 문의하기
-    @PostMapping(value = "/post/{spaceId}", produces = "text/plain;charset=UTF-8")
-    public ResponseEntity<String> inquiry(@PathVariable(name = "spaceId") Long spaceId,
+    @PostMapping(value = "/post/{companyId}", produces = "text/plain;charset=UTF-8")
+    public ResponseEntity<String> inquiry(@PathVariable(name = "companyId") Long companyId,
                                           @RequestBody InquiryRequestDto requestDto) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -34,7 +34,7 @@ public class InquiryController {
         Member member = ((UserDetailsImpl) principal).getMember();
         log.info("member?:{}", member);
 
-        inquiryService.inquiry(spaceId, requestDto, member);
+        inquiryService.inquiry(companyId, requestDto, member);
 
         return ResponseEntity.ok()
                 .body("result : 문의내용 작성완료");
@@ -86,15 +86,15 @@ public class InquiryController {
     }
 
     // 문의 내역
-    @GetMapping("/total/{spaceId}")
-    public ResponseEntity<Map<String,Object>> totalInquiry(@PathVariable(name = "spaceId") Long spaceId) {
+    @GetMapping("/total/{companyId}")
+    public ResponseEntity<Map<String,Object>> totalInquiry(@PathVariable(name = "companyId") Long companyId) {
 //        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        log.info("principal:{}",principal);
 //        Member member = ((UserDetailsImpl)principal).getMember();
 //        log.info("member?:{}",member);
         Map<String,Object> map = new HashMap<>();
 
-        List<InquiryTotalResponseDto> totalResponseDtoList = inquiryService.totalInquiry(spaceId);
+        List<InquiryTotalResponseDto> totalResponseDtoList = inquiryService.totalInquiry(companyId);
         map.put("list",totalResponseDtoList);
         map.put("count",totalResponseDtoList.size());
 

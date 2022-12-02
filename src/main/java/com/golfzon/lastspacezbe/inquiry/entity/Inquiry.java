@@ -26,8 +26,8 @@ public class Inquiry {
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member; // 회원 번호
-
-    private Long spaceId; // 사무공간 번호
+    @Column(name = "company_id")
+    private Long companyId; // 사무공간 번호
 
     String inquiries; // 문의 내용
     String answers; // 문의 답변
@@ -35,8 +35,8 @@ public class Inquiry {
     @CreationTimestamp
     LocalDateTime inquiriesTime; // 문의한 날짜
 
-    public Inquiry(Long spaceId,Member member, String inquiries) {
-        this.spaceId = spaceId;
+    public Inquiry(Long companyId,Member member, String inquiries) {
+        this.companyId = companyId;
         this.member = member;
         this.inquiries = inquiries;
     }
