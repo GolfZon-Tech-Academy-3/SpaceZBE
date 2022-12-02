@@ -35,10 +35,7 @@ public class InquiryMypageService {
              ) {
             InquiryResponseDto responseDto = new InquiryResponseDto();
 
-            Optional<Space> space = spaceRepository.findById(data.getSpaceId());
             responseDto.setInquiryId(data.getInquiryId());// 문의 번호
-            responseDto.setSpaceName(space.get().getSpaceName()); // 사무공간 이름
-            responseDto.setType(space.get().getType()); // 공간타입
             responseDto.setInquiries(data.getInquiries()); // 문의내용
             responseDto.setInquiryTime(data.getInquiriesTime().toString().substring(0,10)+" "+
                                       data.getInquiriesTime().toString().substring(11,16)); // 문의 날짜

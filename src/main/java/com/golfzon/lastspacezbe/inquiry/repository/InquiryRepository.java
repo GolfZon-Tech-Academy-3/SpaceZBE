@@ -9,7 +9,7 @@ import java.util.List;
 public interface InquiryRepository extends JpaRepository<Inquiry,Long> {
 
     // 사무공간의 문의 내역
-    List<Inquiry> findAllBySpaceId(Long spaceId);
+    List<Inquiry> findAllByCompanyId(Long companyId);
     // 마이페이지
     List<Inquiry> findAllByMember(Member member);
 }
