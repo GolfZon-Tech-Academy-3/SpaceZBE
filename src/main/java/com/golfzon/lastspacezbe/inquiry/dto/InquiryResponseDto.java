@@ -16,7 +16,7 @@ public class InquiryResponseDto {
     String answers; // 답변 내용
     String inquiryTime; //문의 날짜
     String type; // 공간타입
-    String spaceName; // 사무공간 이호
+    String companyName; // 업체 이름
 
     Long memberId; // 회원번호
     String memberName; // 회원 닉네임

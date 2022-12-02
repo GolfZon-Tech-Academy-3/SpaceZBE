@@ -1,5 +1,7 @@
 package com.golfzon.lastspacezbe.inquiry.service;
 
+import com.golfzon.lastspacezbe.company.entity.Company;
+import com.golfzon.lastspacezbe.company.repository.CompanyRepository;
 import com.golfzon.lastspacezbe.inquiry.dto.InquiryResponseDto;
 import com.golfzon.lastspacezbe.inquiry.entity.Inquiry;
 import com.golfzon.lastspacezbe.inquiry.repository.InquiryRepository;
@@ -23,6 +25,7 @@ public class InquiryMypageService {
     private final InquiryRepository inquiryRepository;
     private final SpaceRepository spaceRepository;
     private final MemberRepository memberRepository;
+    private final CompanyRepository companyRepository;
 
     // 마이페이지 문의 내역
     public List<InquiryResponseDto> inquirySelectAll(Member member) {
@@ -33,8 +36,9 @@ public class InquiryMypageService {
 
         for (Inquiry data: inquiries
              ) {
+            Company company = companyRepository.findByCompanyId(data.getCompanyId());
             InquiryResponseDto responseDto = new InquiryResponseDto();
-
+            responseDto.setCompanyName(company.getCompanyName()); // 업체이름
             responseDto.setInquiryId(data.getInquiryId());// 문의 번호
             responseDto.setInquiries(data.getInquiries()); // 문의내용
             responseDto.setInquiryTime(data.getInquiriesTime().toString().substring(0,10)+" "+
