@@ -24,7 +24,7 @@ public class FormLoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         UsernamePasswordAuthenticationToken authRequest;
-        System.out.println("getServletPath:"+request.getServletPath());
+        System.out.println("요청 urL:"+ request.getRequestURL());
         System.out.println("요청 url:"+request.getRequestURI());
         System.out.println("get?post?"+request.getMethod());
         try {
