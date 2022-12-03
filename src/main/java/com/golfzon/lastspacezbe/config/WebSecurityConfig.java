@@ -129,6 +129,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthFilter jwtFilter() throws Exception {
         List<String> skipPathList = new ArrayList<>();
 
+        skipPathList.add("GET,/**");
+        skipPathList.add("POST,/**");
+
         // Static 정보 접근 허용
         skipPathList.add("GET,/images/**");
         skipPathList.add("GET,/css/**");
@@ -187,12 +190,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        //configuration.addAllowedOrigin("http://localhost:3000"); // local 테스트 시
-        //configuration.addAllowedOrigin("54.180.201.231"); // local 테스트 시
-        //configuration.addAllowedOrigin("http://localhost:8080"); // local 테스트 시
-        //configuration.addAllowedOrigin("http://localhost:8081"); // local 테스트 시
+        configuration.addAllowedOrigin("http://localhost:3000"); // local 테스트 시
+        configuration.addAllowedOrigin("https://acme-v02.api.letsencrypt.org:443"); // local 테스트 시
+        configuration.addAllowedOrigin("https://acme-v02.api.letsencrypt.org"); // local 테스트 시
+        configuration.addAllowedOrigin("http://localhost:8080"); // local 테스트 시
+        configuration.addAllowedOrigin("http://localhost:8081"); // local 테스트 시
         configuration.addAllowedOrigin("*"); // local 테스트 시
-        //configuration.addAllowedOrigin("https://main.d3ezz3muzp1rz5.amplifyapp.com"); // 배포 시
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
