@@ -45,25 +45,22 @@ public class MasterController {
                 .body(memberService.memberList(searchWord));
     }
 
-
+    //멤버에서 마스터로 등록
     @ApiOperation(value = "마스터로 등록", notes = "마스터로 등록 기능입니다.")
     @PutMapping(value = "/approve/{memberId}")
     public ResponseEntity<String> approve(@PathVariable(name = "memberId") Long memberId) {
 
         memberService.approve(memberId);
-
-        // 업체 신청 목록보기
         return ResponseEntity.ok()
                 .body("result : 승인완료");
     }
 
+    //마스터에서 멤버로 변경
     @ApiOperation(value = "멤버로 변경", notes = "마스터를 멤버로 변경하는 기능입니다.")
     @PutMapping(value = "/disapprove/{memberId}")
     public ResponseEntity<String> disapprove(@PathVariable(name = "memberId") Long memberId) {
 
         memberService.disapprove(memberId);
-
-        // 업체 신청 목록보기
         return ResponseEntity.ok()
                 .body("result : 승인완료");
     }
