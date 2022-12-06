@@ -1,7 +1,5 @@
 package com.golfzon.lastspacezbe.space.controller;
 
-import com.golfzon.lastspacezbe.member.entity.Member;
-import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import com.golfzon.lastspacezbe.security.UserDetailsImpl;
 import com.golfzon.lastspacezbe.space.dto.SpaceRequestDto;
 import com.golfzon.lastspacezbe.space.service.SpaceService;
@@ -12,12 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 @Slf4j
 @Api(tags = "Space 컨트롤러")

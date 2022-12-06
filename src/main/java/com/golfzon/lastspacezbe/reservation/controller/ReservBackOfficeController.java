@@ -4,13 +4,13 @@ import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationResponseDto;
 import com.golfzon.lastspacezbe.reservation.service.ReservBackOfficeService;
 import com.golfzon.lastspacezbe.reservation.service.ReservationService;
-import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -51,5 +51,25 @@ public class ReservBackOfficeController {
 
         return ResponseEntity.ok()
                 .body(reservationResponseDtos);
+    }
+
+
+    // 기간별 대여 금액 검색
+    @PostMapping("/total-incomes/{companyId}")
+    public ResponseEntity<Map<String, Object>> totalIncome(@PathVariable(name="companyId") Long companyId, @RequestBody ReservationRequestDto dto) {
+
+        return ResponseEntity.ok()
+                .body(reservBackOfficeService.totalIncomes(companyId, dto));
+    }
+
+    // 예약 이용완료 처리
+    @PutMapping("/reservation/done/{reservationId}")
+    public ResponseEntity<String> doneReservation(
+            @PathVariable(name = "reservationId") Long reservationId) {
+
+        reservationService.doneReservation(reservationId);
+
+        return ResponseEntity.ok()
+                .body("result : 이용완료 처리 완료");
     }
 }

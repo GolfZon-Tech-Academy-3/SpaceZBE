@@ -54,6 +54,9 @@ public class ReservationService {
         Space space = spaceRepository.findById(requestDto.getSpaceId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 spaceId는 존재하지 않습니다."));
 
+        // 예약된 시간 있는지 확인
+        checkReservedTimes(requestDto);
+
         Reservation reservation = new Reservation(member.getMemberId(),
                 requestDto.getReservationName(), requestDto.getStartDate(), requestDto.getEndDate(),
                 "001", "002", requestDto.getPrice(), requestDto.getPrepay(),
@@ -143,7 +146,7 @@ public class ReservationService {
             String postpayUid = reservation.getPostpayUid();
             paymentService.refund(new RefundDto(postpayUid, "후결제 예약취소", 0, reservation.getMemberId()));
             reservation.setStatus("002"); // 예약상태를 예약 취소로 바꾸기
-            reservationRepository.save(reservation); // 002 예약상태 저장
+            reservationRepository.save(reservation); // 저장
             // 사용한 마일리지 환급
             mileageService.refundMileage(reservation);
         }
@@ -257,10 +260,12 @@ public class ReservationService {
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
         // 포맷변경 (년월일 시분)
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         if (space.getType().equals("오피스")) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             // 예약된 날짜 하루 간격으로 더하기
             for (Reservation reservation : reservations) {
+                log.info(reservation.getStartDate());
+                log.info(reservation.getEndDate());
                 try {
                     Date startDate = formatter.parse(reservation.getStartDate());
                     startCal.setTime(startDate);
@@ -270,6 +275,7 @@ public class ReservationService {
                     // 이용시작 시간부터 이용종료 시간 전까지 시간 더하기
                     while (startCal.before(endCal)) {
                         time = formatter.format(startCal.getTime());
+                        log.info("time:{}",time);
                         reservedTimes.add(time.split(" ")[0]);
                         startCal.add(Calendar.DATE, +1);
                     }
@@ -278,7 +284,6 @@ public class ReservationService {
                 }
             }
         } else {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             // 예약된 시간 1시간 간격으로 더하기
             for (Reservation reservation : reservations) {
                 try {
@@ -300,7 +305,75 @@ public class ReservationService {
         }
         //오름차순으로 정렬
         Collections.sort(reservedTimes);
+        log.info("RESERVEDTIME:{}",reservedTimes);
         return reservedTimes;
     }
 
+    // 예약하는 시간이 이미 예약이 되어있는지 확인
+    public void checkReservedTimes(ReservationRequestDto requestDto) {
+        log.info("requestDto : {}", requestDto);
+        // companyId 조회
+        Space space = spaceRepository.findById(requestDto.getSpaceId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 spaceId는 존재하지 않습니다."));
+        List<String> reservedTimes = getReservedTimes(space);
+        List<String> checktimes = new ArrayList<>();
+        Calendar startCal = Calendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
+        // 포맷변경 (년월일 시분)
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        if (space.getType().equals("오피스")) {
+            // 예약된 날짜 하루 간격으로 더하기
+            try {
+                Date startDate = formatter.parse(requestDto.getStartDate());
+                startCal.setTime(startDate);
+                String time;
+                Date endDate = formatter.parse(requestDto.getEndDate());
+                endCal.setTime(endDate);
+                // 이용시작 시간부터 이용종료 시간 전까지 시간 더하기
+                while (startCal.before(endCal)) {
+                    time = formatter.format(startCal.getTime());
+                    if (reservedTimes.contains(time.split(" ")[0])) {
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 예약이 이루어진 시간입니다.");
+                    }
+                    checktimes.add(time.split(" ")[0]);
+                    startCal.add(Calendar.DATE, +1);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // 예약된 시간 1시간 간격으로 더하기
+            try {
+                Date startDate = formatter.parse(requestDto.getStartDate());
+                startCal.setTime(startDate);
+                String time;
+                Date endDate = formatter.parse(requestDto.getEndDate());
+                endCal.setTime(endDate);
+                // 이용시작 시간부터 이용종료 시간 전까지 시간 더하기
+                while (startCal.before(endCal)) {
+                    time = formatter.format(startCal.getTime());
+                    if (reservedTimes.contains(time)) {
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 예약이 이루어진 시간입니다.");
+                    }
+                    checktimes.add(time);
+                    startCal.add(Calendar.HOUR, +1);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void doneReservation(Long reservationId) {
+
+        log.info("reservationId:{}", reservationId);
+        Reservation reservation = reservationRepository.findAllByReservationId(reservationId);
+        // 예약 상태 확인
+        if (!reservation.getStatus().equals("001")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이용완료 가능한 상태가 아닙니다.");
+        } else {
+            reservation.setStatus("004"); // 예약상태를 이용 완료로 바꾸기
+            reservationRepository.save(reservation); // 004 이용 완료상태 저장
+        }
+    }
 }

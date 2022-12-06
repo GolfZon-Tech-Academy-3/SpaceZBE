@@ -53,11 +53,9 @@ public class CompanyController {
     @ApiOperation(value = "업체 신청 목록 조회", notes = "업체 신청 목록 조회기능입니다.")
     @GetMapping(value = "/manager/list")
     public ResponseEntity<List<CompanyJoinResponseDto>> companySelectAll() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        log.info("principal:{}",principal);
-        Member member = ((UserDetailsImpl)principal).getMember();
 
-        List<CompanyJoinResponseDto> responseDtos = companyService.companySelectAll(member);
+
+        List<CompanyJoinResponseDto> responseDtos = companyService.companySelectAll();
         // 업체 신청 목록보기
         return ResponseEntity.ok()
                 .body(responseDtos);
