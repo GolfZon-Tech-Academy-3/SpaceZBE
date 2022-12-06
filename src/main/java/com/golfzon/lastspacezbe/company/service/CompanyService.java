@@ -80,6 +80,7 @@ public class CompanyService {
         List<Space> spaces = spaceRepository.findAllByCompanyId(companyId);
         // 공간에 등록된 사진들
         List<String> spaceImages = new ArrayList<>();
+        spaceImages.add(company.getImageName());
         List<SpaceResponseDto> dtos = new ArrayList<>();
         for (Space space : spaces) {
             for (SpaceImage image : space.getSpaceImages()) {
@@ -252,7 +253,7 @@ public class CompanyService {
 
             List<Space> spaces = spaceRepository.findAllByCompanyId(company.getCompanyId());
             if (!spaces.isEmpty()) {
-                dto.setFirstImage(spaces.get(0).getSpaceImages().get(0).getSpaceImage()); // 업체에 등록된 사진
+                //dto.setFirstImage(spaces.get(0).getSpaceImages().get(0).getSpaceImage()); // 업체에 등록된 사진
                 lowPrice = spaces.get(0).getPrice();
                 log.info("price:{}", lowPrice);
                 for (Space space : spaces) {
@@ -274,7 +275,7 @@ public class CompanyService {
                 }
                 if (type.equals("hotCompany") & dto.getAvgReview() == 0) continue; //리뷰 점수가 0이면 continue
             } //else continue; //공간이 등록되어 있지 않으면, continue
-
+            dto.setFirstImage(company.getImageName()); //업체이미지
             dto.setCompanyId(company.getCompanyId()); //업체번호
             dto.setCompanyName(company.getCompanyName()); //업체이름
             dto.setCompanyLike(checkLike(company, memberId)); //업체 관심등록수
@@ -387,7 +388,7 @@ public class CompanyService {
     }
 
     // 업체 신청 목록 보기
-    public List<CompanyJoinResponseDto> companySelectAll(Member member) {
+    public List<CompanyJoinResponseDto> companySelectAll() {
 
 //        Member member1 = memberRepository.findById(member.getMemberId()).orElseThrow(){
 //
@@ -406,9 +407,9 @@ public class CompanyService {
             responseDto.setApproveStatus(data.getApproveStatus()); // 업체 활동 상태
             responseDto.setImageName(data.getImageName()); // 업체 이미지
 
-            responseDto.setEmail(member.getEmail()); // 회원 이메일
-            responseDto.setMemberName(member.getMemberName()); // 회원 이름
-            responseDto.setProfileImage(member.getImgName()); // 프로필 이미지
+            responseDto.setEmail(data.getMember().getEmail()); // 회원 이메일
+            responseDto.setMemberName(data.getMember().getMemberName()); // 회원 이름
+            responseDto.setProfileImage(data.getMember().getImgName()); // 프로필 이미지
 
             companyJoinResponseDtos.add(responseDto);
         }
@@ -419,20 +420,24 @@ public class CompanyService {
     // 업체관리자로 승인하기
     public void approve(Long companyId) {
         Company company = companyRepository.findByCompanyId(companyId);
-
         company.setApproveStatus("001"); // 활동상태 활동중으로 변경
-
         companyRepository.save(company); // 저장.
+
+        Member member = memberRepository.findByMemberId(company.getMember().getMemberId());
+        member.setAuthority("manager"); // 권한을 매니저로 변경
+        memberRepository.save(member); //저장.
 
     }
 
     // 업체관리자 승인 거부
     public void disapprove(Long companyId) {
         Company company = companyRepository.findByCompanyId(companyId);
-
         company.setApproveStatus("002"); // 활동상태 활동 정지로 변경
-
         companyRepository.save(company); // 저장.
+
+        Member member = memberRepository.findByMemberId(company.getMember().getMemberId());
+        member.setAuthority("member"); // 권한을 멤버로 변경
+        memberRepository.save(member); //저장.
     }
 
     public List<MainResponseDto> companyList(Long memberId) {
