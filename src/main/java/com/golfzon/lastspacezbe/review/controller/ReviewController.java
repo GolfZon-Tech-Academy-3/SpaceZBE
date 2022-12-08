@@ -2,6 +2,8 @@ package com.golfzon.lastspacezbe.review.controller;
 
 import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.review.dto.ReviewDto;
+import com.golfzon.lastspacezbe.review.entity.Review;
+import com.golfzon.lastspacezbe.review.repository.ReviewRepository;
 import com.golfzon.lastspacezbe.review.service.ReviewService;
 import com.golfzon.lastspacezbe.security.UserDetailsImpl;
 import com.golfzon.lastspacezbe.space.dto.SpaceRequestDto;
@@ -28,6 +30,7 @@ import java.util.Map;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final ReviewRepository reviewRepository;
 
     @ApiOperation(value = "리뷰 조회", notes = "업체 상세페이지에서 리뷰 보기입니다.")
     @GetMapping(value = "/total/{companyId}")

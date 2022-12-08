@@ -59,7 +59,7 @@ public class CompanyService {
         //업체 등록
         Company company = new Company(
                 member, companyRequestDto.getCompanyName(), companyRequestDto.getInfo(), companyRequestDto.getRules(),
-                companyRequestDto.getLocation(), companyRequestDto.getDetails(), companyRequestDto.getSummary(), "000"
+                companyRequestDto.getLocation(), companyRequestDto.getDetails(), companyRequestDto.getSummary(), "000", 0
         );
 
         if (companyRequestDto.getMultipartFile() != null) {
@@ -126,7 +126,7 @@ public class CompanyService {
     // 인기장소 8개 가져오기
     @Transactional
     public List<MainResponseDto> getHotCompany(Long memberId) {
-        List<Company> companyList = companyRepository.findTop8ByOrderByLikeCountDesc();
+        List<Company> companyList = companyRepository.findTop8ByOrderByReviewAvgDesc();
         log.info("companyList.size:{}", companyList.size());
         return getCompanyInfo(companyList, memberId, "hotCompany");
     }
@@ -262,18 +262,8 @@ public class CompanyService {
                     if (space.getPrice() < lowPrice) {
                         lowPrice = space.getPrice();
                     }
-                    // 공간에 등록된 리뷰
-                    List<Review> reviews = reviewRepository.findAllBySpaceId(space.getSpaceId());
-                    if (!reviews.isEmpty()) {
-                        dto.setReviewSize(reviews.size());
-                        double sum = 0;
-                        for (Review review : reviews) {
-                            sum += review.getRating();
-                        }
-                        dto.setAvgReview(Math.floor(sum / reviews.size() * 10) / 10);
-                    }
                 }
-                if (type.equals("hotCompany") & dto.getAvgReview() == 0) continue; //리뷰 점수가 0이면 continue
+                if (type.equals("hotCompany") & company.getReviewAvg() == 0.0) continue; //리뷰 점수가 0이면 continue
             } //else continue; //공간이 등록되어 있지 않으면, continue
             dto.setFirstImage(company.getImageName()); //업체이미지
             dto.setCompanyId(company.getCompanyId()); //업체번호
@@ -284,6 +274,7 @@ public class CompanyService {
             dto.setTypes(types); //업체 타입들
             dto.setDetails(company.getDetails()); // 상세주소
             dto.setAddress(company.getLocation()); // 업체 주소
+            dto.setAvgReview(company.getReviewAvg()); // 공간에 등록된 리뷰
             companyInfo.add(dto);
         }
         return companyInfo;

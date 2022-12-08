@@ -8,7 +8,6 @@ import java.util.List;
 
 
 public interface ReviewRepository extends JpaRepository<Review,Long> {
-    List<Review> findAllBySpaceId(Long spaceId);
 
     //List<Review> findAllByCompanyId(Long companyId);
 
@@ -19,4 +18,8 @@ public interface ReviewRepository extends JpaRepository<Review,Long> {
     List<Review> findAllByCompanyIdOrderByReviewTimeDesc(Pageable pageable, Long companyId);
 
     Review findBySpaceIdAndMemberId(Long spaceId, Long memberId);
+
+    Review findByReviewId(Long reviewId);
+
+    List<Review> findAllByCompanyId(Long companyId);
 }

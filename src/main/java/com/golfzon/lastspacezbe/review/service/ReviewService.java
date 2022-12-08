@@ -1,5 +1,7 @@
 package com.golfzon.lastspacezbe.review.service;
 
+import com.golfzon.lastspacezbe.company.entity.Company;
+import com.golfzon.lastspacezbe.company.repository.CompanyRepository;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.member.repository.MemberRepository;
 import com.golfzon.lastspacezbe.review.dto.ReviewDto;
@@ -29,6 +31,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
     private final SpaceRepository spaceRepository;
+    private final CompanyRepository companyRepository;
 
     // 업체에 등록된 리뷰 가져오기
     public Map<String, Object> spaceReviews(Long companyId, int page) {
@@ -70,6 +73,8 @@ public class ReviewService {
         log.info("requestDto:{}",requestDto);
         Review review = new Review(requestDto, memberId);
         reviewRepository.save(review);
+
+        updateReviewAvg(requestDto.getCompanyId());
     }
 
     // 리뷰 수정
@@ -81,14 +86,35 @@ public class ReviewService {
         review.setContent(requestDto.getContent());
         reviewRepository.save(review);
         log.info("review:{}",review);
+
+        updateReviewAvg(requestDto.getCompanyId());
     }
 
     // 리뷰 삭제
     public void reviewDelete(Long reviewId) {
         log.info("reviewId:{}",reviewId);
+        Review review = reviewRepository.findByReviewId(reviewId);
         reviewRepository.deleteById(reviewId);
+
+        updateReviewAvg(review.getCompanyId());
     }
 
-
+    // company review avg 변경
+    public void updateReviewAvg(Long companyId){
+        // company review avg 변경
+        double avg = 0;
+        List<Review> reviews = reviewRepository.findAllByCompanyId(companyId);
+        if (!reviews.isEmpty()) {
+            double sum = 0;
+            for (Review r : reviews) {
+                sum += r.getRating();
+            }
+            avg = (Math.floor(sum / reviews.size() * 10) / 10);
+        }
+        log.info("avg:{}",avg);
+        Company company = companyRepository.findByCompanyId(companyId);
+        company.setReviewAvg(avg);
+        companyRepository.save(company);
+    }
 
 }
