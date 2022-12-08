@@ -86,6 +86,7 @@ public class InquiryService {
             totalResponseDto.setAnswers(data.getAnswers()); // 답변내용
             totalResponseDto.setInquiryTime(data.getInquiriesTime().toString().substring(0,10)+" "
             +data.getInquiriesTime().toString().substring(11,16)); // 문의 날짜
+            totalResponseDto.setMemberId(member.get().getMemberId()); // 회원 번호
             totalResponseDto.setImagePath(member.get().getImgName()); // 프로필 이미지
             totalResponseDto.setMemberName(member.get().getMemberName()); // 회원 이름
 

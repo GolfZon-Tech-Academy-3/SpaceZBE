@@ -93,6 +93,7 @@ public class SpaceService {
             responseDto.setSpaceName(data.getSpaceName());
             responseDto.setSpaceId(data.getSpaceId());
             responseDto.setType(data.getType());
+            responseDto.setPrice(data.getPrice()); // 가격
             responseDto.setOpenTime(data.getOpenTime());
             responseDto.setCloseTime(data.getCloseTime());
             responseDto.setBreakOpen(data.getBreakOpen());

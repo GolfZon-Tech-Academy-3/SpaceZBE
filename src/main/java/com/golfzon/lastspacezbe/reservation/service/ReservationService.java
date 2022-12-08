@@ -232,8 +232,15 @@ public class ReservationService {
     }
 
     // 공간 예약 상세페이지
-    public ReservationSpaceDto getDetails(Long spaceId, Member member) {
+    public ReservationSpaceDto getDetails(Long spaceId, Member member, String userAgent) {
         log.info("spaceId:{}", spaceId);
+        log.info("userAgent:{}", userAgent);
+
+        boolean bot = false;
+        // 봇 프로그램 작동중
+        if(userAgent.contains("Headless")){
+            bot = true;
+        }
 
         // 1. 공간 정보 찾기
         Space space = spaceRepository.findById(spaceId)
@@ -245,7 +252,7 @@ public class ReservationService {
         // 3. 총 마일리지 찾기
         int totalMileage = mileageService.getTotalScore(member.getMemberId());
 
-        return new ReservationSpaceDto(space, reservedTimes, totalMileage, paymentService.getMerchantUid());
+        return new ReservationSpaceDto(space, reservedTimes, totalMileage, paymentService.getMerchantUid(),bot);
     }
 
     // 예약된 시간 찾기

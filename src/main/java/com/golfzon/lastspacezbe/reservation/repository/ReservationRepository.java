@@ -14,6 +14,7 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
     Reservation findAllByReservationId(Long reservationId);
 
     // 업체 예약 현황용 (백오피스)
+    List<Reservation> findAllByCompanyIdOrderByStartDateDesc(Long companyId);
     List<Reservation> findAllByCompanyId(Long companyId);
     // 예약한 시간
     Reservation findByReservationId(Long reservationId);

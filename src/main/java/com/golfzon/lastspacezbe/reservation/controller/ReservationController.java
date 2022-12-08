@@ -28,14 +28,17 @@ public class ReservationController {
     @ApiOperation(value = "예약폼 페이지", notes = "예약하기 폼 페이지입니다.")
     @GetMapping(value = "/details/{spaceId}")
     public ResponseEntity<ReservationSpaceDto> getDetails(
-            @PathVariable(value = "spaceId") Long spaceId){
+            @PathVariable(value = "spaceId") Long spaceId,
+            @RequestHeader(value = "User-Agent") String userAgent){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("principal:{}",principal);
         Member member = ((UserDetailsImpl)principal).getMember();
         log.info("member?:{}",member);
 
+        System.out.println(userAgent);
+
         return ResponseEntity.ok()
-                .body(reservationService.getDetails(spaceId, member));
+                .body(reservationService.getDetails(spaceId, member , userAgent));
     }
 
     // 예약하기

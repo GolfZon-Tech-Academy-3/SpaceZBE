@@ -1,7 +1,5 @@
 package com.golfzon.lastspacezbe.reservation.service;
 
-import com.golfzon.lastspacezbe.member.entity.Member;
-import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationResponseDto;
 import com.golfzon.lastspacezbe.reservation.entity.Reservation;
 import com.golfzon.lastspacezbe.reservation.repository.ReservationRepository;
@@ -9,16 +7,10 @@ import com.golfzon.lastspacezbe.space.entity.Space;
 import com.golfzon.lastspacezbe.space.repository.SpaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.nurigo.java_sdk.api.Message;
-import net.nurigo.java_sdk.exceptions.CoolsmsException;
-import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -90,7 +82,7 @@ public class ReservBackOfficeService {
     // 예약 전체 조회
     public List<ReservationResponseDto> totalReserveSelectAll(Long companyId) {
 
-        List<Reservation> reservations =  reservationRepository.findAllByCompanyId(companyId);
+        List<Reservation> reservations =  reservationRepository.findAllByCompanyIdOrderByStartDateDesc(companyId);
         List<ReservationResponseDto> reservationResponseDtos = new ArrayList<>();
 
         for (Reservation data :reservations

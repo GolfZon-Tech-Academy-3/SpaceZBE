@@ -30,7 +30,7 @@ public class InquiryBackOfficeService {
         List<InquiryResponseDto> responseDtos = new ArrayList<>();
 
         // 업체의 사무공간 조회
-            List<Inquiry> inquiries = inquiryRepository.findAllByCompanyId(companyId);
+            List<Inquiry> inquiries = inquiryRepository.findAllByCompanyIdOrderByInquiriesTimeDesc(companyId);
             for (Inquiry dataInquiry: inquiries
                  ) {
 //                // 문의한 회원의 닉네임
