@@ -1,7 +1,6 @@
 package com.golfzon.lastspacezbe.review.entity;
 
 import com.golfzon.lastspacezbe.review.dto.ReviewDto;
-import com.golfzon.lastspacezbe.space.entity.SpaceImage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Setter
 @Getter

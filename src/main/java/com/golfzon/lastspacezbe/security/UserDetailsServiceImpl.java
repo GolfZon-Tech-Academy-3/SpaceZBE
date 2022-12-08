@@ -1,6 +1,7 @@
 package com.golfzon.lastspacezbe.security;
 
 import com.golfzon.lastspacezbe.company.entity.Company;
+
 import com.golfzon.lastspacezbe.company.repository.CompanyRepository;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.member.repository.MemberRepository;
@@ -23,7 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberRepository.findByEmail(username)
+        Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Can't find " + username));
         Company company = companyRepository.findByMember(member);
         if(company == null){

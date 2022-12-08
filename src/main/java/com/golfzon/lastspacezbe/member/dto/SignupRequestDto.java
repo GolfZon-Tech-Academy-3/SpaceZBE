@@ -23,7 +23,7 @@ public class SignupRequestDto {
 
     public SignupRequestDto(Member member) {
         this.memberId = member.getMemberId();
-        this.email = member.getEmail();
+        this.email = member.getUsername();
         this.memberName = member.getMemberName();
         this.authority = member.getAuthority();
         this.imgName = member.getImgName();

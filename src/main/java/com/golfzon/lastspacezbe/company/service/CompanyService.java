@@ -407,7 +407,7 @@ public class CompanyService {
             responseDto.setApproveStatus(data.getApproveStatus()); // 업체 활동 상태
             responseDto.setImageName(data.getImageName()); // 업체 이미지
 
-            responseDto.setEmail(data.getMember().getEmail()); // 회원 이메일
+            responseDto.setEmail(data.getMember().getUsername()); // 회원 이메일
             responseDto.setMemberName(data.getMember().getMemberName()); // 회원 이름
             responseDto.setProfileImage(data.getMember().getImgName()); // 프로필 이미지
 

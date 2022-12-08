@@ -24,11 +24,10 @@ public class UserDetailsImpl implements UserDetails{
     public Member getMember() {
         return member;
     }
-    public Company getCompany() {
+
+    public Company getcompany() {
         return company;
     }
-
-    public String getEmail(){return member.getEmail();}
 
     @Override
     public String getPassword() {
@@ -37,7 +36,7 @@ public class UserDetailsImpl implements UserDetails{
 
     @Override
     public String getUsername() {
-        return member.getEmail();
+        return member.getUsername();
     }
 
     @Override

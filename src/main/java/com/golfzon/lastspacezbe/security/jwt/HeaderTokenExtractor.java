@@ -1,6 +1,5 @@
 package com.golfzon.lastspacezbe.security.jwt;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
