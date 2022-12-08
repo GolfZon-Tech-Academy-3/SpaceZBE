@@ -14,7 +14,7 @@ import java.util.Set;
 public interface CompanyRepository extends JpaRepository<Company,Long> {
 
     // 관심등록 수가 많은 8개 순으로 가져오기
-    List<Company> findTop8ByOrderByLikeCountDesc();
+    List<Company> findTop8ByOrderByReviewAvgDesc();
     // 최근 등록된 순으로 4개 가져오기
     List<Company> findTop4ByOrderByCreatedTimeDesc();
 
@@ -64,4 +64,5 @@ public interface CompanyRepository extends JpaRepository<Company,Long> {
                     value = "select * from company where company_id in (:companyIds) order by company_id asc"
             )
     List<Company> findAllByCompanyIds(@Param("companyIds") Set<Long> companyIdList);
+
 }
