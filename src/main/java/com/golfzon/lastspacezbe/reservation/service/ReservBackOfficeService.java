@@ -1,5 +1,6 @@
 package com.golfzon.lastspacezbe.reservation.service;
 
+import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationResponseDto;
 import com.golfzon.lastspacezbe.reservation.entity.Reservation;
 import com.golfzon.lastspacezbe.reservation.repository.ReservationRepository;
