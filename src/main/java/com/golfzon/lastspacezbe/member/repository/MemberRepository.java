@@ -3,6 +3,7 @@ package com.golfzon.lastspacezbe.member.repository;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,8 +20,6 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
 
     List<Member> findAllByAuthority(String authority);
 
-    @Query (value = "select m from Member m where m.email like 'member@gmail.com' and m.authority like 'member'")
-    Member findMemberBySearchWord(String searchWord);
-
-    List<Member> findByEmailLikeOrMemberNameLikeAndAuthority(String searchWord, String searchWord1, String member);
+    @Query (nativeQuery = true, value = "select * from (select * from member where authority='member') as member where member.email like ?1 or member.member_name like ?1")
+    List<Member> findMembers(String searchWord);
 }

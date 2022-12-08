@@ -22,6 +22,17 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
+    //예약 중복확인
+    @ApiOperation(value = "예약 중복확인", notes = "예약 중복확인 처리입니다.")
+    @PostMapping(value = "/check")
+    public ResponseEntity<String> checkReserve(
+            @RequestBody ReservationRequestDto requestDto){
+
+        reservationService.checkReservedTimes(requestDto);
+        return ResponseEntity.ok()
+                .body("result : 예약가능합니다.");
+    }
+
     // 예약하기 상세 페이지
     // /reservation/details?spaceId=1
     // 예약하기

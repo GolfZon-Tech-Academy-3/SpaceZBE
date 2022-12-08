@@ -17,4 +17,6 @@ public interface ReviewRepository extends JpaRepository<Review,Long> {
     //List<Review> findAllByOrderByReviewTimeDesc(Pageable pageable);
 
     List<Review> findAllByCompanyIdOrderByReviewTimeDesc(Pageable pageable, Long companyId);
+
+    Review findBySpaceIdAndMemberId(Long spaceId, Long memberId);
 }

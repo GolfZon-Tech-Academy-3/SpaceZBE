@@ -1,10 +1,8 @@
 package com.golfzon.lastspacezbe.config;
 
 
-import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.security.FilterSkipMatcher;
 import com.golfzon.lastspacezbe.security.FormLoginSuccessHandler;
-import com.golfzon.lastspacezbe.security.UserDetailsImpl;
 import com.golfzon.lastspacezbe.security.filter.FormLoginFilter;
 import com.golfzon.lastspacezbe.security.filter.JwtAuthFilter;
 import com.golfzon.lastspacezbe.security.jwt.HeaderTokenExtractor;
@@ -20,7 +18,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -188,10 +185,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000"); // local 테스트 시
+        configuration.addAllowedOrigin("https://acme-v02.api.letsencrypt.org:443"); // local 테스트 시
+        configuration.addAllowedOrigin("https://acme-v02.api.letsencrypt.org"); // local 테스트 시
         configuration.addAllowedOrigin("http://localhost:8080"); // local 테스트 시
         configuration.addAllowedOrigin("http://localhost:8081"); // local 테스트 시
         configuration.addAllowedOrigin("*"); // local 테스트 시
-        configuration.addAllowedOrigin("https://main.d3ezz3muzp1rz5.amplifyapp.com"); // 배포 시
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");

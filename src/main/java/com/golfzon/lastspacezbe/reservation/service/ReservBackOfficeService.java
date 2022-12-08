@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,7 +52,7 @@ public class ReservBackOfficeService {
         return reserveCount;
     }
 
-    // 금일 예약
+    // 금일 취소
     public int todayCancel(Long companyId) {
 
         log.info("companyId : {}", companyId);
@@ -114,5 +118,68 @@ public class ReservBackOfficeService {
         }
 
         return reservationResponseDtos;
+    }
+
+    public Map<String, Object> totalIncomes(Long companyId, ReservationRequestDto requestDto) {
+        log.info("dto:{}",requestDto);
+        List<Reservation> reservations =  reservationRepository.findReservations(companyId);
+        log.info("reservation:{}",reservations);
+        log.info("reservation:{}",reservations.size());
+        List<ReservationResponseDto> reservationResponseDtos = new ArrayList<>();
+        int totalIncome = 0;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar startCal = Calendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
+        Calendar rStartCal = Calendar.getInstance();
+        Calendar rEndCal = Calendar.getInstance();
+        try {
+            Date startDate = formatter.parse(requestDto.getStartDate());
+            startCal.setTime(startDate);
+            startCal.add(Calendar.DATE, -1);
+            Date endDate = formatter.parse(requestDto.getEndDate());
+            endCal.setTime(endDate);
+            endCal.add(Calendar.DATE, +1);
+            for (Reservation reservation:reservations) {
+                Date reservSdate = formatter.parse(reservation.getStartDate());
+                rStartCal.setTime(reservSdate);
+                Date reservEdate = formatter.parse(reservation.getEndDate());
+                rEndCal.setTime(reservEdate);
+                if((rStartCal.after(startCal) && rStartCal.before(endCal)) || (rEndCal.after(startCal) && rEndCal.before(endCal))){
+                    String type = ""; // 공간 타입
+                    String spaceName = ""; // 공간 이름
+
+                    // space 공간 타입과 공간 이름 찾기
+                    List<Space> spaces = spaceRepository.findAllByCompanyId(companyId);
+                    for (Space space: spaces
+                    ) {
+                        if(space.getSpaceId().equals(reservation.getSpaceId())){
+                            type = space.getType();
+                            spaceName = space.getSpaceName();
+                        }
+                    }
+
+                    ReservationResponseDto responseDto = new ReservationResponseDto();
+                    responseDto.setReservationId(reservation.getReservationId());
+                    responseDto.setReservationName(reservation.getReservationName());
+                    responseDto.setStartDate(reservation.getStartDate());
+                    responseDto.setEndDate(reservation.getEndDate());
+                    responseDto.setPrice(reservation.getPrice());
+                    responseDto.setStatus(reservation.getStatus()); // 예약 상태
+                    responseDto.setType(type); // 공간타입
+                    responseDto.setSpaceName(spaceName);
+
+                    reservationResponseDtos.add(responseDto);
+                    totalIncome+= responseDto.getPrice();
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("totalIncome", totalIncome);
+        map.put("reservations",reservationResponseDtos);
+        return map;
     }
 }
