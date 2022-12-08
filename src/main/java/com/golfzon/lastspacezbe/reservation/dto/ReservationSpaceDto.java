@@ -28,17 +28,20 @@ public class ReservationSpaceDto {
     int mileage; //유저의 사용가능한 마일리지
     String merchantUid; //상품 고유번호
 
-    public ReservationSpaceDto(Space space, List<String> reservedTimes, int mileage, String merchantUid) {
+    boolean bot; // 예약 봇 프로그램 여부
+
+    public ReservationSpaceDto(Space space, List<String> reservedTimes, int mileage, String merchantUid , boolean bot) {
         this.spaceId = space.getSpaceId();
         this.spaceName = space.getSpaceName();
         this.type = space.getType();
         this.price = space.getPrice();
         this.openTime = space.getOpenTime();
         this.closeTime = space.getCloseTime();
-        this.breakOpen = space.getOpenTime();
+        this.breakOpen = space.getBreakOpen();
         this.breakClose = space.getBreakClose();
         this.reservedTime = reservedTimes;
         this.mileage = mileage;
         this.merchantUid = merchantUid;
+        this.bot = bot;
     }
 }

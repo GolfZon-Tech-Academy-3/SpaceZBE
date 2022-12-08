@@ -85,7 +85,7 @@ public class InquiryController {
                 .body("result : 답변 삭제완료");
     }
 
-    // 문의 내역
+    // 문의 내역 (업체 정보)
     @GetMapping("/total/{companyId}")
     public ResponseEntity<Map<String,Object>> totalInquiry(@PathVariable(name = "companyId") Long companyId) {
 //        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
