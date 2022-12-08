@@ -82,7 +82,7 @@ public class MemberService {
     private void checkEmail(String email) {
         log.info("checkEmail()...");
         log.info("checkEmail:{}", email);
-        Optional<Member> foundByEmail = memberRepository.findByEmail(email);
+        Optional<Member> foundByEmail = memberRepository.findByUsername(email);
         log.info("foundByEmail:{}", foundByEmail);
         if (foundByEmail.isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 존재하는 아이디입니다.");

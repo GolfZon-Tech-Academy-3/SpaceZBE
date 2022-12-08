@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 
@@ -24,7 +22,7 @@ public class Member{
     private Long memberId;
 
     @Column(nullable = false)
-    private String email;
+    private String username;
 
     @Column(nullable = false)
     private String password;
@@ -39,7 +37,7 @@ public class Member{
     private String imgName;
 
     public Member(SignupRequestDto signupRequestDto) {
-        this.email = signupRequestDto.getEmail();
+        this.username = signupRequestDto.getEmail();
         this.password = signupRequestDto.getPassword();
         this.memberName = signupRequestDto.getMemberName();
         this.authority = signupRequestDto.getAuthority();
@@ -50,16 +48,11 @@ public class Member{
     public String toString() {
         return "Member{" +
                 "memberId=" + memberId +
-                ", email='" + email + '\'' +
+                ", email='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", memberName='" + memberName + '\'' +
                 ", authority='" + authority + '\'' +
                 ", imgName='" + imgName + '\'' +
                 '}';
     }
-
-    //    @Column
-//    private MultipartFile multipartFile;
-
-
 }

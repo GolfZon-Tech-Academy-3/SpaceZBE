@@ -2,11 +2,8 @@ package com.golfzon.lastspacezbe.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.golfzon.lastspacezbe.company.entity.Company;
-import com.golfzon.lastspacezbe.company.repository.CompanyRepository;
-import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.security.UserDetailsImpl;
-import lombok.RequiredArgsConstructor;
+
 
 import java.util.Date;
 
@@ -24,24 +21,23 @@ public final class JwtTokenUtils {
     public static final String CLAIM_EXPIRED_DATE = "EXPIRED_DATE";
     public static final String CLAIM_USER_NAME = "USER_EMAIL";
     public static final String CLAIM_NICK_NAME = "NICK_NAME";
-    public static final String CLAIM_AUTHORITY = "AUTHORITY";
-    public static final String CLAIM_IMAGE_NAME = "IMAGE_NAME";
+    public static final String CLAIM_ROLE = "AUTHORITY";
+    public static final String CLAIM_IMAGE_URL = "IMAGE_NAME";
     public static final String CLAIM_USER_ID = "MEMBER_ID";
     public static final String CLAIM_COMPANY_ID = "COMPANY_ID";
     public static final String JWT_SECRET = "jwt_secret_!@#$%";
 
     public static String generateJwtToken(UserDetailsImpl userDetails) {
         String token = null;
-        System.out.println(userDetails.getCompany().getCompanyId());
         try {
             token = JWT.create()
                     .withIssuer("spacez")
                     .withClaim(CLAIM_USER_NAME, userDetails.getUsername())
                     .withClaim(CLAIM_NICK_NAME, userDetails.getMember().getMemberName())
-                    .withClaim(CLAIM_AUTHORITY, userDetails.getMember().getAuthority())
-                    .withClaim(CLAIM_IMAGE_NAME, userDetails.getMember().getImgName())
+                    .withClaim(CLAIM_ROLE, userDetails.getMember().getAuthority())
+                    .withClaim(CLAIM_IMAGE_URL, userDetails.getMember().getImgName())
                     .withClaim(CLAIM_USER_ID, userDetails.getMember().getMemberId())
-                    .withClaim(CLAIM_COMPANY_ID, userDetails.getCompany().getCompanyId())
+                    .withClaim(CLAIM_COMPANY_ID, userDetails.getcompany().getCompanyId())
                     // 토큰 만료 일시 = 현재 시간 + 토큰 유효기간)
                     .withClaim(CLAIM_EXPIRED_DATE, new Date(System.currentTimeMillis() + JWT_TOKEN_VALID_MILLI_SEC))
                     .sign(generateAlgorithm());

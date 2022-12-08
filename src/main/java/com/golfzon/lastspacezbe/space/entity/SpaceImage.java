@@ -18,13 +18,13 @@ public class SpaceImage {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "spaceImage_id")
-    Long spaceImageId; // 예약 번호
+    private Long spaceImageId; // 예약 번호
 
-    String spaceImage; // image url
+    private String spaceImage; // image url
 
     @ManyToOne
     @JoinColumn(name = "space_id", nullable = false)
-    Space space;
+    private Space space;
 
     public SpaceImage(String spaceImage,Space space) {
         this.spaceImage = spaceImage;

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member,Long> {
-    Optional<Member> findByEmail(String email);
 
     Optional<Member> findByMemberName(String memberName);
 
@@ -20,6 +19,8 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
 
     List<Member> findAllByAuthority(String authority);
 
-    @Query (nativeQuery = true, value = "select * from (select * from member where authority='member') as member where member.email like ?1 or member.member_name like ?1")
+    @Query (nativeQuery = true, value = "select * from (select * from member where authority='member') as member where member.username like ?1 or member.member_name like ?1")
     List<Member> findMembers(String searchWord);
+
+    Optional<Member> findByUsername(String username);
 }
