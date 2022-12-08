@@ -87,7 +87,7 @@ public class ReviewService {
         reviewRepository.save(review);
         log.info("review:{}",review);
 
-        updateReviewAvg(requestDto.getCompanyId());
+        updateReviewAvg(review.getCompanyId());
     }
 
     // 리뷰 삭제
