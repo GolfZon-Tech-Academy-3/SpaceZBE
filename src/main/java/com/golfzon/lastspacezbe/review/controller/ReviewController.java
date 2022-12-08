@@ -30,7 +30,6 @@ import java.util.Map;
 public class ReviewController {
 
     private final ReviewService reviewService;
-    private final ReviewRepository reviewRepository;
 
     @ApiOperation(value = "리뷰 조회", notes = "업체 상세페이지에서 리뷰 보기입니다.")
     @GetMapping(value = "/total/{companyId}")

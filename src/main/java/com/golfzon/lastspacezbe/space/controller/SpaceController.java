@@ -55,7 +55,7 @@ public class SpaceController {
 
     //사무공간 삭제
     @DeleteMapping("/delete")
-    public ResponseEntity<String> spaceUpdate(
+    public ResponseEntity<String> spaceDelete(
             @RequestParam Long spaceId) {
 
         spaceService.spaceDelete(spaceId);
