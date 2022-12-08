@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -84,7 +87,7 @@ public class ReservBackOfficeService {
     // 예약 전체 조회
     public List<ReservationResponseDto> totalReserveSelectAll(Long companyId) {
 
-        List<Reservation> reservations =  reservationRepository.findAllByCompanyId(companyId);
+        List<Reservation> reservations =  reservationRepository.findAllByCompanyIdOrderByStartDateDesc(companyId);
         List<ReservationResponseDto> reservationResponseDtos = new ArrayList<>();
 
         for (Reservation data :reservations

@@ -14,6 +14,8 @@ public class SpaceBackOfficeResponseDto {
     Long spaceId; // 공간번호
     String spaceName; // 사무공간 이름
     String type; // 공간형태
+
+    int price; // 가격
     String openTime; // 오픈시간
     String closeTime; // 마감시간
     String breakOpen; // 청소 시작 시간
