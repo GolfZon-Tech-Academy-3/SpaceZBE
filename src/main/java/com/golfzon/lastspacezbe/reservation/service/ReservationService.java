@@ -416,6 +416,7 @@ public class ReservationService {
     public void checkDoubleReservation(ReservationRequestDto requestDto) {
         //이미 예약완료인지 확인
         int flag = checkReservedTimes(requestDto);
+        if(flag==0) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 예약이 완료되었습니다.");
         //현재 예약 중인지 확인
         //1) 예약할 날짜 확인
         List<String> checktimes = new ArrayList<>();
