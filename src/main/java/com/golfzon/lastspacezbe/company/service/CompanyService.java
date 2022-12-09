@@ -248,6 +248,7 @@ public class CompanyService {
 
 
         for (Company company : companyList) {
+            if (type.equals("hotCompany") && company.getReviewAvg()==0.0) continue; //리뷰 점수가 0이면 continue
             MainResponseDto dto = new MainResponseDto();
             Set<String> types = new HashSet<>(); // 등록된 type들
 
@@ -265,7 +266,6 @@ public class CompanyService {
                 }
                 int reviewSize = reviewRepository.countByCompanyId(company.getCompanyId());
                 dto.setReviewSize(reviewSize);
-                if (type.equals("hotCompany") & company.getReviewAvg() == 0.0) continue; //리뷰 점수가 0이면 continue
             } //else continue; //공간이 등록되어 있지 않으면, continue
             dto.setFirstImage(company.getImageName()); //업체이미지
             dto.setCompanyId(company.getCompanyId()); //업체번호
