@@ -61,10 +61,8 @@ dependencies {
     testCompileOnly 'junit:junit:4.12'
     testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.3.1'
 
-    //Redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
-    testImplementation 'it.ozimov:embedded-redis:0.7.2'
+    // redis
+    implementation 'org.springframework.data:spring-data-redis:2.7.5'
 
 }
 

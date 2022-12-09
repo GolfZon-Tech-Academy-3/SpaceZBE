@@ -22,4 +22,6 @@ public interface ReviewRepository extends JpaRepository<Review,Long> {
     Review findByReviewId(Long reviewId);
 
     List<Review> findAllByCompanyId(Long companyId);
+
+    int countByCompanyId(Long companyId);
 }
