@@ -3,6 +3,7 @@ package com.golfzon.lastspacezbe.company.controller;
 import com.golfzon.lastspacezbe.company.dto.*;
 import com.golfzon.lastspacezbe.company.service.CompanyService;
 import com.golfzon.lastspacezbe.member.entity.Member;
+import com.golfzon.lastspacezbe.redis.RedisService;
 import com.golfzon.lastspacezbe.security.UserDetailsImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,15 +11,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Api(tags = "Company 컨트롤러")
@@ -28,6 +28,12 @@ import java.util.*;
 public class CompanyController {
 
     private final CompanyService companyService;
+    private final RedisService redisService;
+
+    @GetMapping(value = "/redis")
+    public void redisTest(){
+        redisService.redisString();
+    }
 
     // 업체 등록 (신청)
     @ApiOperation(value = "업체 등록", notes = "업체 등록이 가능합니다.")
