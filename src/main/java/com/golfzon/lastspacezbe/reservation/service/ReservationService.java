@@ -341,6 +341,7 @@ public class ReservationService {
         Space space = spaceRepository.findById(requestDto.getSpaceId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 spaceId는 존재하지 않습니다."));
         List<String> reservedTimes = getReservedTimes(space);
+        if(reservedTimes.size()==0) return flag;
         List<String> checktimes = new ArrayList<>();
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
