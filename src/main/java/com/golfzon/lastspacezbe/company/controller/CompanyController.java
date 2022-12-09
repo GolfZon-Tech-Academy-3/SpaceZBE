@@ -198,7 +198,6 @@ public class CompanyController {
     }
 
 
-
     //공간이 등록된 업체 모두 조회
     @GetMapping("/space/list")
     public ResponseEntity<List<MainResponseDto>> companyList() {
@@ -209,5 +208,37 @@ public class CompanyController {
         return ResponseEntity.ok()
                 .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .body(companyService.companyList(member.getMemberId()));
+    }
+
+    // 업체 정보 조회 (백오피스)
+    @GetMapping("/information/{companyId}")
+    public ResponseEntity<CompanyInfoResponseDto> getCompanyInfo(
+            @PathVariable(name = "companyId") Long companyId
+    ) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
+
+        CompanyInfoResponseDto responseDto = companyService.getCompany(companyId);
+
+        return ResponseEntity.ok()
+                .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
+                .body(responseDto);
+    }
+
+    // 업체 정보 수정하기 (백오피스)
+    @ApiOperation(value = "업체 정보 수정 ", notes = "업체 정보 수정 기능입니다.")
+    @PutMapping(value = "/update/{companyId}")
+    public ResponseEntity<String> update(CompanyInfoRequestDto companyInfoRequestDto
+            ,@PathVariable(name = "companyId") Long companyId) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
+
+        companyService.update(companyInfoRequestDto,companyId);
+
+        // 업체 신청 목록보기
+        return ResponseEntity.ok()
+                .body("result : 업체 정보 수정완료");
     }
 }

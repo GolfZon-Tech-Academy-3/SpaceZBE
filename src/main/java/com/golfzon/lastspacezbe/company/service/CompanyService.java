@@ -1,10 +1,6 @@
 package com.golfzon.lastspacezbe.company.service;
 
-import com.golfzon.lastspacezbe.company.dto.CompanyResponseDto;
-import com.golfzon.lastspacezbe.company.dto.MainResponseDto;
-import com.golfzon.lastspacezbe.company.dto.CompanyJoinResponseDto;
-import com.golfzon.lastspacezbe.company.dto.CompanyRequestDto;
-import com.golfzon.lastspacezbe.company.dto.SearchRequestDto;
+import com.golfzon.lastspacezbe.company.dto.*;
 import com.golfzon.lastspacezbe.company.entity.Company;
 import com.golfzon.lastspacezbe.company.entity.CompanyLike;
 import com.golfzon.lastspacezbe.company.repository.CompanyLikeRepository;
@@ -443,5 +439,41 @@ public class CompanyService {
         List<MainResponseDto> dtos = getCompanyInfo(companyList, memberId, "totalCompany");
         log.info("dtos.size():{}", dtos.size());
         return dtos;
+    }
+
+    // 업체 정보 조회
+    public CompanyInfoResponseDto getCompany(Long companyId){
+
+        Company company = companyRepository.findByCompanyId(companyId);
+        CompanyInfoResponseDto companyInfoResponseDto = new CompanyInfoResponseDto();
+        companyInfoResponseDto.setCompanyId(companyId);
+        companyInfoResponseDto.setCompanyName(company.getCompanyName());
+        companyInfoResponseDto.setLocation(company.getLocation());
+        companyInfoResponseDto.setDetails(company.getDetails());
+        companyInfoResponseDto.setInfo(company.getInfo());
+        companyInfoResponseDto.setRules(company.getRules());
+        companyInfoResponseDto.setSummary(company.getSummary());
+        companyInfoResponseDto.setImageName(company.getImageName());
+
+        return companyInfoResponseDto;
+    }
+
+    // 업체 정보 수정하기
+    public void update(CompanyInfoRequestDto companyInfoRequestDto, Long companyId) {
+        Company company = companyRepository.findByCompanyId(companyId);
+
+        company.setCompanyName(companyInfoRequestDto.getCompanyName());
+        company.setLocation(companyInfoRequestDto.getLocation());
+        company.setDetails(companyInfoRequestDto.getDetails());
+        company.setInfo(companyInfoRequestDto.getInfo());
+        company.setSummary(companyInfoRequestDto.getSummary());
+        company.setRules(companyInfoRequestDto.getRules());
+
+        if(companyInfoRequestDto.getMultipartFile() != null){
+            String imageUrl = companyS3Service.update(company.getCompanyId(), companyInfoRequestDto.getMultipartFile());
+            company.setImageName(imageUrl);
+        }
+
+        companyRepository.save(company);
     }
 }
