@@ -3,7 +3,6 @@ package com.golfzon.lastspacezbe.company.controller;
 import com.golfzon.lastspacezbe.company.dto.*;
 import com.golfzon.lastspacezbe.company.service.CompanyService;
 import com.golfzon.lastspacezbe.member.entity.Member;
-import com.golfzon.lastspacezbe.redis.RedisService;
 import com.golfzon.lastspacezbe.security.UserDetailsImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

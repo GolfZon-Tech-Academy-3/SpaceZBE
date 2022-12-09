@@ -16,6 +16,10 @@ import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -55,7 +59,19 @@ public class ReservationService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 spaceId는 존재하지 않습니다."));
 
         // 예약된 시간 있는지 확인
-        checkReservedTimes(requestDto);
+        int isReserved = checkReservedTimes(requestDto);
+        if(isReserved == 0){
+            // 일치하지 않을 시, 오류로 계산된 금액 환불처리
+            if(requestDto.getPrepay().equals("002")){
+                //오피스 후불
+                paymentService.refund(new RefundDto(requestDto.getPostpayUid(), "후결제 예약취소", 0, member.getMemberId()));
+            } else {
+                //선불, 보증금
+                int price = Integer.parseInt( paymentService.getPaymentInfo(requestDto));
+                paymentService.refund(new RefundDto(requestDto.getPrepayUid(), "이미 결제된 금액 환불", price, member.getMemberId()));
+            }
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 예약이 이루어진 건입니다.");
+        }
 
         Reservation reservation = new Reservation(member.getMemberId(),
                 requestDto.getReservationName(), requestDto.getStartDate(), requestDto.getEndDate(),
@@ -109,6 +125,7 @@ public class ReservationService {
                 break;
             //후결제
             case "002":
+                paymentService.verifyReserveDate(requestDto);
                 flag = paymentService.reserve(requestDto);
                 reservation.setPrepayUid(requestDto.getPrepayUid());
                 reservation.setPostpayUid(requestDto.getPostpayUid());
@@ -317,8 +334,9 @@ public class ReservationService {
     }
 
     // 예약하는 시간이 이미 예약이 되어있는지 확인
-    public void checkReservedTimes(ReservationRequestDto requestDto) {
+    public int checkReservedTimes(ReservationRequestDto requestDto) {
         log.info("requestDto : {}", requestDto);
+        int flag = 1;
         // companyId 조회
         Space space = spaceRepository.findById(requestDto.getSpaceId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 spaceId는 존재하지 않습니다."));
@@ -340,7 +358,7 @@ public class ReservationService {
                 while (startCal.before(endCal)) {
                     time = formatter.format(startCal.getTime());
                     if (reservedTimes.contains(time.split(" ")[0])) {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 예약이 이루어진 시간입니다.");
+                        flag =0;
                     }
                     checktimes.add(time.split(" ")[0]);
                     startCal.add(Calendar.DATE, +1);
@@ -360,7 +378,7 @@ public class ReservationService {
                 while (startCal.before(endCal)) {
                     time = formatter.format(startCal.getTime());
                     if (reservedTimes.contains(time)) {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 예약이 이루어진 시간입니다.");
+                        flag =0;
                     }
                     checktimes.add(time);
                     startCal.add(Calendar.HOUR, +1);
@@ -369,6 +387,7 @@ public class ReservationService {
                 e.printStackTrace();
             }
         }
+        return flag;
     }
 
     public void doneReservation(Long reservationId) {
@@ -382,5 +401,80 @@ public class ReservationService {
             reservation.setStatus("004"); // 예약상태를 이용 완료로 바꾸기
             reservationRepository.save(reservation); // 004 이용 완료상태 저장
         }
+    }
+
+    public List<String> getTimes(Long spaceId) {
+        // 1. 공간 정보 찾기
+        Space space = spaceRepository.findById(spaceId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 spaceId는 존재하지 않습니다."));
+
+        // 2. 예약된 시간 찾기
+        return getReservedTimes(space);
+    }
+
+    //결제 전, 중복 예약 확인
+    public void checkDoubleReservation(ReservationRequestDto requestDto) {
+        //이미 예약완료인지 확인
+        int flag = checkReservedTimes(requestDto);
+        //현재 예약 중인지 확인
+        //1) 예약할 날짜 확인
+        List<String> checktimes = new ArrayList<>();
+        Calendar startCal = Calendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
+        // 포맷변경 (년월일 시분)
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        if (requestDto.getPrepay().equals("002")) {
+            // 예약된 날짜 하루 간격으로 더하기
+            try {
+                Date startDate = formatter.parse(requestDto.getStartDate());
+                startCal.setTime(startDate);
+                String time;
+                Date endDate = formatter.parse(requestDto.getEndDate());
+                endCal.setTime(endDate);
+                // 이용시작 시간부터 이용종료 시간 전까지 시간 더하기
+                while (startCal.before(endCal)) {
+                    time = formatter.format(startCal.getTime());
+                    checktimes.add(time.split(" ")[0]);
+                    startCal.add(Calendar.DATE, +1);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // 예약된 시간 1시간 간격으로 더하기
+            try {
+                Date startDate = formatter.parse(requestDto.getStartDate());
+                startCal.setTime(startDate);
+                String time;
+                Date endDate = formatter.parse(requestDto.getEndDate());
+                endCal.setTime(endDate);
+                // 이용시작 시간부터 이용종료 시간 전까지 시간 더하기
+                while (startCal.before(endCal)) {
+                    time = formatter.format(startCal.getTime());
+                    checktimes.add(time);
+                    startCal.add(Calendar.HOUR, +1);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //2) Redis에 예약중인 날짜 저장
+        RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.execute(new SessionCallback() {
+            @Override
+            public Object execute(RedisOperations operations) throws DataAccessException {
+                operations.multi(); // transaction start
+                Boolean result;
+                for (String checktime:checktimes) {
+                    result = operations.opsForValue().setIfAbsent(requestDto.getSpaceId()+checktime,true, Duration.ofMinutes(5));
+                    if (Boolean.FALSE.equals(result)) {
+                        throw new RuntimeException("exception");
+                    }
+                }
+                return operations.exec(); // transaction end
+            }
+        });
+
     }
 }
