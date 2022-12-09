@@ -61,6 +61,9 @@ dependencies {
     testCompileOnly 'junit:junit:4.12'
     testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.3.1'
 
+    // redis
+    implementation 'org.springframework.data:spring-data-redis:2.7.5'
+
 }
 
 tasks.named('test') {
