@@ -4,6 +4,7 @@ import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.mileage.service.MileageService;
 import com.golfzon.lastspacezbe.payment.dto.RefundDto;
 import com.golfzon.lastspacezbe.payment.service.PaymentService;
+import com.golfzon.lastspacezbe.redis.RedisService;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationSpaceDto;
 import com.golfzon.lastspacezbe.reservation.entity.Reservation;
@@ -48,6 +49,7 @@ public class ReservationService {
     private final SpaceRepository spaceRepository;
     private final MileageService mileageService;
     private final PaymentService paymentService;
+    private final RedisService redisService;
 
     // 예약하기
     public void reserve(ReservationRequestDto requestDto, Member member) {
@@ -343,7 +345,6 @@ public class ReservationService {
         List<String> reservedTimes = getReservedTimes(space);
         log.info("size가 0인지?:{}",reservedTimes.size()==0);
         if(reservedTimes.size()==0) return flag;
-        log.info("지나가지 않았는지?");
         List<String> checktimes = new ArrayList<>();
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
@@ -467,21 +468,6 @@ public class ReservationService {
         log.info("checkTimes:{}",checktimes);
 
         //2) Redis에 예약중인 날짜 저장
-        RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.execute(new SessionCallback() {
-            @Override
-            public Object execute(RedisOperations operations) throws DataAccessException {
-                operations.multi(); // transaction start
-                Boolean result;
-                for (String checktime:checktimes) {
-                    result = operations.opsForValue().setIfAbsent(requestDto.getSpaceId()+checktime,true, Duration.ofMinutes(5));
-                    if (Boolean.FALSE.equals(result)) {
-                        throw new RuntimeException("exception");
-                    }
-                }
-                return operations.exec(); // transaction end
-            }
-        });
-
+        redisService.checkReservation(requestDto, checktimes);
     }
 }

@@ -1,12 +1,17 @@
 package com.golfzon.lastspacezbe.redis;
 
+import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -55,5 +60,22 @@ public class RedisService {
     // 키-벨류 삭제
     public void delValues(String username) {
         redisTemplate.delete(username);
+    }
+
+    public void checkReservation(ReservationRequestDto requestDto, List<String> checktimes) {
+        redisTemplate.execute(new SessionCallback() {
+            @Override
+            public Object execute(RedisOperations operations) throws DataAccessException {
+                operations.multi(); // transaction start
+                Boolean result;
+                for (String checktime:checktimes) {
+                    result = operations.opsForValue().setIfAbsent(requestDto.getSpaceId()+checktime,true, Duration.ofMinutes(5));
+                    if (Boolean.FALSE.equals(result)) {
+                        throw new RuntimeException("exception");
+                    }
+                }
+                return operations.exec(); // transaction end
+            }
+        });
     }
 }
