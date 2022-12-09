@@ -341,7 +341,9 @@ public class ReservationService {
         Space space = spaceRepository.findById(requestDto.getSpaceId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 spaceId는 존재하지 않습니다."));
         List<String> reservedTimes = getReservedTimes(space);
+        log.info("size가 0인지?:{}",reservedTimes.size()==0);
         if(reservedTimes.size()==0) return flag;
+        log.info("지나가지 않았는지?");
         List<String> checktimes = new ArrayList<>();
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
@@ -415,6 +417,7 @@ public class ReservationService {
 
     //결제 전, 중복 예약 확인
     public void checkDoubleReservation(ReservationRequestDto requestDto) {
+        log.info("request:{}",requestDto);
         //이미 예약완료인지 확인
         int flag = checkReservedTimes(requestDto);
         if(flag==0) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 예약이 완료되었습니다.");
@@ -460,6 +463,8 @@ public class ReservationService {
                 e.printStackTrace();
             }
         }
+
+        log.info("checkTimes:{}",checktimes);
 
         //2) Redis에 예약중인 날짜 저장
         RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
