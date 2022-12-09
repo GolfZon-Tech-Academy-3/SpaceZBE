@@ -28,12 +28,6 @@ import java.util.Optional;
 public class CompanyController {
 
     private final CompanyService companyService;
-    private final RedisService redisService;
-
-    @GetMapping(value = "/redis")
-    public void redisTest(){
-        redisService.redisString();
-    }
 
     // 업체 등록 (신청)
     @ApiOperation(value = "업체 등록", notes = "업체 등록이 가능합니다.")

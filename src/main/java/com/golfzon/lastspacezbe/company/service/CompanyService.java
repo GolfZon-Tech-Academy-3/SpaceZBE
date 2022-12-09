@@ -8,7 +8,6 @@ import com.golfzon.lastspacezbe.company.repository.CompanyRepository;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.member.repository.MemberRepository;
 import com.golfzon.lastspacezbe.reservation.service.ReservationService;
-import com.golfzon.lastspacezbe.review.entity.Review;
 import com.golfzon.lastspacezbe.review.repository.ReviewRepository;
 import com.golfzon.lastspacezbe.space.dto.SpaceResponseDto;
 import com.golfzon.lastspacezbe.space.entity.Space;
@@ -122,14 +121,14 @@ public class CompanyService {
     // 인기장소 8개 가져오기
     @Transactional
     public List<MainResponseDto> getHotCompany(Long memberId) {
-        List<Company> companyList = companyRepository.findTop8ByOrderByReviewAvgDesc();
+        List<Company> companyList = companyRepository.findTop8ByApproveStatusOrderByReviewAvgDesc("001");
         log.info("companyList.size:{}", companyList.size());
         return getCompanyInfo(companyList, memberId, "hotCompany");
     }
 
     // 최신등록 장소 4개 가져오기
     public List<MainResponseDto> getNewCompany(Long memberId) {
-        List<Company> companyList = companyRepository.findTop4ByOrderByCreatedTimeDesc();
+        List<Company> companyList = companyRepository.findTop4ByApproveStatusOrderByCreatedTimeDesc("001");
         log.info("companyList.size:{}", companyList.size());
         return getCompanyInfo(companyList, memberId, "newCompany");
     }
