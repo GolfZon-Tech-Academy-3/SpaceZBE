@@ -16,12 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -125,6 +123,8 @@ public class PaymentService {
                 log.info("예약될 가격:{}",vo.getPrice());
                 reserve(vo);
                 flag = 1;
+            } else {
+                refund(new RefundDto(vo.getPrepayUid(), "계산된 금액과 일치하지 않습니다.", price, vo.getMemberId()));
             }
         }
         return flag;
@@ -280,7 +280,7 @@ public class PaymentService {
         return unixTime;
     }
 
-    // 예약된 총 시간 계산
+    // 예약된 총 시간 계산(데스크,회의실)
     public int getReserveTime(String startDate, String endDate) {
         int time = 0;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
@@ -293,6 +293,26 @@ public class PaymentService {
         }
         log.info("time:{}hr",time);
         return time;
+    }
+
+    // 예약된 총 날짜 계산(오피스) 및 유효성 검사
+    public void verifyReserveDate(ReservationRequestDto dto) {
+        int days = 0;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date1 = formatter.parse(dto.getStartDate().split(" ")[0]);
+            Date date2 = formatter.parse(dto.getEndDate().split(" ")[0]);
+            days = (int) ((date2.getTime() - date1.getTime()) / (24*60*60*1000));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        log.info("days:{}일",days);
+        //실제 계산될 돈과 요청된 돈이 불일치 시
+        Space space = spaceRepository.findById(dto.getSpaceId()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "찾는 공간이 없습니다."));
+        if(space.getPrice()*days != (dto.getPrice()+dto.getMileage())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"요청된 금액이 실제 계산될 금액과 일치하지 않습니다.");
+        }
     }
 
     // random 주문번호 생성

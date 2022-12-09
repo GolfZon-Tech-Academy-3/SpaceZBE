@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @Api(tags = "예약 컨트롤러")
 @RestController
@@ -28,14 +30,22 @@ public class ReservationController {
     public ResponseEntity<String> checkReserve(
             @RequestBody ReservationRequestDto requestDto){
 
-        reservationService.checkReservedTimes(requestDto);
+        reservationService.checkDoubleReservation(requestDto);
         return ResponseEntity.ok()
                 .body("result : 예약가능합니다.");
     }
 
+    // 예약하기- 날짜조회
+    @ApiOperation(value = "예약된 날짜조회", notes = "예약된 날짜 조회 기능입니다.")
+    @GetMapping(value = "/details/{spaceId}/times")
+    public ResponseEntity<List<String>> getTimes(
+            @PathVariable(value = "spaceId") Long spaceId){
+
+        return ResponseEntity.ok()
+                .body(reservationService.getTimes(spaceId));
+    }
+
     // 예약하기 상세 페이지
-    // /reservation/details?spaceId=1
-    // 예약하기
     @ApiOperation(value = "예약폼 페이지", notes = "예약하기 폼 페이지입니다.")
     @GetMapping(value = "/details/{spaceId}")
     public ResponseEntity<ReservationSpaceDto> getDetails(
