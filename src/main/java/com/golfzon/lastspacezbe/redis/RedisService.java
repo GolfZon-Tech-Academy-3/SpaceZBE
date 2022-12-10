@@ -49,25 +49,8 @@ public class RedisService {
         redisTemplate.delete(email);
     }
 
-    // 키-벨류 설정
-    public void setValues(String id, String pwd) {
-        ValueOperations<String, String> values = redisTemplate.opsForValue();
-        values.set(id, pwd, Duration.ofDays(1));
-    }
-
-    // 키값으로 벨류 가져오기
-    public String getValues(String id) {
-        ValueOperations<String, String> values = redisTemplate.opsForValue();
-        return values.get(id);
-    }
-
-    // 키-벨류 삭제
-    public void delValues(String username) {
-        redisTemplate.delete(username);
-    }
 
     // 예약날짜 저장
-
     @Transactional
     public void checkReservation(ReservationRequestDto requestDto, List<String> checktimes) {
         ValueOperations<String, String> values = redisTemplate.opsForValue();
