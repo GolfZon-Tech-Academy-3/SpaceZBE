@@ -8,9 +8,13 @@ import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -28,14 +32,14 @@ public class RedisService {
     }
 
     // 키-벨류 설정
-    public void setRefreshValues(String email, String refresh){
+    public void setRefreshValues(String email, String refresh) {
         ValueOperations<String, String> values = redisTemplate.opsForValue();
 //        values.set(name, age);
-        values.set(email, refresh,Duration.ofDays(7));
+        values.set(email, refresh, Duration.ofDays(7));
     }
 
     // 키값으로 벨류 가져오기
-    public String getRefreshValues(String email){
+    public String getRefreshValues(String email) {
         ValueOperations<String, String> values = redisTemplate.opsForValue();
         return values.get(email);
     }
@@ -45,37 +49,42 @@ public class RedisService {
         redisTemplate.delete(email);
     }
 
-    // 키-벨류 설정
-    public void setValues(String id, String pwd){
-        ValueOperations<String, String> values = redisTemplate.opsForValue();
-        values.set(id, pwd, Duration.ofDays(1));
-    }
 
-    // 키값으로 벨류 가져오기
-    public String getValues(String id){
-        ValueOperations<String, String> values = redisTemplate.opsForValue();
-        return values.get(id);
-    }
-
-    // 키-벨류 삭제
-    public void delValues(String username) {
-        redisTemplate.delete(username);
-    }
-
+    // 예약날짜 저장
+    @Transactional
     public void checkReservation(ReservationRequestDto requestDto, List<String> checktimes) {
+        ValueOperations<String, String> values = redisTemplate.opsForValue();
+
+        String key;
+        List<String> keys = new ArrayList<>();
+        String value;
+        for (String checktime : checktimes) {
+            key = requestDto.getSpaceId() + checktime;
+            value = values.get(key);
+            if (value != null) {
+                log.info("이미 있습니다.");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 예약진행중입니다.");
+            } else keys.add(key);
+        }
+
         redisTemplate.execute(new SessionCallback() {
             @Override
             public Object execute(RedisOperations operations) throws DataAccessException {
-                operations.multi(); // transaction start
-                Boolean result;
-                for (String checktime:checktimes) {
-                    result = operations.opsForValue().setIfAbsent(requestDto.getSpaceId()+checktime,true, Duration.ofMinutes(5));
-                    if (Boolean.FALSE.equals(result)) {
-                        throw new RuntimeException("exception");
-                    }
+                operations.watch(keys);
+                operations.multi();
+                for (String checktime : checktimes) {
+                    String key = requestDto.getSpaceId() + checktime;
+                    operations.opsForValue().setIfAbsent(key, "true", Duration.ofMinutes(5));
+                    log.info("저장:{}", key);
                 }
-                return operations.exec(); // transaction end
+                Object obj;
+                obj = operations.exec();
+                log.info("obj:{}", obj);
+                if(obj.toString().equals("[]")) throw new RuntimeException("이미 예약 진행중입니다.");
+                return obj;
             }
         });
     }
 }
+
+
