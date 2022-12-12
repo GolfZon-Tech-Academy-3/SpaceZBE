@@ -185,9 +185,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000"); // local 테스트 시
-        configuration.addAllowedOrigin("https://acme-v02.api.letsencrypt.org:443"); // local 테스트 시
-        configuration.addAllowedOrigin("https://acme-v02.api.letsencrypt.org"); // local 테스트 시
-        configuration.addAllowedOrigin("http://localhost:8080"); // local 테스트 시
+        configuration.addAllowedOrigin("https://spacezz.shop:443"); // local 테스트 시
+        configuration.addAllowedOrigin("https://spacezz.shop"); // local 테스트 시
+        configuration.addAllowedOrigin("https://localhost:8080"); // local 테스트 시
         configuration.addAllowedOrigin("http://localhost:8081"); // local 테스트 시
         configuration.addAllowedOrigin("*"); // local 테스트 시
         configuration.addAllowedOriginPattern("*");

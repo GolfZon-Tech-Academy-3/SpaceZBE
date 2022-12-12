@@ -120,7 +120,7 @@ public class CompanyController {
 
     // 업체 북마크
     @ApiOperation(value = "업체관심등록", notes = "업체 관심등록/취소 기능입니다.")
-    @PostMapping(value = "/like/{companyId}")
+    @GetMapping(value = "/like/{companyId}")
     public ResponseEntity<Boolean> companyLike(@PathVariable(name = "companyId") Long companyId) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("principal:{}",principal);
