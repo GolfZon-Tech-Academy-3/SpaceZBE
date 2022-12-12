@@ -67,7 +67,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         ,"/swagger-ui/**"
                         ,"/swagger-resources/**"
                         ,"/v2/api-docs"
-                        ,"/h2-console");
+                        ,"/h2-console"
+                        ,"/port-profile"
+                        ,"/hello");
     }
 
     @Override
@@ -142,6 +144,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         skipPathList.add("GET,/favicon.ico");
 
+        skipPathList.add("GET,/port-profile");
+        skipPathList.add("GET,/hello");
+
+
+
         // 예약 관리 API 허용
 //        skipPathList.add("GET,/reservation/**");
         skipPathList.add("POST,/payment/**");
@@ -187,6 +194,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.addAllowedOrigin("http://localhost:3000"); // local 테스트 시
         configuration.addAllowedOrigin("https://spacezz.shop:443"); // local 테스트 시
         configuration.addAllowedOrigin("https://spacezz.shop"); // local 테스트 시
+        configuration.addAllowedOrigin("https://spacezzz.netflify.com"); // local 테스트 시
         configuration.addAllowedOrigin("https://localhost:8080"); // local 테스트 시
         configuration.addAllowedOrigin("http://localhost:8081"); // local 테스트 시
         configuration.addAllowedOrigin("*"); // local 테스트 시
