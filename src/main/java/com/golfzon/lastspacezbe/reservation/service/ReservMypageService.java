@@ -67,7 +67,7 @@ public class ReservMypageService {
                 responseDto.setLocation(company.getLocation());// 장소 위치
                 responseDto.setDetails(company.getDetails());// 장소 상세 위치
 
-                Review review = reviewRepository.findBySpaceIdAndMemberId(data.getSpaceId(), memberId);
+                Review review = reviewRepository.findByReservationIdAndMemberId(data.getReservationId(), memberId);
                 if (review != null) {
                     responseDto.setReview(new ReviewDto(review));
                 }

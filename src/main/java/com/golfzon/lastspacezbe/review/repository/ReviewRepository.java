@@ -17,11 +17,11 @@ public interface ReviewRepository extends JpaRepository<Review,Long> {
 
     List<Review> findAllByCompanyIdOrderByReviewTimeDesc(Pageable pageable, Long companyId);
 
-    Review findBySpaceIdAndMemberId(Long spaceId, Long memberId);
-
     Review findByReviewId(Long reviewId);
 
     List<Review> findAllByCompanyId(Long companyId);
 
     int countByCompanyId(Long companyId);
+
+    Review findByReservationIdAndMemberId(Long reservationId, Long memberId);
 }

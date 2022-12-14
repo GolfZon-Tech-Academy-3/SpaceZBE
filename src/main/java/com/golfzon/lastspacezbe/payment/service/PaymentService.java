@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -39,11 +41,11 @@ public class PaymentService {
     @Value("${import.imp_secret}")
     private String imp_secret;
 
+    @Value("${toss.secret_key}")
+    private String toss_secret;
+
     // import에서 accesstoken 생성하여 받아오기.
     public String getAccessToken() {
-        log.info("imp_key: {}", imp_key);
-        log.info("imp_secret: {}", imp_secret);
-
         RestTemplate rt = new RestTemplate();
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
@@ -345,5 +347,39 @@ public class PaymentService {
         } else{
             return "result : 예약결제 실패";
         }
+    }
+
+    public String getTossAccessToken(String code, String customerKey) {
+        RestTemplate rt = new RestTemplate();
+        // HTTP Header 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        log.info("Basic "+Base64.getEncoder().encodeToString(toss_secret.getBytes(StandardCharsets.UTF_8)));
+        headers.add("Authorization", "Basic "+Base64.getEncoder().encodeToString(toss_secret.getBytes(StandardCharsets.UTF_8)));
+        // Request body 생성
+        JSONObject body = new JSONObject();
+        body.put("grantType", "AuthorizationCode");
+        body.put("code", code);
+        body.put("customerKey", customerKey);
+
+        // HTTP 요청 보내기
+        HttpEntity<JSONObject> entity = new HttpEntity<>(body, headers);
+        ResponseEntity<JSONObject> response = rt.postForEntity("https://api.tosspayments.com/v1/brandpay/authorizations/access-token", entity, JSONObject.class);
+
+        // HTTP 응답 (JSON) -> 액세스 토큰 파싱
+        String responseBody = Objects.requireNonNull(response.getBody()).toString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = objectMapper.readTree(responseBody);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        if (jsonNode == null) {
+            throw new NullPointerException("jsonNode가 null입니다.");
+        }
+        log.info(jsonNode.asText());
+        log.info("accessToken:{}", jsonNode.get("accessToken").asText());
+        return "토스 accessToken 발급완료";
     }
 }

@@ -79,7 +79,7 @@ public class ReservationService {
                 requestDto.getReservationName(), requestDto.getStartDate(), requestDto.getEndDate(),
                 "001", "002", requestDto.getPrice(), requestDto.getPrepay(),
                 requestDto.getImpUid(), "prepay", "postPay", requestDto.getMileage(),
-                requestDto.getSpaceId(), space.getCompanyId());
+                requestDto.getSpaceId(), space.getCompanyId(), false);
 
         int flag = 0;
         // 선결제(000) or 보증금결제(001) or 후결제(002)
@@ -92,7 +92,7 @@ public class ReservationService {
                 reservation.setPostpayUid("000");
                 // payStatus: 결제 전 001, 결제 완료 002, 결제 취소 000, 보증금 결제완료 003, 보증금 결제취소 004
                 reservation.setPayStatus("002");
-                reservation.setPrice(requestDto.getPrice());
+                reservation.setPrice(requestDto.getPrice()); //전체가격에서 마일리지를 제한 실제 결제된 총 가격
                 log.info("reservation:{}", reservation);
                 // 마일리지 사용 및 적립
                 if (flag == 1) {
@@ -108,14 +108,13 @@ public class ReservationService {
                 break;
             //보증금결제
             case "001":
-                int originalPrice = requestDto.getPrice();
+                int originalPrice = requestDto.getPrice(); //전체가격에서 마일리지를 제한 실제 결제되고, 결제될 총 가격
                 flag = paymentService.depositOK(requestDto);
                 reservation.setPrice(originalPrice);
                 reservation.setPrepayUid(requestDto.getPrepayUid());
                 reservation.setPostpayUid(requestDto.getPostpayUid());
                 //보증금 결제완료 003
                 reservation.setPayStatus("003");
-                reservation.setPrice(requestDto.getPrice() - requestDto.getMileage());
                 // 저장
                 if (flag == 1) {
                     // 마일리지 사용
@@ -133,7 +132,7 @@ public class ReservationService {
                 reservation.setPostpayUid(requestDto.getPostpayUid());
                 // 결제 전 001
                 reservation.setPayStatus("001");
-                reservation.setPrice(requestDto.getPrice() - requestDto.getMileage());
+                reservation.setPrice(requestDto.getPrice()); //전체가격에서 마일리지를 제한 실제 결제될 총 가격
                 // 저장
                 if (flag == 1) {
                     // 마일리지 사용
