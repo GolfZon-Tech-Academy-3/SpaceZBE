@@ -69,7 +69,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         ,"/v2/api-docs"
                         ,"/h2-console"
                         ,"/port-profile"
-                        ,"/hello");
+                        ,"/hello"
+                        ,"payment");
     }
 
     @Override
@@ -144,13 +145,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         skipPathList.add("GET,/favicon.ico");
 
+        //nginx
         skipPathList.add("GET,/port-profile");
         skipPathList.add("GET,/hello");
 
+        //toss
 
 
         // 예약 관리 API 허용
-//        skipPathList.add("GET,/reservation/**");
+        skipPathList.add("POST,/reservation/**");
+        skipPathList.add("GET,/payment/**");
         skipPathList.add("POST,/payment/**");
 //        skipPathList.add("PUT,/reservation/**");
 //        skipPathList.add("DELETE,/reservation/**");
@@ -197,6 +201,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.addAllowedOrigin("https://spacezzz.netflify.com"); // local 테스트 시
         configuration.addAllowedOrigin("https://localhost:8080"); // local 테스트 시
         configuration.addAllowedOrigin("http://localhost:8081"); // local 테스트 시
+        configuration.addAllowedOrigin("https://13.124.18.147"); // toss 테스트 시
+        configuration.addAllowedOrigin("https://13.124.108.35"); // toss 테스트 시
+        configuration.addAllowedOrigin("https://3.36.173.151"); // toss 테스트 시
+        configuration.addAllowedOrigin("https://3.38.81.32"); // toss 테스트 시
         configuration.addAllowedOrigin("*"); // local 테스트 시
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedMethod("*");

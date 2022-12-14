@@ -114,11 +114,6 @@ public class ReservMypageService {
                 responseDto.setLocation(company.getLocation());// 장소 위치
                 responseDto.setDetails(company.getDetails());// 장소 상세 위치
 
-                Review review = reviewRepository.findBySpaceId(data.getSpaceId());
-                if (review != null) {
-                    responseDto.setReview(new ReviewDto(review));
-                }
-
                 reservationResponseDtos.add(responseDto);
             }
         }
