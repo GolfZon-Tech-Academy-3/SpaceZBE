@@ -280,45 +280,59 @@ public class CompanyService {
     // 예약 가능한 시간 조회(같은 날짜)
     public List<String> getTimes(Space space, Optional<SearchRequestDto> searchDto) {
         List<String> times = new ArrayList<>();
-        // 포맷변경 (년월일 시분)
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
-        Calendar startCal = Calendar.getInstance();
-        Calendar endCal = Calendar.getInstance();
-        // 시간 1시간 간격으로 더하기
-        Date startDate;
-        try {
-            startDate = formatter.parse(space.getOpenTime());
-            startCal.setTime(startDate);
-            String time;
-            Date endDate = formatter.parse(space.getCloseTime());
-            endCal.setTime(endDate);
-            // 오픈시작 시간부터 종료 시간 전까지 시간 더하기
-            while (startCal.before(endCal)) {
-                time = formatter.format(startCal.getTime());
-                times.add(time);
-                startCal.add(Calendar.HOUR, +1);
+        if(!space.getType().equals("오피스")){
+            // 포맷변경 (년월일 시분)
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+            Calendar startCal = Calendar.getInstance();
+            Calendar endCal = Calendar.getInstance();
+            // 시간 1시간 간격으로 더하기
+            Date startDate;
+            try {
+                startDate = formatter.parse(space.getOpenTime());
+                startCal.setTime(startDate);
+                String time;
+                Date endDate = formatter.parse(space.getCloseTime());
+                endCal.setTime(endDate);
+                // 오픈시작 시간부터 종료 시간 전까지 시간 더하기
+                while (startCal.before(endCal)) {
+                    time = formatter.format(startCal.getTime());
+                    times.add(time);
+                    startCal.add(Calendar.HOUR, +1);
+                }
+                // break time 은 없애기
+                startDate = formatter.parse(space.getBreakOpen());
+                startCal.setTime(startDate);
+                endDate = formatter.parse(space.getBreakClose());
+                endCal.setTime(endDate);
+                while (startCal.before(endCal)) {
+                    time = formatter.format(startCal.getTime());
+                    times.remove(time);
+                    startCal.add(Calendar.HOUR, +1);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-            // break time 은 없애기
-            startDate = formatter.parse(space.getBreakOpen());
-            startCal.setTime(startDate);
-            endDate = formatter.parse(space.getBreakClose());
-            endCal.setTime(endDate);
-            while (startCal.before(endCal)) {
-                time = formatter.format(startCal.getTime());
-                times.remove(time);
-                startCal.add(Calendar.HOUR, +1);
+
+            // 2. 예약된 시간 구하기
+            List<String> reservedTimes = reservationService.getReservedTimes(space);
+
+            // 3. 예약 가능한 시간 있는지 확인
+            for (String reservedTime : reservedTimes) {
+                if (reservedTime.split(" ")[0].equals(searchDto.get().getDate())) {
+                    times.remove(reservedTime.split(" ")[1]);
+                }
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        } else {
+            // 2. 예약된 시간 구하기
+            List<String> reservedTimes = reservationService.getReservedTimes(space);
 
-        // 2. 예약된 시간 구하기
-        List<String> reservedTimes = reservationService.getReservedTimes(space);
-
-        // 3. 예약 가능한 시간 있는지 확인
-        for (String reservedTime : reservedTimes) {
-            if (reservedTime.split(" ")[0].equals(searchDto.get().getDate())) {
-                times.remove(reservedTime.split(" ")[1]);
+            // 3. 예약 가능한 시간 있는지 확인
+            for (String reservedTime : reservedTimes) {
+                if (reservedTime.split(" ")[0].equals(searchDto.get().getDate())) {
+                    return new ArrayList<>();
+                } else {
+                    times.add("예약가능");
+                }
             }
         }
         log.info("예약 가능한 시간들:{}", times);
