@@ -195,7 +195,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:3000"); // local 테스트 시
+        configuration.addAllowedOrigin("http://localhost:3000/"); // local 테스트 시
         configuration.addAllowedOrigin("https://spacezz.shop:443"); // local 테스트 시
         configuration.addAllowedOrigin("https://spacezz.shop"); // local 테스트 시
         configuration.addAllowedOrigin("https://spacezzz.netflify.com"); // local 테스트 시

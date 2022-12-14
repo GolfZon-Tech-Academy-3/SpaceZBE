@@ -95,8 +95,8 @@ public class ReservMypageService {
                 List<SpaceImage> spaceImages = spaceImageRepository.findAllBySpace(space);
                 type = space.getType();
                 spaceName = space.getSpaceName();
-
                 ReservationResponseDto responseDto = new ReservationResponseDto();
+
                 responseDto.setReservationId(data.getReservationId());
                 responseDto.setStartDate(data.getStartDate());
                 responseDto.setEndDate(data.getEndDate());
