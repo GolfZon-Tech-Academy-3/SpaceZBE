@@ -28,6 +28,8 @@ public class Review {
     @Column(name = "space_id")
     Long spaceId;
 
+    @Column(name = "reservation_id")
+    Long reservationId;
     @Column(name = "company_id")
     Long companyId;
     @Column(name = "member_id")
@@ -45,6 +47,7 @@ public class Review {
         this.memberId = memberId;
         this.content = requestDto.getContent();
         this.rating = requestDto.getRating();
+        this.reservationId = requestDto.getReservationId();
     }
 
     @Override
@@ -52,6 +55,7 @@ public class Review {
         return "Review{" +
                 "reviewId=" + reviewId +
                 ", spaceId=" + spaceId +
+                ", reservationId=" + reservationId +
                 ", companyId=" + companyId +
                 ", memberId=" + memberId +
                 ", content='" + content + '\'' +

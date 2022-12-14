@@ -12,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ReviewDto {
 
+    Long reservationId;
     Long reviewId;
     Long companyId;
     Long spaceId;
@@ -31,7 +32,8 @@ public class ReviewDto {
     @Override
     public String toString() {
         return "ReviewDto{" +
-                "reviewId=" + reviewId +
+                "reservationId=" + reservationId +
+                ", reviewId=" + reviewId +
                 ", companyId=" + companyId +
                 ", spaceId=" + spaceId +
                 ", memberImage='" + memberImage + '\'' +
