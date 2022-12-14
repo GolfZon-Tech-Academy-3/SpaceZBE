@@ -95,8 +95,8 @@ public class ReservMypageService {
                 List<SpaceImage> spaceImages = spaceImageRepository.findAllBySpace(space);
                 type = space.getType();
                 spaceName = space.getSpaceName();
-
                 ReservationResponseDto responseDto = new ReservationResponseDto();
+
                 responseDto.setReservationId(data.getReservationId());
                 responseDto.setStartDate(data.getStartDate());
                 responseDto.setEndDate(data.getEndDate());
@@ -113,11 +113,6 @@ public class ReservMypageService {
                 responseDto.setImageName(spaceImages.get(0).getSpaceImage());// 이미지 첫번째
                 responseDto.setLocation(company.getLocation());// 장소 위치
                 responseDto.setDetails(company.getDetails());// 장소 상세 위치
-
-                Review review = reviewRepository.findBySpaceId(data.getSpaceId());
-                if (review != null) {
-                    responseDto.setReview(new ReviewDto(review));
-                }
 
                 reservationResponseDtos.add(responseDto);
             }
