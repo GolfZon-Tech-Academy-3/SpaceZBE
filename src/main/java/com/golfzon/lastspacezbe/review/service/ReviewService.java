@@ -40,11 +40,13 @@ public class ReviewService {
         Map<String, Object> map = new HashMap<>();
 
         Pageable pageable = PageRequest.of(page -1, 5);
-        List<Review> reviewList = reviewRepository.findAllByCompanyIdOrderByReviewTimeDesc(pageable, companyId);
-        map.put("totalCount", reviewList.size()); // 총 리뷰 개수
+        Page<Review> reviewList = reviewRepository.findAllByCompanyIdOrderByReviewTimeDesc(pageable, companyId);
+        map.put("totalCount", reviewList.getTotalElements());// 총 리뷰 개수
+        map.put("totalPage", reviewList.getTotalPages());
+
         List<ReviewDto> reviews = new ArrayList<>();
 
-        if(reviewList.size()>0){
+        if(reviewList.getTotalElements()>0){
             for (Review review:reviewList) {
                 log.info("review:{}",review);
                 ReviewDto dto = new ReviewDto();

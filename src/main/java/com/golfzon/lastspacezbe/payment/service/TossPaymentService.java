@@ -72,7 +72,57 @@ public class TossPaymentService {
         }
         log.info(jsonNode.asText());
         log.info("accessToken:{}", jsonNode.get("accessToken").asText());
-        return "토스 accessToken 발급완료";
+        return jsonNode.get("accessToken").asText();
+    }
+
+    public String getMethods(ReservationRequestDto requestDto) {
+        RestTemplate rt = new RestTemplate();
+        // HTTP Header 생성
+        HttpHeaders headers = new HttpHeaders();
+        //headers.setContentType(MediaType.APPLICATION_JSON);
+        log.info("Basic " + Base64.getEncoder().encodeToString(toss_secret.getBytes(StandardCharsets.UTF_8)));
+        headers.add("Authorization", "Basic " + Base64.getEncoder().encodeToString(toss_secret.getBytes(StandardCharsets.UTF_8)));
+
+        // HTTP 요청 보내기
+        HttpEntity<JSONObject> entity = new HttpEntity<>(headers);
+        ResponseEntity<String> response = rt.exchange(
+                "https://api.tosspayments.com/v1/brandpay/payments/methods/"+requestDto.getMemberId(),
+                HttpMethod.GET,
+                entity, String.class);
+
+        // HTTP 응답 (JSON) -> 액세스 토큰 파싱
+        String responseBody = response.getBody();
+        log.info(responseBody);
+
+        //String responseBody = Objects.requireNonNull(response.getBody()).toString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = objectMapper.readTree(responseBody);
+            log.info(requestDto.getMethodId());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        if (jsonNode == null) {
+            throw new NullPointerException("jsonNode가 null입니다.");
+        } else {
+            int index = 0;
+            while (jsonNode.get("cards").get(index) != null) {
+                log.info(String.valueOf(jsonNode.get("cards").get(index).get("id").toString().replaceAll("\"", "").equals(requestDto.getMethodId())));
+                if (jsonNode.get("cards").get(index).get("id").toString().replaceAll("\"", "").equals(requestDto.getMethodId())) {
+                    log.info("methodKey:{}",jsonNode.get("cards").get(index).get("methodKey").toString());
+                    return jsonNode.get("cards").get(index).get("methodKey").toString().replaceAll("\"","");
+                } else index++;
+            }
+            index = 0;
+            while (jsonNode.get("accounts").get(index) != null) {
+                if (jsonNode.get("accounts").get(index).get("id").toString().replaceAll("\"","").equals(requestDto.getMethodId())) {
+                    log.info("methodKey:{}",jsonNode.get("accounts").get(index).get("methodKey").toString());
+                    return jsonNode.get("accounts").get(index).get("methodKey").toString();
+                } else index++;
+            }
+            throw new NullPointerException("methodKey가 null입니다.");
+        }
     }
 
     public void tossReserve(ReservationRequestDto requestDto, Member member) {
@@ -145,7 +195,6 @@ public class TossPaymentService {
                     mileageService.updateMileage(requestDto);
                     log.info("마일리지 사용 완료");
                 }
-
                 break;
         }
         // 저장
@@ -162,7 +211,7 @@ public class TossPaymentService {
         headers.add("Authorization", "Basic " + Base64.getEncoder().encodeToString(toss_secret.getBytes(StandardCharsets.UTF_8)));
         // Request body 생성
         JSONObject body = new JSONObject();
-        body.put("paymentKey", requestDto.getImpUid()); // 결제 고유키(Import uid와 혼용하여 사용)
+        body.put("paymentKey", requestDto.getImpUid()); // 결제 고유키
         body.put("amount", requestDto.getPrice()); // 결제될 가격
         body.put("customerKey", requestDto.getMemberId()); // USER 번호
         body.put("orderId", requestDto.getPrepayUid()); // 주문아이디
@@ -184,12 +233,50 @@ public class TossPaymentService {
             throw new NullPointerException("jsonNode가 null입니다.");
         }
         log.info(jsonNode.asText());
-        log.info("accessToken:{}", jsonNode.get("accessToken").asText());
+        log.info("status:{}", jsonNode.get("status").asText());
+        log.info("amount:{}", jsonNode.get("card").get("amount").asText());
     }
 
     //후결제 예약 요청
     private void tossPostReserve(ReservationRequestDto requestDto) {
+        requestDto.setPostpayUid(paymentService.getMerchantUid());
+        RestTemplate rt = new RestTemplate();
+        // HTTP Header 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        log.info("후결제예약 요청 -> Basic " + Base64.getEncoder().encodeToString(toss_secret.getBytes(StandardCharsets.UTF_8)));
+        headers.add("Authorization", "Basic " + Base64.getEncoder().encodeToString(toss_secret.getBytes(StandardCharsets.UTF_8)));
+        // Request body 생성
+        JSONObject body = new JSONObject();
+        body.put("methodKey", getMethods(requestDto)); // 결제 수단
+        body.put("amount", requestDto.getPrice()); // 결제될 가격
+        body.put("customerKey", requestDto.getMemberId()); // USER 번호
+        body.put("orderId", requestDto.getPostpayUid()); // 주문아이디 merchant_uid
+        body.put("orderName", requestDto.getOrderName()); // 주문내용
+        body.put("approvedAt", requestDto.getEndDate()); // 결제될 시점
+        log.info("body:{}",body);
 
+        // HTTP 요청 보내기
+        HttpEntity<JSONObject> entity = new HttpEntity<>(body, headers);
+        ResponseEntity<JSONObject> response = rt.postForEntity("https://api.tosspayments.com/v1/brandpay/payments", entity, JSONObject.class);
+
+        // HTTP 응답 (JSON) -> 액세스 토큰 파싱
+        String responseBody = Objects.requireNonNull(response.getBody()).toString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = objectMapper.readTree(responseBody);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        if (jsonNode == null) {
+            throw new NullPointerException("jsonNode가 null입니다.");
+        }
+        log.info(jsonNode.asText());
+        log.info("status:{}", jsonNode.get("status").asText());
+        log.info("amount:{}", jsonNode.get("card").get("amount").asText());
+        log.info("paymentKey:{}", jsonNode.get("paymentKey").asText());
+        requestDto.setImpUid(jsonNode.get("paymentKey").asText());
     }
 
 

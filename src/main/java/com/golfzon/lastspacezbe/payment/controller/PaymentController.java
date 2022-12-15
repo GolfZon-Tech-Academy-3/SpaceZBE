@@ -38,8 +38,9 @@ public class PaymentController {
 
         log.info("code:{}",code);
         log.info("customerKey:{}",customerKey);
+        tossPaymentService.getTossAccessToken(code, customerKey);
         return ResponseEntity.ok()
-                .body(tossPaymentService.getTossAccessToken(code, customerKey));
+                .body("result : accessToken 발급완료");
     }
 
 }
