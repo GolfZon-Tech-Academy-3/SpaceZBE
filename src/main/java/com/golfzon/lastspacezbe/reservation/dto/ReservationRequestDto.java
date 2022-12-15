@@ -25,6 +25,8 @@ public class ReservationRequestDto {
 
     Long memberId;
     Boolean toss; //true:toss, false:import
+    String methodId; //등록한 결제수단
+    String orderName; //주문내용
 
     public ReservationRequestDto(String prepay, String imp_uid, String postpayUid) {
         this.prepay = prepay;
@@ -47,6 +49,8 @@ public class ReservationRequestDto {
                 ", postpayUid='" + postpayUid + '\'' +
                 ", memberId=" + memberId +
                 ", toss=" + toss +
+                ", methodId='" + methodId + '\'' +
+                ", orderName='" + orderName + '\'' +
                 '}';
     }
 }
