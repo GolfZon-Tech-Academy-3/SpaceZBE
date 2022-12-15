@@ -21,7 +21,7 @@ public class Scheduler {
     private final ReservationRepository reservationRepository;
     private final TossPaymentService tossPaymentService;
 
-    @Scheduled(cron = "0 * * * * *") //0 50 23 * * *
+    @Scheduled(cron = "0 50 23 * * *") //0 50 23 * * *
         public void autoPostPay(){
         log.info("후결제 시작");
         LocalDate now = LocalDate.now();
