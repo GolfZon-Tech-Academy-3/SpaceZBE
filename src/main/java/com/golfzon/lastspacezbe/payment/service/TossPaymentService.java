@@ -14,7 +14,6 @@ import com.golfzon.lastspacezbe.space.entity.Space;
 import com.golfzon.lastspacezbe.space.repository.SpaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -23,15 +22,17 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Base64;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class TossPaymentService {
 
+    private static String toss_secret;
     private final ReservationService reservationService;
     private final PaymentService paymentService;
     private final SpaceRepository spaceRepository;
@@ -39,7 +40,9 @@ public class TossPaymentService {
     private final ReservationRepository reservationRepository;
 
     @Value("${toss.secret_key}")
-    private String toss_secret;
+    public void setKey(String value){
+        toss_secret = value;
+    }
 
     public String getTossAccessToken(String code, String customerKey) {
         RestTemplate rt = new RestTemplate();
@@ -139,7 +142,7 @@ public class TossPaymentService {
                 requestDto.getReservationName(), requestDto.getStartDate(), requestDto.getEndDate(),
                 "001", "002", requestDto.getPrice(), requestDto.getPrepay(),
                 requestDto.getImpUid(), "prepay", "postPay", requestDto.getMileage(),
-                requestDto.getSpaceId(), space.getCompanyId(), true);
+                requestDto.getSpaceId(), space.getCompanyId(), true, requestDto.getMethodId());
 
         int flag = 0;
         // 선결제(000) or 보증금결제(001) or 후결제(002)
@@ -172,7 +175,7 @@ public class TossPaymentService {
                 tossDepositOK(requestDto);
                 reservation.setPrice(originalPrice);
                 reservation.setPrepayUid(requestDto.getPrepayUid());
-                reservation.setPostpayUid(requestDto.getPostpayUid());
+                reservation.setPostpayUid(paymentService.getMerchantUid());
                 //보증금 결제완료 003
                 reservation.setPayStatus("003");
                 // 마일리지 사용
@@ -184,9 +187,8 @@ public class TossPaymentService {
             //후결제
             case "002":
                 paymentService.verifyReserveDate(requestDto);
-                tossPostReserve(requestDto);
                 reservation.setPrepayUid(requestDto.getPrepayUid());
-                reservation.setPostpayUid(requestDto.getPostpayUid());
+                reservation.setPostpayUid(paymentService.getMerchantUid());
                 // 결제 전 001
                 reservation.setPayStatus("001");
                 reservation.setPrice(requestDto.getPrice());
@@ -202,7 +204,7 @@ public class TossPaymentService {
     }
 
     //선결제 및 보증금 결제 요청
-    private void tossPreReserve(ReservationRequestDto requestDto) {
+    public void tossPreReserve(ReservationRequestDto requestDto) {
         RestTemplate rt = new RestTemplate();
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
@@ -238,7 +240,7 @@ public class TossPaymentService {
     }
 
     //후결제 예약 요청
-    private void tossPostReserve(ReservationRequestDto requestDto) {
+    public void tossPostReserve(ReservationRequestDto requestDto) {
         requestDto.setPostpayUid(paymentService.getMerchantUid());
         RestTemplate rt = new RestTemplate();
         // HTTP Header 생성
@@ -253,7 +255,6 @@ public class TossPaymentService {
         body.put("customerKey", requestDto.getMemberId()); // USER 번호
         body.put("orderId", requestDto.getPostpayUid()); // 주문아이디 merchant_uid
         body.put("orderName", requestDto.getOrderName()); // 주문내용
-        body.put("approvedAt", requestDto.getEndDate()); // 결제될 시점
         log.info("body:{}",body);
 
         // HTTP 요청 보내기
@@ -316,7 +317,7 @@ public class TossPaymentService {
                 tossPreReserve(vo);
                 vo.setPrice(price2 - depositPrice - vo.getMileage());
                 log.info("예약될 가격:{}", vo.getPrice());
-                tossPostReserve(vo);
+                //tossPostReserve(vo);
             } else {
                 // 일치하지 않을 시, 에러반환
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "결제요청금액이 올바르지 않습니다.");
@@ -324,4 +325,38 @@ public class TossPaymentService {
         }
     }
 
+    public static void tossRefund(RefundDto refundDto) {
+        RestTemplate rt = new RestTemplate();
+        // HTTP Header 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        log.info("toss refund : Basic " + Base64.getEncoder().encodeToString(toss_secret.getBytes(StandardCharsets.UTF_8)));
+        headers.add("Authorization", "Basic " + Base64.getEncoder().encodeToString(toss_secret.getBytes(StandardCharsets.UTF_8)));
+        headers.add("Idempotency-Key", String.valueOf(UUID.randomUUID()));
+        // Request body 생성
+        JSONObject body = new JSONObject();
+        body.put("cancelReason", refundDto.getReason()); // 취소 사유
+
+        // HTTP 요청 보내기
+        String url = "https://api.tosspayments.com/v1/payments/"+refundDto.getMerchant_uid()+"/cancel";
+        log.info(url);
+        HttpEntity<JSONObject> entity = new HttpEntity<>(body, headers);
+        ResponseEntity<JSONObject> response = rt.postForEntity(url, entity, JSONObject.class);
+
+        // HTTP 응답 (JSON) -> 액세스 토큰 파싱
+        String responseBody = Objects.requireNonNull(response.getBody()).toString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = objectMapper.readTree(responseBody);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        if (jsonNode == null) {
+            throw new NullPointerException("jsonNode가 null입니다.");
+        }
+        log.info(jsonNode.asText());
+        log.info("status:{}", jsonNode.get("status").asText());
+        log.info("amount:{}", jsonNode.get("card").get("amount").asText());
+    }
 }

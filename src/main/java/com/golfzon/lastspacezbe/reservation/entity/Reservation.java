@@ -40,6 +40,7 @@ public class Reservation {
     @Column(name = "reservation_name", nullable=false)
     String reservationName;
     Boolean toss;
+    String methodId;
 
     @CreationTimestamp
     LocalDateTime reserveTime;
@@ -65,7 +66,7 @@ public class Reservation {
     // reserveTime 을 제외한 생성자
     public Reservation(Long memberId,String reservationName, String startDate, String endDate,
                        String status, String payStatus, int price, String prepay,
-                       String impUid, String prepayUid, String postpayUid, int mileage, Long spaceId, Long companyId, Boolean toss) {
+                       String impUid, String prepayUid, String postpayUid, int mileage, Long spaceId, Long companyId, Boolean toss, String methodId) {
         this.memberId = memberId;
         this.reservationName = reservationName;
         this.startDate = startDate;
@@ -81,6 +82,7 @@ public class Reservation {
         this.spaceId = spaceId;
         this.companyId = companyId;
         this.toss = toss;
+        this.methodId = methodId;
     }
 
     // 예약 취소 생성자
@@ -103,6 +105,7 @@ public class Reservation {
                 ", postpayUid='" + postpayUid + '\'' +
                 ", reservationName='" + reservationName + '\'' +
                 ", toss=" + toss +
+                ", methodId='" + methodId + '\'' +
                 ", reserveTime=" + reserveTime +
                 ", companyId=" + companyId +
                 ", memberId=" + memberId +
