@@ -1,6 +1,7 @@
 package com.golfzon.lastspacezbe.review.repository;
 
 import com.golfzon.lastspacezbe.review.entity.Review;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,13 +16,13 @@ public interface ReviewRepository extends JpaRepository<Review,Long> {
 
     //List<Review> findAllByOrderByReviewTimeDesc(Pageable pageable);
 
-    List<Review> findAllByCompanyIdOrderByReviewTimeDesc(Pageable pageable, Long companyId);
-
-    Review findBySpaceIdAndMemberId(Long spaceId, Long memberId);
+    Page<Review> findAllByCompanyIdOrderByReviewTimeDesc(Pageable pageable, Long companyId);
 
     Review findByReviewId(Long reviewId);
 
     List<Review> findAllByCompanyId(Long companyId);
 
     int countByCompanyId(Long companyId);
+
+    Review findByReservationIdAndMemberId(Long reservationId, Long memberId);
 }
