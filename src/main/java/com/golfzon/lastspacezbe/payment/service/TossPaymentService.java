@@ -144,7 +144,6 @@ public class TossPaymentService {
                 requestDto.getImpUid(), "prepay", "postPay", requestDto.getMileage(),
                 requestDto.getSpaceId(), space.getCompanyId(), true, requestDto.getMethodId());
 
-        int flag = 0;
         // 선결제(000) or 보증금결제(001) or 후결제(002)
         switch (requestDto.getPrepay()) {
             //선결제

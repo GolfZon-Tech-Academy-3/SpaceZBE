@@ -32,6 +32,7 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
     @Query(nativeQuery = true, value = "select * from reservation where company_id =?1 and (status='001' or status='004')")
     List<Reservation> findReservations(Long compnayId);
 
+    // 오늘 후결제될 예약들 조회
     @Query(nativeQuery = true, value = "select * from (select * from reservation where toss = true) reservation where (to_date(end_date, 'YYYY-MM-DD HH24:MI')>= to_date(?1, 'YYYY-MM-DD HH24:MI')) and (to_date(end_date, 'YYYY-MM-DD HH24:MI') <= to_date(?2, 'YYYY-MM-DD HH24:MI')) and status !='002' and (pay_status='001' or pay_status='003')")
     List<Reservation> findAllTodayPostPayments(String todayStart, String todayEnd);
 

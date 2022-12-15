@@ -69,9 +69,6 @@ public class ReservationController {
             @RequestBody ReservationRequestDto requestDto){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("principal:{}",principal);
-        //test
-//        Member member = new Member();
-//        member.setMemberId(1L);
         Member member = ((UserDetailsImpl)principal).getMember();
         log.info("member?:{}",member);
 

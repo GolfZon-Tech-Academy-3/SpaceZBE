@@ -29,41 +29,14 @@ public class TossReservationController {
     @PostMapping(value = "/toss-post")
     public ResponseEntity<String> tossReserve(
             @RequestBody ReservationRequestDto requestDto){
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        log.info("principal:{}",principal);
-//        Member member = ((UserDetailsImpl)principal).getMember();
-        Member member = new Member();
-        member.setMemberId(1L);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("principal:{}",principal);
+        Member member = ((UserDetailsImpl)principal).getMember();
         log.info("member?:{}",member);
 
          tossReservationService.tossReserve(requestDto, member);
          return ResponseEntity.ok()
                 .body("result : 예약완료");
     }
-//
-//    // 오피스 예약 취소하기
-//    @ApiOperation(value = "예약취소", notes = "예약취소 처리입니다.")
-//    @PutMapping("/office-cancel/{reservationId}")
-//    public ResponseEntity<String> officeCancel(
-//            @PathVariable(name = "reservationId") Long reservationId) {
-//
-//        reservationService.officeCancel(reservationId);
-//
-//        return ResponseEntity.ok()
-//                .body("result : 예약취소 완료");
-//    }
-//
-//    // 데스크 회의실 예약 취소하기
-//    @PutMapping("/desk-cancel/{reservationId}")
-//    public ResponseEntity<String> deskCancel(
-//            @PathVariable(name="reservationId") Long reservationId) {
-//
-//        reservationService.deskCancel(reservationId);
-//
-//        return ResponseEntity.ok()
-//                .body("result : 예약취소 완료");
-//    }
-
-
 }
 

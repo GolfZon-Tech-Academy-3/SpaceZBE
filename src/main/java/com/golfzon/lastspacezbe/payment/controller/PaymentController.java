@@ -31,8 +31,8 @@ public class PaymentController {
                 .body(paymentService.changeStatus(map));
     }
 
-    // AccessToken 발급
-    @ApiOperation(value = "예약하기 폼페이지", notes = "예약하기 폼 페이지")
+    // Toss AccessToken 발급
+    @ApiOperation(value = "toss accessToken", notes = "toss accessToken 발급위한 콜백기능입니다.")
     @GetMapping(value = "/callback-auth")
     public ResponseEntity<String> getTossAccessToken(@RequestParam("code") String code, @RequestParam("customerKey") String customerKey){
 
