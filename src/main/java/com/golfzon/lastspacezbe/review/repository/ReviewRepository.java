@@ -10,11 +10,7 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review,Long> {
 
-    //List<Review> findAllByCompanyId(Long companyId);
-
     Review findBySpaceId(Long spaceId);
-
-    //List<Review> findAllByOrderByReviewTimeDesc(Pageable pageable);
 
     Page<Review> findAllByCompanyIdOrderByReviewTimeDesc(Pageable pageable, Long companyId);
 

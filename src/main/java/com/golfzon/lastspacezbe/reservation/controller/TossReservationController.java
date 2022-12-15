@@ -29,12 +29,12 @@ public class TossReservationController {
     @PostMapping(value = "/toss-post")
     public ResponseEntity<String> tossReserve(
             @RequestBody ReservationRequestDto requestDto){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        log.info("principal:{}",principal);
-        Member member = ((UserDetailsImpl)principal).getMember();
-        log.info("member?:{}",member);
+//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        log.info("principal:{}",principal);
+//        Member member = ((UserDetailsImpl)principal).getMember();
+//        log.info("member?:{}",member);
 
-         tossReservationService.tossReserve(requestDto, member);
+         tossReservationService.tossReserve(requestDto);
          return ResponseEntity.ok()
                 .body("result : 예약완료");
     }

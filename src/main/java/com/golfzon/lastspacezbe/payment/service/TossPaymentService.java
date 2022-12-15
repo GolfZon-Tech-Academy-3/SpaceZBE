@@ -128,17 +128,17 @@ public class TossPaymentService {
         }
     }
 
-    public void tossReserve(ReservationRequestDto requestDto, Member member) {
+    public void tossReserve(ReservationRequestDto requestDto) {
         log.info("requestDto : {}", requestDto);
         //중복예약 확인
         reservationService.checkDoubleReservation(requestDto);
         //멤버 셋팅
-        requestDto.setMemberId(member.getMemberId());
+        requestDto.setMemberId(requestDto.getMemberId());
         // companyId 조회
         Space space = spaceRepository.findById(requestDto.getSpaceId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 spaceId는 존재하지 않습니다."));
 
-        Reservation reservation = new Reservation(member.getMemberId(),
+        Reservation reservation = new Reservation(requestDto.getMemberId(),
                 requestDto.getReservationName(), requestDto.getStartDate(), requestDto.getEndDate(),
                 "001", "002", requestDto.getPrice(), requestDto.getPrepay(),
                 requestDto.getImpUid(), "prepay", "postPay", requestDto.getMileage(),
