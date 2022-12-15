@@ -147,25 +147,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/port-profile");
         skipPathList.add("GET,/hello");
 
-
-
-        // 예약 관리 API 허용
-//        skipPathList.add("GET,/reservation/**");
         skipPathList.add("POST,/payment/**");
-//        skipPathList.add("PUT,/reservation/**");
-//        skipPathList.add("DELETE,/reservation/**");
 
-        // 사무 공간 API 허용
-//        skipPathList.add("GET,/space/**");
         skipPathList.add("POST,/space/**");
-//        skipPathList.add("PUT,/space/**");
-//        skipPathList.add("DELETE,/space/**");
 
-        // 백오피스
-//        skipPathList.add("GET,/back-office/**");
-//        skipPathList.add("POST,/back-office/**");
-//        skipPathList.add("PUT,/back-office/**");
-//        skipPathList.add("DELETE,/back-office/**");
+        // 채팅
+        skipPathList.add("GET,/chat/**");
+        skipPathList.add("POST,/chat/**");
+        skipPathList.add("GET,/ws-stomp/**");
+        skipPathList.add("POST,/ws-stomp/**");
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(
                 skipPathList,
