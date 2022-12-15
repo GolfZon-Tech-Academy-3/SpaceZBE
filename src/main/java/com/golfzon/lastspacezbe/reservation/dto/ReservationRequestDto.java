@@ -1,5 +1,6 @@
 package com.golfzon.lastspacezbe.reservation.dto;
 
+import com.golfzon.lastspacezbe.reservation.entity.Reservation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,14 @@ public class ReservationRequestDto {
         this.prepay = prepay;
         this.impUid = imp_uid;
         this.postpayUid = postpayUid;
+    }
+
+    public ReservationRequestDto(Reservation reservation) {
+        this.methodId = reservation.getMethodId();
+        this.price = reservation.getPrice();
+        this.memberId = reservation.getMemberId();
+        this.postpayUid = reservation.getPostpayUid();
+        this.orderName = String.valueOf(reservation.getReservationId());
     }
 
     @Override

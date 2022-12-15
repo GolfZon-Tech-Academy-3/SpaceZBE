@@ -112,7 +112,7 @@ public class PaymentService {
         int flag = 0;
 
         // 계산되어야 할 값과 실제 계산된 값이 맞는지 확인.
-        int price = Integer.parseInt( getPaymentInfo(vo));
+        int price = Integer.parseInt(getPaymentInfo(vo));
         log.info("실제 계산된 돈: {}", price);
         Optional<Space> vo2 = spaceRepository.findById(vo.getSpaceId());
         if (vo2.isPresent()) {
@@ -304,7 +304,7 @@ public class PaymentService {
         try {
             Date date1 = formatter.parse(dto.getStartDate().split(" ")[0]);
             Date date2 = formatter.parse(dto.getEndDate().split(" ")[0]);
-            days = (int) ((date2.getTime() - date1.getTime()) / (24*60*60*1000));
+            days = (int) ((date2.getTime() - date1.getTime()) / (24*60*60*1000))+1;
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -347,39 +347,5 @@ public class PaymentService {
         } else{
             return "result : 예약결제 실패";
         }
-    }
-
-    public String getTossAccessToken(String code, String customerKey) {
-        RestTemplate rt = new RestTemplate();
-        // HTTP Header 생성
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        log.info("Basic "+Base64.getEncoder().encodeToString(toss_secret.getBytes(StandardCharsets.UTF_8)));
-        headers.add("Authorization", "Basic "+Base64.getEncoder().encodeToString(toss_secret.getBytes(StandardCharsets.UTF_8)));
-        // Request body 생성
-        JSONObject body = new JSONObject();
-        body.put("grantType", "AuthorizationCode");
-        body.put("code", code);
-        body.put("customerKey", customerKey);
-
-        // HTTP 요청 보내기
-        HttpEntity<JSONObject> entity = new HttpEntity<>(body, headers);
-        ResponseEntity<JSONObject> response = rt.postForEntity("https://api.tosspayments.com/v1/brandpay/authorizations/access-token", entity, JSONObject.class);
-
-        // HTTP 응답 (JSON) -> 액세스 토큰 파싱
-        String responseBody = Objects.requireNonNull(response.getBody()).toString();
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = null;
-        try {
-            jsonNode = objectMapper.readTree(responseBody);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        if (jsonNode == null) {
-            throw new NullPointerException("jsonNode가 null입니다.");
-        }
-        log.info(jsonNode.asText());
-        log.info("accessToken:{}", jsonNode.get("accessToken").asText());
-        return "토스 accessToken 발급완료";
     }
 }
