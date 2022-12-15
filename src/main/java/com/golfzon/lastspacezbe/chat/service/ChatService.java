@@ -1,26 +1,53 @@
 package com.golfzon.lastspacezbe.chat.service;
 
-import com.golfzon.lastspacezbe.chat.entity.ChatMessage;
-import com.golfzon.lastspacezbe.chat.repository.ChatRepository;
-import com.golfzon.lastspacezbe.member.entity.Member;
-import com.golfzon.lastspacezbe.member.repository.MemberRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.golfzon.lastspacezbe.chat.entity.ChatRoom;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
-import java.util.Optional;
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ChatService {
-    private final MemberRepository memberRepository;
-    private final ChatRepository chatRepository;
 
-    public ChatMessage chattingHandler(ChatMessage chatting) {
-        Member member = memberRepository.findById(chatting.getMember().getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 사용자입니다."));
+    private final ObjectMapper objectMapper;
+    private Map<String, ChatRoom> chatRooms;
 
-        chatting.setMember(member);
+    @PostConstruct
+    private void init() {
+        chatRooms = new LinkedHashMap<>();
+    }
 
-        return chatRepository.save(chatting);
+    public List<ChatRoom> findAllRoom() {
+        return new ArrayList<>(chatRooms.values());
+    }
+
+    public ChatRoom findRoomById(String roomId) {
+        return chatRooms.get(roomId);
+    }
+
+    public ChatRoom createRoom(String name) {
+        String randomId = UUID.randomUUID().toString();
+        ChatRoom chatRoom = ChatRoom.builder()
+                .roomId(randomId)
+                .name(name)
+                .build();
+        chatRooms.put(randomId, chatRoom);
+        return chatRoom;
+    }
+
+    public <T> void sendMessage(WebSocketSession session, T message) {
+        try {
+            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }

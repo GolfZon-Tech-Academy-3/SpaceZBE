@@ -1,35 +1,27 @@
 package com.golfzon.lastspacezbe.chat.entity;
 
-import com.golfzon.lastspacezbe.member.entity.Member;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
-@Builder
 @Getter
 @Setter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "chat")
+@SequenceGenerator(sequenceName = "seq_chat", allocationSize = 1, name="seq_chat")
 public class ChatMessage {
+    // 메시지 타입 : 입장, 채팅
+    public enum MessageType {
+        ENTER, TALK
+    }
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "chat_id")
+    private Long chatId;
 
-    @OneToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
-
-    @Column(name = "message")
-    private String message;
-
-    @CreationTimestamp
-    LocalDateTime reserveTime;
-
-    @Column(name = "is_request")
-    private Boolean isRequest;
+    private MessageType type; // 메시지 타입
+    private String roomId; // 방번호
+    private String sender; // 메시지 보낸사람
+    private String message; // 메시지
 }
