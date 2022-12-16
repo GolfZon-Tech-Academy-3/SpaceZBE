@@ -29,7 +29,7 @@ public class CompanyController {
     private final CompanyService companyService;
 
     // 업체 등록 (신청)
-    @ApiOperation(value = "업체 등록", notes = "업체 등록이 가능합니다.")
+    @ApiOperation(value = "업체 등록", notes = "업체 등록 기능입니다.")
     @PostMapping(value = "/post")
     public ResponseEntity<String> companyPost(CompanyRequestDto companyRequestDto) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
