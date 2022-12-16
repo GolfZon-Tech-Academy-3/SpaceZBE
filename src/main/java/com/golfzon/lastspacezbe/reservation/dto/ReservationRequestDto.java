@@ -43,6 +43,10 @@ public class ReservationRequestDto {
         this.orderName = String.valueOf(reservation.getReservationId());
     }
 
+    public ReservationRequestDto(long l) {
+        this.memberId = l;
+    }
+
     @Override
     public String toString() {
         return "ReservationRequestDto{" +
