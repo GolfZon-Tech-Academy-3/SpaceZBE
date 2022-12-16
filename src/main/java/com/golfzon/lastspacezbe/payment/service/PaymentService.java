@@ -342,7 +342,7 @@ public class PaymentService {
         String status = getPaymentInfo(new ReservationRequestDto("003", (String) map.get("imp_uid"), (String) map.get("merchant_uid")));
         log.info("status:{}",status);
         if(status.equals("paid")){
-            Reservation reservation = reservationRepository.findByImpUid((String) map.get("imp_uid"));
+            Reservation reservation = reservationRepository.findByPostpayUid((String) map.get("merchant_uid"));
             reservation.setPayStatus("002");
             reservationRepository.save(reservation);
             return "result : 예약결제 완료";
