@@ -267,7 +267,7 @@ public class PaymentService {
     public long getUnixTime(String endDate) {
         long unixTime = 0;
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         try {
             Date date = formatter.parse(endDate);
             Calendar c = Calendar.getInstance();
@@ -285,10 +285,12 @@ public class PaymentService {
     // 예약된 총 시간 계산(데스크,회의실)
     public int getReserveTime(String startDate, String endDate) {
         int time = 0;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         try {
             Date date1 = formatter.parse(startDate);
             Date date2 = formatter.parse(endDate);
+            log.info("두 날짜차이:{}",(date2.getTime() - date1.getTime()));
+            log.info("두 날짜차이:{}",((date2.getTime() - date1.getTime()) / 3600000));
             time = (int) ((date2.getTime() - date1.getTime()) / 3600000);
         } catch (ParseException e) {
             e.printStackTrace();
