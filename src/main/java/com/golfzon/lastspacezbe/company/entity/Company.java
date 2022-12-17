@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@SequenceGenerator(sequenceName = "seq_company", allocationSize = 1, name="seq_company")
 public class Company {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_company")
+    @SequenceGenerator(sequenceName = "seq_company", allocationSize = 1, name="seq_company")
     @Column(name = "company_id")
     Long companyId; // 예약 번호
 
