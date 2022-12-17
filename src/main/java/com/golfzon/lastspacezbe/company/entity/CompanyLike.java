@@ -12,11 +12,11 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@SequenceGenerator(sequenceName = "seq_company_like", allocationSize = 1, name="seq_company_like")
 public class CompanyLike {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_companylike")
+    @SequenceGenerator(sequenceName = "seq_companylike", allocationSize = 1, name="seq_companylike")
     @Column(name = "company_like_id")
     Long companyLikeId; // 좋아요 번호
 

@@ -14,12 +14,12 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@SequenceGenerator(sequenceName = "seq_inquiry", allocationSize = 1, name="seq_inquiry")
 @Entity
 public class Inquiry {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_inquiry")
+    @SequenceGenerator(sequenceName = "seq_inquiry", allocationSize = 1, name="seq_inquiry")
     @Column(name = "inquiry_id")
     Long inquiryId; // 문의 번호
 

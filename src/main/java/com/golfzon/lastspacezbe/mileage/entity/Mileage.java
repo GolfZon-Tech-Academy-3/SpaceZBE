@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@SequenceGenerator(sequenceName = "seq_mileage", allocationSize = 1, name="seq_mileage")
 @Entity
 public class Mileage {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_mileage")
+	@SequenceGenerator(sequenceName = "seq_mileage", allocationSize = 1, name="seq_mileage")
 	@Column(name = "mileage_id")
 	private long mileageId;
 

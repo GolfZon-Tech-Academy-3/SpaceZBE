@@ -10,12 +10,14 @@ import java.util.UUID;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder // Builder 는 파라미터가 없는 기본생성자와는 쓸 수 없다.
-@Entity
-@SequenceGenerator(sequenceName = "seq_room", allocationSize = 1, name="seq_room")
+@Entity(name = "chat_room")
 public class ChatRoom {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "room_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_room")
+    @SequenceGenerator(sequenceName = "seq_room", allocationSize = 1, name="seq_room")
+    @Column(name = "id")
+    private Long id;
     private String roomId;
     private String name;
 

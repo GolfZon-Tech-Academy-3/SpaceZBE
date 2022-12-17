@@ -14,12 +14,12 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@SequenceGenerator(sequenceName = "seq_reservation", allocationSize = 1, name="seq_reservation")
 @Entity
 public class Reservation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_reservation")
+    @SequenceGenerator(sequenceName = "seq_reservation", allocationSize = 1, name="seq_reservation")
     @Column(name = "reservation_id")
     Long reservationId; // 예약 번호
     @Column(name = "start_date", nullable=false)

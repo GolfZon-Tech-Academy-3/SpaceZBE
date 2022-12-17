@@ -13,11 +13,11 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@SequenceGenerator(sequenceName = "seq_space", allocationSize = 1, name="seq_space")
 public class Space {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_space")
+    @SequenceGenerator(sequenceName = "seq_space", allocationSize = 1, name="seq_space")
     @Column(name = "space_id")
     Long spaceId; // 예약 번호
 

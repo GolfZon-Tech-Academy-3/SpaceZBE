@@ -12,11 +12,11 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@SequenceGenerator(sequenceName = "seq_spaceImage", allocationSize = 1, name="seq_spaceImage")
 public class SpaceImage {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_spaceImage")
+    @SequenceGenerator(sequenceName = "seq_spaceImage", allocationSize = 1, name="seq_spaceImage")
     @Column(name = "spaceImage_id")
     private Long spaceImageId; // 예약 번호
 
