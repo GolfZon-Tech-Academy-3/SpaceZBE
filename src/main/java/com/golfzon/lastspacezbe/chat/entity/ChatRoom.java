@@ -1,5 +1,6 @@
 package com.golfzon.lastspacezbe.chat.entity;
 
+import com.golfzon.lastspacezbe.member.entity.Member;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,6 +21,10 @@ public class ChatRoom {
     private Long id;
     private String roomId;
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     public static ChatRoom create(String name) {
         ChatRoom chatRoom = new ChatRoom();
