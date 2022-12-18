@@ -1,5 +1,7 @@
 package com.golfzon.lastspacezbe.security.provider;
 
+import com.golfzon.lastspacezbe.chat.entity.ChatRoom;
+import com.golfzon.lastspacezbe.chat.repository.ChatRoomRepository;
 import com.golfzon.lastspacezbe.company.entity.Company;
 import com.golfzon.lastspacezbe.company.repository.CompanyRepository;
 import com.golfzon.lastspacezbe.member.entity.Member;
@@ -24,6 +26,7 @@ public class JWTAuthProvider implements AuthenticationProvider {
 
     private final MemberRepository memberRepository;
     private final CompanyRepository companyRepository;
+//    private final ChatRoomRepository chatRoomRepository;
 
     @Override
     public Authentication authenticate(Authentication authentication)
@@ -38,6 +41,7 @@ public class JWTAuthProvider implements AuthenticationProvider {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Can't find " + username));
         Company company = companyRepository.findByMember(member);
+//        ChatRoom chatRoom = chatRoomRepository.findByMember(member);
         if(company == null){
             company = new Company(0L);
         }

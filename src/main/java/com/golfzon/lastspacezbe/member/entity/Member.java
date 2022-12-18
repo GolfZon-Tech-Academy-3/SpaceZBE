@@ -1,5 +1,6 @@
 package com.golfzon.lastspacezbe.member.entity;
 
+import com.golfzon.lastspacezbe.chat.entity.ChatRoom;
 import com.golfzon.lastspacezbe.member.dto.SignupRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter

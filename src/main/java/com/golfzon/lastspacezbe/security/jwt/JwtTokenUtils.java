@@ -25,6 +25,8 @@ public final class JwtTokenUtils {
     public static final String CLAIM_IMAGE_URL = "IMAGE_NAME";
     public static final String CLAIM_USER_ID = "MEMBER_ID";
     public static final String CLAIM_COMPANY_ID = "COMPANY_ID";
+//    public static final String CLAIM_CHATROOM_ID = "ROOM_ID";
+
     public static final String JWT_SECRET = "jwt_secret_!@#$%";
 
     public static String generateJwtToken(UserDetailsImpl userDetails) {
@@ -37,7 +39,8 @@ public final class JwtTokenUtils {
                     .withClaim(CLAIM_ROLE, userDetails.getMember().getAuthority())
                     .withClaim(CLAIM_IMAGE_URL, userDetails.getMember().getImgName())
                     .withClaim(CLAIM_USER_ID, userDetails.getMember().getMemberId())
-                    .withClaim(CLAIM_COMPANY_ID, userDetails.getcompany().getCompanyId())
+                    .withClaim(CLAIM_COMPANY_ID, userDetails.getCompany().getCompanyId())
+//                    .withClaim(CLAIM_CHATROOM_ID, userDetails.getChatRoom().getRoomId()) // 채팅방 roomId 를 가져옴.
                     // 토큰 만료 일시 = 현재 시간 + 토큰 유효기간)
                     .withClaim(CLAIM_EXPIRED_DATE, new Date(System.currentTimeMillis() + JWT_TOKEN_VALID_MILLI_SEC))
                     .sign(generateAlgorithm());
