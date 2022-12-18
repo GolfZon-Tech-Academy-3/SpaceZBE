@@ -1,5 +1,8 @@
 package com.golfzon.lastspacezbe.company.service;
 
+import com.golfzon.lastspacezbe.chat.entity.ChatRoom;
+import com.golfzon.lastspacezbe.chat.repository.ChatRoomRepository;
+import com.golfzon.lastspacezbe.chat.repository.ChatRoomService;
 import com.golfzon.lastspacezbe.company.dto.*;
 import com.golfzon.lastspacezbe.company.entity.Company;
 import com.golfzon.lastspacezbe.company.entity.CompanyLike;
@@ -40,8 +43,12 @@ public class CompanyService {
     private final ReservationService reservationService;
 
     private final MemberRepository memberRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
     private final CompanyS3Service companyS3Service;
+
+    private final ChatRoomService chatRoomService;
+
 
     // 업체 등록 (신청)
     public void companyPost(CompanyRequestDto companyRequestDto, Member member) {
@@ -427,7 +434,12 @@ public class CompanyService {
 
         Member member = memberRepository.findByMemberId(company.getMember().getMemberId());
         member.setAuthority("manager"); // 권한을 매니저로 변경
-        memberRepository.save(member); //저장.
+        memberRepository.save(member);
+
+        // 마스터와의 채팅방 생성
+        ChatRoom chatRoom = chatRoomService.createChatRoom(company.getCompanyName()+"님의 방");
+        chatRoom.setMember(member);
+        chatRoomRepository.save(chatRoom);
 
     }
 

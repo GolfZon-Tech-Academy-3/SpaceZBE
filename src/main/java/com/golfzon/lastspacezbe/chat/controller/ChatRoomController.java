@@ -3,12 +3,16 @@ package com.golfzon.lastspacezbe.chat.controller;
 import com.golfzon.lastspacezbe.chat.entity.ChatRoom;
 import com.golfzon.lastspacezbe.chat.repository.ChatRoomService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/chat")
@@ -24,8 +28,9 @@ public class ChatRoomController {
     // 모든 채팅방 목록 반환
     @GetMapping("/rooms")
     @ResponseBody
-    public List<ChatRoom> room() {
-        return chatRoomService.findAllRoom();
+    public List<ChatRoom> room(@RequestHeader("Authorization") String token) {
+        log.info("token : {}",token);
+        return chatRoomService.findAllRoom(token);
     }
     // 채팅방 생성
     @PostMapping("/room")

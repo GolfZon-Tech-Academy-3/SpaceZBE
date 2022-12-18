@@ -25,7 +25,7 @@ public class UserDetailsImpl implements UserDetails{
         return member;
     }
 
-    public Company getcompany() {
+    public Company getCompany() {
         return company;
     }
 
