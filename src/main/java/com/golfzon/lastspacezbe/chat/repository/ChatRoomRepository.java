@@ -9,6 +9,7 @@ import com.golfzon.lastspacezbe.security.UserDetailsImpl;
 import com.golfzon.lastspacezbe.security.jwt.JwtDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -85,10 +86,10 @@ public class ChatRoomRepository {
         }
         return chatRoomDtoList;
     }
-
+    ObjectMapper objectMapper = new ObjectMapper();
     // 채팅방 조회
     public ChatRoom findRoomById(String roomId) {
-        return opsHashChatRoom.get(CHAT_ROOMS, roomId);
+        return objectMapper.convertValue(opsHashChatRoom.get(CHAT_ROOMS, roomId),ChatRoom.class);
     }
 
     /**

@@ -31,10 +31,15 @@ public class ChatRepository {
     public ChatMessage save(ChatMessage chatMessage) {
         log.info("save");
         redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(List.class));
+
         String roomId = chatMessage.getRoomId();
         List<ChatMessage> chatMessageList = opsHashChatMessage.get(CHAT_MESSAGE, roomId);
-        if (chatMessageList == null) chatMessageList = new ArrayList<>();
+        if (chatMessageList == null) {
+            chatMessageList = new ArrayList<>();
+        }
+        log.info("메세지를 저장하자!!!");
         chatMessageList.add(chatMessage);
+        log.info("chatMessageList : {}", chatMessageList);
 
 //        if (chatMessageList.size() > 10) {
 //            log.info("chatMessageList size : {}", chatMessageList.size());
@@ -89,7 +94,9 @@ public class ChatRepository {
 
     public List<ChatMessage> findAllMessage(String roomId) {
         log.info("findAllMessage");
-        return opsHashChatMessage.get(CHAT_MESSAGE, roomId);
+        List<ChatMessage> chatMessageList = opsHashChatMessage.get(CHAT_MESSAGE, roomId);
+        log.info("chatMessageList2 : {}", chatMessageList);
+        return chatMessageList;
     }
 
     public Object findLastMessage(String roomId) {
