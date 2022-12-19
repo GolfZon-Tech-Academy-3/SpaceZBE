@@ -23,7 +23,7 @@ public class ChatMessage {
     private String sender; // 메시지 보낸사람
     private String message; // 메시지
 
-    private Date createdAt; // 날짜
+    private String createdAt; // 날짜
 
     public ChatMessage(ChatMessageDto dto){
         this.type = dto.getType();

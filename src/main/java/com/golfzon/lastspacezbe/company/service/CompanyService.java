@@ -22,10 +22,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,6 +55,15 @@ public class CompanyService {
 
     private final ChatRoomService chatRoomService;
 
+    private static final String CHAT_ROOMS = "CHAT_ROOM";
+    private final RedisTemplate<String, Object> redisTemplate;
+    private HashOperations<String, String, ChatRoom> opsHashChatRoom;
+    private Map<String, ChannelTopic> topics;
+    @PostConstruct
+    private void init() {
+        opsHashChatRoom = redisTemplate.opsForHash();
+        topics = new HashMap<>();
+    }
 
     // 업체 등록 (신청)
     public void companyPost(CompanyRequestDto companyRequestDto, Member member) {
@@ -439,10 +452,17 @@ public class CompanyService {
         memberRepository.save(member);
 
         // 마스터와의 채팅방 생성
-        ChatRoom chatRoom = chatRoomRepository.createChatRoom(company.getCompanyName()+"님의 방");
+        ChatRoom chatRoom = createChatRoom(company.getCompanyName()+"님의 방");
         chatRoom.setMember(member);
         chatRoomsRepository.save(chatRoom);
 
+    }
+
+    // 채팅방 생성
+    public ChatRoom createChatRoom(String name) {
+        ChatRoom chatRoom = ChatRoom.create(name);
+        opsHashChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
+        return chatRoom;
     }
 
     // 업체관리자 승인 거부
