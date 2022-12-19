@@ -1,6 +1,8 @@
 package com.golfzon.lastspacezbe.chat.controller;
 
+import com.golfzon.lastspacezbe.chat.dto.ChatRoomDto;
 import com.golfzon.lastspacezbe.chat.entity.ChatRoom;
+import com.golfzon.lastspacezbe.chat.repository.ChatRoomRepository;
 import com.golfzon.lastspacezbe.chat.repository.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,35 +21,31 @@ import java.util.List;
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
+    private final ChatRoomRepository chatRoomRepository;
 
-    // 채팅 리스트 화면
-    @GetMapping("/room")
-    public String rooms(Model model) {
-        return "chat/room";
-    }
     // 모든 채팅방 목록 반환
     @GetMapping("/rooms")
     @ResponseBody
-    public List<ChatRoom> room(@RequestHeader("Authorization") String token) {
-        log.info("token : {}",token);
-        return chatRoomService.findAllRoom(token);
+    public List<ChatRoomDto> room(@RequestHeader("Authorization") String token) {
+        log.info("요청 메서드 [GET] /chat/rooms");
+        return chatRoomRepository.findAllRoom(token);
     }
     // 채팅방 생성
-    @PostMapping("/room")
-    @ResponseBody
-    public ChatRoom createRoom(@RequestParam String name) {
-        return chatRoomService.createChatRoom(name);
-    }
-    // 채팅방 입장 화면
-    @GetMapping("/room/enter/{roomId}")
-    public String roomDetail(Model model, @PathVariable String roomId) {
-        model.addAttribute("roomId", roomId);
-        return "chat/roomdetail";
-    }
+//    @PostMapping("/room")
+//    @ResponseBody
+//    public ChatRoom createRoom(@RequestParam String name) {
+//
+//        log.info("요청 메서드 [POST] /chat/room");
+//
+//        return chatRoomRepository.createChatRoom(name);
+//    }
+
     // 특정 채팅방 조회
     @GetMapping("/room/{roomId}")
     @ResponseBody
     public ChatRoom roomInfo(@PathVariable String roomId) {
-        return chatRoomService.findRoomById(roomId);
+
+        log.info("요청 메서드 [GET] /chat/room/{roomId}");
+        return chatRoomRepository.findRoomById(roomId);
     }
 }
