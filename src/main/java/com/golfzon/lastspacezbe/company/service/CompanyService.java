@@ -3,6 +3,7 @@ package com.golfzon.lastspacezbe.company.service;
 import com.golfzon.lastspacezbe.chat.entity.ChatRoom;
 import com.golfzon.lastspacezbe.chat.repository.ChatRoomRepository;
 import com.golfzon.lastspacezbe.chat.repository.ChatRoomService;
+import com.golfzon.lastspacezbe.chat.repository.ChatRoomsRepository;
 import com.golfzon.lastspacezbe.company.dto.*;
 import com.golfzon.lastspacezbe.company.entity.Company;
 import com.golfzon.lastspacezbe.company.entity.CompanyLike;
@@ -43,6 +44,7 @@ public class CompanyService {
     private final ReservationService reservationService;
 
     private final MemberRepository memberRepository;
+    private final ChatRoomsRepository chatRoomsRepository;
     private final ChatRoomRepository chatRoomRepository;
 
     private final CompanyS3Service companyS3Service;
@@ -437,9 +439,9 @@ public class CompanyService {
         memberRepository.save(member);
 
         // 마스터와의 채팅방 생성
-        ChatRoom chatRoom = chatRoomService.createChatRoom(company.getCompanyName()+"님의 방");
+        ChatRoom chatRoom = chatRoomRepository.createChatRoom(company.getCompanyName()+"님의 방");
         chatRoom.setMember(member);
-        chatRoomRepository.save(chatRoom);
+        chatRoomsRepository.save(chatRoom);
 
     }
 
