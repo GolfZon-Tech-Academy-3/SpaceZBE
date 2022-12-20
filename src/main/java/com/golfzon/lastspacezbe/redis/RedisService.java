@@ -51,7 +51,6 @@ public class RedisService {
 
 
     // 예약날짜 저장
-    @Transactional
     public void checkReservation(ReservationRequestDto requestDto, List<String> checktimes) {
         ValueOperations<String, String> values = redisTemplate.opsForValue();
 
@@ -71,10 +70,11 @@ public class RedisService {
             @Override
             public Object execute(RedisOperations operations) throws DataAccessException {
                 operations.watch(keys);
+                log.info("lock:{}",keys);
                 operations.multi();
                 for (String checktime : checktimes) {
                     String key = requestDto.getSpaceId() + checktime;
-                    operations.opsForValue().setIfAbsent(key, "true", Duration.ofMinutes(5));
+                    operations.opsForValue().set(key, "true", Duration.ofMinutes(5));
                     log.info("저장:{}", key);
                 }
                 Object obj;
