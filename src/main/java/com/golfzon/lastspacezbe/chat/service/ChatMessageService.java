@@ -64,7 +64,9 @@ public class ChatMessageService {
             message.setSender(sender);
             message.setRoomId(messageDto.getRoomId());
             message.setMessage(messageDto.getMessage());
-            message.setCreatedAt("2022-12-19");
+            Date date = new Date();
+            message.setCreatedAt(date.toString().substring(11,16));
+//            'Wed Dec 21 14:17:49 KST 2022'
 
             log.debug("message type : {}",message.getType());
             log.debug("message : {}",message);
@@ -77,7 +79,10 @@ public class ChatMessageService {
         } else if(messageDto.getType().equals("TALK")){
             log.debug("TALK 타입이 들어왔습니다. ");
             chatMessageRepository.save(message);
+
+            // 저장
         }
+
         // Websocket에 발행된 메시지를 redis로 발행한다(publish)
         redisPublisher.publish(chatRoomRepository.getTopic(message.getRoomId()), message);
     }
