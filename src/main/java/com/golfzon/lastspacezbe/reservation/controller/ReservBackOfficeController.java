@@ -4,6 +4,7 @@ import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationResponseDto;
 import com.golfzon.lastspacezbe.reservation.service.ReservBackOfficeService;
 import com.golfzon.lastspacezbe.reservation.service.ReservationService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@Api(tags = "백오피스 예약 컨트롤러")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/back-office")

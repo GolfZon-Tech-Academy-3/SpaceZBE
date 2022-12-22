@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@Api(tags = "Review 컨트롤러")
+@Api(tags = "리뷰 컨트롤러")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/review")

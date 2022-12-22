@@ -2,6 +2,7 @@ package com.golfzon.lastspacezbe.reservation.controller;
 
 import com.golfzon.lastspacezbe.reservation.dto.ReservationResponseDto;
 import com.golfzon.lastspacezbe.reservation.service.ReservMypageService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @Slf4j
+@Api(tags = "마이페이지 예약 컨트롤러")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/mypage")
