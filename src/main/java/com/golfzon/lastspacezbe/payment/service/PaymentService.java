@@ -222,7 +222,6 @@ public class PaymentService {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", token);
 
-
         // HTTP 요청 보내기
         // response date
         JSONObject body = new JSONObject();
@@ -235,7 +234,6 @@ public class PaymentService {
             body.put("merchant_uid", vo.getMerchant_uid()); // imp_uid를 환불 `unique key`로 입력
             body.put("amount", String.valueOf(vo.getCancel_request_amount())); // 가맹점 클라이언트로부터 받은 환불금액
             url = "https://api.iamport.kr/payments/cancel";
-//			json.addProperty("checksum", vo.getCancel_request_amount()); // [권장] 환불 가능 금액 입력
         }
 
         HttpEntity<JSONObject> entity = new HttpEntity<>(body, headers);
@@ -261,7 +259,6 @@ public class PaymentService {
         }
         return flag;
     }
-
 
     // 결제 시도 시각 in Unix Time Stamp.
     public long getUnixTime(String endDate) {
@@ -329,7 +326,7 @@ public class PaymentService {
         return merchant_uid;
     }
 
-
+    // 고유값 생성
     public String getMerchantUid() {
         // 주문번호 고유값 설정 위해, 난수생성 -> 이것은 공간 예약 시 생성되어 추가되어야 한다.
         char random_alphabet = (char) ((Math.random() * 26) + 97);
@@ -337,6 +334,7 @@ public class PaymentService {
         return String.valueOf(random_alphabet) + System.currentTimeMillis();
     }
 
+    // 예약 상태 변경
     public String changeStatus(HashMap<String, Object> map) {
         log.info("map:{}",map);
         String status = getPaymentInfo(new ReservationRequestDto("003", (String) map.get("imp_uid"), (String) map.get("merchant_uid")));

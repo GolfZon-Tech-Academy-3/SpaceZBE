@@ -1,4 +1,4 @@
-package com.golfzon.lastspacezbe.redis;
+package com.golfzon.lastspacezbe.redis.service;
 
 import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import lombok.RequiredArgsConstructor;

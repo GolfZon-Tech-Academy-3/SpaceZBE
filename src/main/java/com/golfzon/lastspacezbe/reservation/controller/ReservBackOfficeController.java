@@ -4,6 +4,7 @@ import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationResponseDto;
 import com.golfzon.lastspacezbe.reservation.service.ReservBackOfficeService;
 import com.golfzon.lastspacezbe.reservation.service.ReservationService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class ReservBackOfficeController {
     private final ReservBackOfficeService reservBackOfficeService;
 
     // 오늘 업체 예약 수
+    @ApiOperation(value = "오늘 업체 예약 수", notes = "오늘 업체 예약 수 조회 기능입니다.")
     @GetMapping("/reservation/count/{companyId}")
     public ResponseEntity<Integer> todayReserve(@PathVariable(name="companyId") Long companyId) {
 
@@ -33,6 +35,7 @@ public class ReservBackOfficeController {
     }
 
     // 오늘 업체 예약 취소 수
+    @ApiOperation(value = "오늘 업체 취소 수", notes = "오늘 업체 예약 취소 수 조회 기능입니다.")
     @GetMapping("/cancel/count/{companyId}")
     public ResponseEntity<Integer> todayCancel(@PathVariable(name="companyId") Long companyId) {
 
@@ -44,6 +47,7 @@ public class ReservBackOfficeController {
     }
 
     // 예약 현황
+    @ApiOperation(value = "예약 현황", notes = "예약 현황 조회 기능입니다.")
     @GetMapping("/reservation/total/{companyId}")
     public ResponseEntity<List<ReservationResponseDto>> totalReservation(@PathVariable(name="companyId") Long companyId) {
 
@@ -55,6 +59,7 @@ public class ReservBackOfficeController {
 
 
     // 기간별 대여 금액 검색
+    @ApiOperation(value = "기간별 대여 금액, 예약 현황", notes = "기간별 대여 금액, 예약 현황 조회 기능입니다.")
     @PostMapping("/total-incomes/{companyId}")
     public ResponseEntity<Map<String, Object>> totalIncome(@PathVariable(name="companyId") Long companyId, @RequestBody ReservationRequestDto dto) {
 
@@ -63,6 +68,7 @@ public class ReservBackOfficeController {
     }
 
     // 예약 이용완료 처리
+    @ApiOperation(value = "예약 이용완료", notes = "예약 이용완료 처리입니다.")
     @PutMapping("/reservation/done/{reservationId}")
     public ResponseEntity<String> doneReservation(
             @PathVariable(name = "reservationId") Long reservationId) {

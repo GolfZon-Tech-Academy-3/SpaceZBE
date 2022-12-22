@@ -1,23 +1,17 @@
 package com.golfzon.lastspacezbe.reservation.controller;
 
-import com.golfzon.lastspacezbe.member.entity.Member;
-import com.golfzon.lastspacezbe.mileage.service.MileageService;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationResponseDto;
-import com.golfzon.lastspacezbe.reservation.service.ReservBackOfficeService;
 import com.golfzon.lastspacezbe.reservation.service.ReservMypageService;
-import com.golfzon.lastspacezbe.reservation.service.ReservationService;
-import com.golfzon.lastspacezbe.security.UserDetailsImpl;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -27,6 +21,7 @@ public class ReservMypageController {
 
     private final ReservMypageService reservMypageService;
     // 예약 이력
+    @ApiOperation(value = "예약 이력", notes = "예약 이력 조회 기능입니다.")
     @GetMapping("/reservation/total/{memberId}")
     public ResponseEntity<List<ReservationResponseDto>> totalReservation(@PathVariable(name="memberId") Long memberId) {
 
@@ -37,6 +32,7 @@ public class ReservMypageController {
     }
 
     // 예약 현황
+    @ApiOperation(value = "예약 현황", notes = "예약 현황 조회 기능입니다.")
     @GetMapping("/reservation/proceeding/{memberId}")
     public ResponseEntity<List<ReservationResponseDto>> proceedReservation(@PathVariable(name="memberId") Long memberId) {
 

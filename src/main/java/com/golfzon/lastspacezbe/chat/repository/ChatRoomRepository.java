@@ -5,12 +5,10 @@ import com.golfzon.lastspacezbe.chat.entity.ChatRoom;
 import com.golfzon.lastspacezbe.chat.pubsub.RedisSubscriber;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.member.repository.MemberRepository;
-import com.golfzon.lastspacezbe.security.UserDetailsImpl;
 import com.golfzon.lastspacezbe.security.jwt.JwtDecoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -36,9 +34,7 @@ public class ChatRoomRepository {
     private Map<String, ChannelTopic> topics;
 
     private final MemberRepository memberRepository;
-    private final ChatRepository chatMessageRepository;
     private final ChatRoomsRepository chatRoomsRepository;
-    private final ChatRoomService chatRoomService;
 
     private final JwtDecoder jwtDecoder;
 

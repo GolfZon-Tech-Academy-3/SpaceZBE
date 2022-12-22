@@ -1,4 +1,4 @@
-package com.golfzon.lastspacezbe.nginx;
+package com.golfzon.lastspacezbe.nginx.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
@@ -14,6 +14,7 @@ public class ProfileController {
 
     private final Environment env;
 
+    // Nginx port 확인
     @GetMapping("/port-profile")
     public String profile() {
         List<String> profiles = Arrays.asList(env.getActiveProfiles());

@@ -57,7 +57,7 @@ public class CompanyS3Service {
                 .build();
     }
 
-    // S3 bucket에 image upload 후, Image names list로 반환
+    // S3 bucket에 image upload 후, Image name 반환
     public String upload(MultipartFile file) {
         String imageUrl;
         String fileName = createFileName(file.getOriginalFilename());

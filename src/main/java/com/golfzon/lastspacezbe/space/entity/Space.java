@@ -21,8 +21,6 @@ public class Space {
     @Column(name = "space_id")
     Long spaceId; // 예약 번호
 
-//    @ManyToOne
-//    @JoinColumn(name = "company_id", nullable = false)
     @Column(name = "company_id")
     Long companyId;
 
@@ -45,7 +43,7 @@ public class Space {
     @Column(name = "break_close")
     String breakClose; // 쉬는 마감시간 (청소)
 
-//     사무공간 이미지
+//  사무공간 이미지
     @OneToMany(mappedBy = "space", cascade = CascadeType.ALL)
     private List<SpaceImage> spaceImages;
 

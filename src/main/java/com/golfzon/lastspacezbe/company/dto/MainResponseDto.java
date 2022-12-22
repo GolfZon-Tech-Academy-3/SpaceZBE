@@ -1,13 +1,10 @@
 package com.golfzon.lastspacezbe.company.dto;
 
-import com.golfzon.lastspacezbe.company.entity.Company;
-import com.golfzon.lastspacezbe.space.entity.Space;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -27,11 +24,4 @@ public class MainResponseDto {
     String firstImage; // 대표이미지
     int reviewSize; // 리뷰개수
     double avgReview; // 총 리뷰 평균
-
-   public MainResponseDto(Company company, List<String> spaceImages, List<Space> spaces, Boolean companyLike) {
-        this.companyId = company.getCompanyId();
-        this.companyName = company.getCompanyName();
-        this.details = company.getDetails();
-        this.companyLike = companyLike;
-    }
 }

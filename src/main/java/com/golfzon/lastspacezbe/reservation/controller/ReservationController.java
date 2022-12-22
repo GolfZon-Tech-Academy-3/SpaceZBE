@@ -90,6 +90,7 @@ public class ReservationController {
     }
 
     // 데스크 회의실 예약 취소하기
+    @ApiOperation(value = "데스크, 회의실 예약 취소", notes = "데스크, 회의실 예약 취소 처리입니다.")
     @PutMapping("/desk-cancel/{reservationId}")
     public ResponseEntity<String> deskCancel(
             @PathVariable(name="reservationId") Long reservationId) {
@@ -101,6 +102,7 @@ public class ReservationController {
     }
 
     //핸드폰 인증번호 보내기
+    @ApiOperation(value = "핸드폰 인증번호", notes = "핸드폰 인증번호 보내기 기능입니다.")
     @GetMapping(value = "/phoneCheck")
     public String sendSMS(@RequestParam("phone") String userPhoneNumber) { // 휴대폰 문자보내기
         log.info("phone:{}",userPhoneNumber);

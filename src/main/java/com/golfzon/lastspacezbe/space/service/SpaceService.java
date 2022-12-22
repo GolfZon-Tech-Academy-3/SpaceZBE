@@ -31,18 +31,8 @@ public class SpaceService {
     private final SpaceImageRepository spaceImageRepository;
     private final SpaceS3Service spaceS3Service;
 
-
+    // 사무공간 등록
     public void spaceRegister(SpaceRequestDto requestDto){
-
-//        Member member1 = memberRepository.findById(member.getMemberId()).orElseThrow(
-//                () -> new IllegalArgumentException("접근할 수 없는 유저 입니다.")
-//        );
-//        log.info("member1 : {}",member1);
-//
-//        Company company = memberRepository.findByMemberId(member1.getMemberId()).orElseThrow(
-//                () -> new IllegalArgumentException("접근할 수 없는 업체 입니다..")
-//        );
-//        log.info("company : {}",company);
 
         List<String> imagePaths = new ArrayList<>();
         if(requestDto.getFiles() == null){
@@ -65,6 +55,7 @@ public class SpaceService {
         }
     }
 
+    // 사무공간 수정
     public void spaceUpdate(Long spaceId, SpaceRequestDto requestDto) {
 
         Space space = spaceRepository.findById(spaceId)

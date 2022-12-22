@@ -23,8 +23,6 @@ public class Review {
     @Column(name = "review_id")
     Long reviewId; // 리뷰 번호
 
-    //    @ManyToOne
-//    @JoinColumn(name = "company_id", nullable = false)
     @Column(name = "space_id")
     Long spaceId;
 
