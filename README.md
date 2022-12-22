@@ -69,12 +69,12 @@
 ## 👪 팀원 소개
 <br>
 
-| 이름     | 깃허브 주소                                                |      
-|:--------:|:----------------------------------------------------------:|
-| 최현민   | [https://github.com/hmhmchm](https://github.com/hmhmchm)                   |
-| 박지연   | [https://github.com/journeypark93](https://github.com/journeypark93)                       |
-| 유창현   | [https://github.com/ChangHyun-Yoo](https://github.com/ChangHyun-Yoo)                       |
-| 신유수   | [https://github.com/tlsdbtn0507](https://github.com/tlsdbtn0507)                       |
+|담당       | 이름     | 깃허브 주소                                                |      
+|:----------:|:--------:|:----------------------------------------------------------:|
+| Backend    | 최현민   | [https://github.com/hmhmchm](https://github.com/hmhmchm)                   |
+| Backend    | 박지연   | [https://github.com/journeypark93](https://github.com/journeypark93)                       |
+| Frontend   | 유창현   | [https://github.com/ChangHyun-Yoo](https://github.com/ChangHyun-Yoo)                       |
+| Frontend   | 신유수   | [https://github.com/tlsdbtn0507](https://github.com/tlsdbtn0507)                       |
 <br>
 
 ## 💻사용한 기술 스택
