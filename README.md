@@ -41,8 +41,8 @@
   <summary><strong> 📱업체와 마스터간 1:1 채팅</strong></summary>
   <br/>
   <ul>
-    <li>검색창을 클릭 시 일반 검색도 가능하지만 위치를 입력할 경우 지도로 이용가능한 사무공간이 보여지게 됩니다.</li>
-   <li><img width="600" alt="스크린샷 2022-11-10 오후 5 58 16" src="https://user-images.githubusercontent.com/58718743/201046408-63209b9a-c8b4-4bc4-b0aa-f3ea34868049.png"></li>
+    <li>백오피스, 마스터 공간에서 업체와 마스터간 문의사항을 1:1 채팅으로 문의, 답변할 수 있습니다.</li>
+   <li><img width="600" alt="스크린샷 2022-11-10 오후 5 58 16" src="https://user-images.githubusercontent.com/101076530/209040748-2823c309-1ddc-4a0a-bec4-804ccc095fe5.gif"></li>
   </ul>
 </details>
 <br>
