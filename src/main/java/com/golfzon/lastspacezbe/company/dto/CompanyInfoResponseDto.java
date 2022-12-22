@@ -1,13 +1,9 @@
 package com.golfzon.lastspacezbe.company.dto;
 
-import com.golfzon.lastspacezbe.company.entity.Company;
-import com.golfzon.lastspacezbe.space.dto.SpaceResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter

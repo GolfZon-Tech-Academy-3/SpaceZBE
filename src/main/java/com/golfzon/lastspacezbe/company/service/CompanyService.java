@@ -2,7 +2,7 @@ package com.golfzon.lastspacezbe.company.service;
 
 import com.golfzon.lastspacezbe.chat.entity.ChatRoom;
 import com.golfzon.lastspacezbe.chat.repository.ChatRoomRepository;
-import com.golfzon.lastspacezbe.chat.repository.ChatRoomService;
+import com.golfzon.lastspacezbe.chat.service.ChatRoomService;
 import com.golfzon.lastspacezbe.chat.repository.ChatRoomsRepository;
 import com.golfzon.lastspacezbe.company.dto.*;
 import com.golfzon.lastspacezbe.company.entity.Company;
@@ -85,7 +85,6 @@ public class CompanyService {
         }
 
         companyRepository.save(company);
-
     }
 
     // 업체 정보 가져오기
@@ -260,9 +259,7 @@ public class CompanyService {
     public List<MainResponseDto> getCompanyInfo(List<Company> companyList, Long memberId, String type) {
         List<MainResponseDto> companyInfo = new ArrayList<>();
 
-
         int lowPrice = 0; // 최저가격
-
 
         for (Company company : companyList) {
             if (type.equals("hotCompany") && company.getReviewAvg()==0.0) continue; //리뷰 점수가 0이면 continue
@@ -414,9 +411,6 @@ public class CompanyService {
     // 업체 신청 목록 보기
     public List<CompanyJoinResponseDto> companySelectAll() {
 
-//        Member member1 = memberRepository.findById(member.getMemberId()).orElseThrow(){
-//
-//        }
         List<CompanyJoinResponseDto> companyJoinResponseDtos = new ArrayList<>();
 
         List<Company> companies = companyRepository.findAll();

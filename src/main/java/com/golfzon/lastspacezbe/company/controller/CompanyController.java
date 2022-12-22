@@ -36,9 +36,7 @@ public class CompanyController {
         log.info("principal:{}",principal);
         Member member = ((UserDetailsImpl)principal).getMember();
 
-        // 업체 등록 service
         companyService.companyPost(companyRequestDto,member);
-
 
         return ResponseEntity.ok()
                 .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
@@ -50,9 +48,8 @@ public class CompanyController {
     @GetMapping(value = "/manager/list")
     public ResponseEntity<List<CompanyJoinResponseDto>> companySelectAll() {
 
-
         List<CompanyJoinResponseDto> responseDtos = companyService.companySelectAll();
-        // 업체 신청 목록보기
+
         return ResponseEntity.ok()
                 .body(responseDtos);
     }
@@ -60,28 +57,22 @@ public class CompanyController {
     @ApiOperation(value = "업체 관리자로 승인", notes = "업체관리자로 승인 기능입니다.")
     @PutMapping(value = "/approve/{companyId}")
     public ResponseEntity<String> approve(@PathVariable(name = "companyId") Long companyId) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        log.info("principal:{}",principal);
-        Member member = ((UserDetailsImpl)principal).getMember();
 
         companyService.approve(companyId);
 
-        // 업체 신청 목록보기
         return ResponseEntity.ok()
+                .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .body("result : 승인완료");
     }
 
     @ApiOperation(value = "업체 관리자로 승인 거부 ", notes = "업체관리자 신청 거부 기능입니다.")
     @PutMapping(value = "/disapprove/{companyId}")
     public ResponseEntity<String> disapprove(@PathVariable(name = "companyId") Long companyId) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        log.info("principal:{}",principal);
-        Member member = ((UserDetailsImpl)principal).getMember();
 
         companyService.disapprove(companyId);
 
-        // 업체 신청 목록보기
         return ResponseEntity.ok()
+                .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .body("result : 승인거부");
     }
 
@@ -99,7 +90,6 @@ public class CompanyController {
         map.put("hotCompany", companyService.getHotCompany(member.getMemberId()));
         map.put("newCompany", companyService.getNewCompany(member.getMemberId()));
 
-        // 업체 상세보기 service
         return ResponseEntity.ok()
                 .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .body(map);
@@ -112,7 +102,7 @@ public class CompanyController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("principal:{}",principal);
         Member member = ((UserDetailsImpl)principal).getMember();
-        // 업체 상세보기 service
+
         return ResponseEntity.ok()
                 .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .body(companyService.getCompanyInfo(companyId, member.getMemberId()));
@@ -125,7 +115,7 @@ public class CompanyController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info("principal:{}",principal);
         Member member = ((UserDetailsImpl)principal).getMember();
-        // 업체 상세보기 service
+
         return ResponseEntity.ok()
                 .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .body(companyService.companyLike(companyId, member.getMemberId()));
@@ -171,7 +161,6 @@ public class CompanyController {
         log.info("principal:{}",principal);
         Member member = ((UserDetailsImpl)principal).getMember();
 
-        // 업체 상세보기 service
         return ResponseEntity.ok()
                 .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .body(companyService.getTotalDesk(searchDto, page, member.getMemberId()));
@@ -184,7 +173,6 @@ public class CompanyController {
         log.info("principal:{}",principal);
         Member member = ((UserDetailsImpl)principal).getMember();
 
-        // 업체 상세보기 service
         return ResponseEntity.ok()
                 .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .body(companyService.getTotalMeetingRoom(searchDto, page, member.getMemberId()));
@@ -192,6 +180,7 @@ public class CompanyController {
 
 
     //공간이 등록된 업체 모두 조회
+    @ApiOperation(value = "공간 등록된 업체 조회", notes = "공간이 등록된 업체 모두 조회기능입니다.")
     @GetMapping("/space/list")
     public ResponseEntity<List<MainResponseDto>> companyList() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -204,13 +193,10 @@ public class CompanyController {
     }
 
     // 업체 정보 조회 (백오피스)
+    @ApiOperation(value = "백오피스 업체 정보 조회", notes = "백오피스에서 업체 정보 조회기능입니다.")
     @GetMapping("/information/{companyId}")
     public ResponseEntity<CompanyInfoResponseDto> getCompanyInfo(
-            @PathVariable(name = "companyId") Long companyId
-    ) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        log.info("principal:{}",principal);
-        Member member = ((UserDetailsImpl)principal).getMember();
+            @PathVariable(name = "companyId") Long companyId) {
 
         CompanyInfoResponseDto responseDto = companyService.getCompany(companyId);
 
@@ -222,16 +208,13 @@ public class CompanyController {
     // 업체 정보 수정하기 (백오피스)
     @ApiOperation(value = "업체 정보 수정 ", notes = "업체 정보 수정 기능입니다.")
     @PutMapping(value = "/update/{companyId}")
-    public ResponseEntity<String> update(CompanyInfoRequestDto companyInfoRequestDto
-            ,@PathVariable(name = "companyId") Long companyId) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        log.info("principal:{}",principal);
-        Member member = ((UserDetailsImpl)principal).getMember();
+    public ResponseEntity<String> update(CompanyInfoRequestDto companyInfoRequestDto,
+                                         @PathVariable(name = "companyId") Long companyId) {
 
         companyService.update(companyInfoRequestDto,companyId);
 
-        // 업체 신청 목록보기
         return ResponseEntity.ok()
+                .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .body("result : 업체 정보 수정완료");
     }
 }

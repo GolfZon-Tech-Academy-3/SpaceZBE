@@ -27,6 +27,7 @@ public class SpaceBackOfficeController {
     private final SpaceService spaceService;
 
     // 사무공간 목록 조회
+    @ApiOperation(value = "사무공간 목록 조회", notes = "사무공간 목록 조회 기능입니다.")
     @GetMapping("/list/{companyId}")
     public ResponseEntity<List<SpaceBackOfficeResponseDto>> spaceUpdate(@PathVariable(name="companyId") Long companyId) {
 

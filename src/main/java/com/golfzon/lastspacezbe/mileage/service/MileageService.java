@@ -31,7 +31,6 @@ public class MileageService {
     public void insertMileage(ReservationRequestDto vo) {
         log.info("insertMileage");
         log.info("vo:{}", vo);
-        int flag = 0;
 
         Space space = spaceRepository.findById(vo.getSpaceId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 spaceId는 존재하지 않습니다."));
@@ -49,7 +48,6 @@ public class MileageService {
     }
 
     // 마일리지 사용
-
     public void updateMileage(ReservationRequestDto vo) {
         log.info("updateMileage");
         log.info("vo:{}", vo);
@@ -70,7 +68,6 @@ public class MileageService {
     }
 
     // 마일리지 취소
-
     public void cancelMileage(Reservation vo) {
         log.info("deleteMileage");
         log.info("vo:{}", vo);
@@ -131,6 +128,7 @@ public class MileageService {
         }
     }
 
+    // 마일리지 정보 반환
     public Map<String, Object> getMileageInfo(Long memberId, String type) {
         log.info("getMileageInfo");
         log.info("memberId:{}", memberId);
@@ -179,7 +177,6 @@ public class MileageService {
         map.put("refundScore", refundScore);
         map.put("mileages", dtos);
         log.info("map:{}", map);
-
 
         return map;
     }

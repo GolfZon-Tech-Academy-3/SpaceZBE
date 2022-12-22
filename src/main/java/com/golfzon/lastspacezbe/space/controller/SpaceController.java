@@ -25,14 +25,15 @@ public class SpaceController {
     @PostMapping(value = "/post")
     public ResponseEntity<String> space(SpaceRequestDto requestDto) {
 
-        // 사무공간 등록 service
         spaceService.spaceRegister(requestDto);
 
         return ResponseEntity.ok()
+                .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .body("result : 사무공간 등록완료");
     }
 
     // 사무공간 수정
+    @ApiOperation(value = "사무공간 수정", notes = "백오피스페이지에서 사무공간 수정기능입니다.")
     @PutMapping("/update")
     public ResponseEntity<String> spaceUpdate(
             @RequestParam Long spaceId, @RequestBody SpaceRequestDto requestDto) {
@@ -45,6 +46,7 @@ public class SpaceController {
     }
 
     //사무공간 삭제
+    @ApiOperation(value = "사무공간 삭제", notes = "백오피스페이지에서 사무공간 삭제기능입니다.")
     @DeleteMapping("/delete")
     public ResponseEntity<String> spaceDelete(
             @RequestParam Long spaceId) {

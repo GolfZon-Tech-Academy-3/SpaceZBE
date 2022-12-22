@@ -1,6 +1,5 @@
 package com.golfzon.lastspacezbe.chat.dto;
 
-import com.golfzon.lastspacezbe.chat.entity.ChatMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

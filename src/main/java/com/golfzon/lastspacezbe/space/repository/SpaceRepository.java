@@ -1,9 +1,6 @@
 package com.golfzon.lastspacezbe.space.repository;
 
-import com.golfzon.lastspacezbe.company.entity.Company;
 import com.golfzon.lastspacezbe.space.entity.Space;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

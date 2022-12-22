@@ -1,6 +1,7 @@
-package com.golfzon.lastspacezbe.chat.repository;
+package com.golfzon.lastspacezbe.chat.service;
 
 import com.golfzon.lastspacezbe.chat.entity.ChatRoom;
+import com.golfzon.lastspacezbe.chat.repository.ChatRoomsRepository;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.member.repository.MemberRepository;
 import com.golfzon.lastspacezbe.security.jwt.JwtDecoder;

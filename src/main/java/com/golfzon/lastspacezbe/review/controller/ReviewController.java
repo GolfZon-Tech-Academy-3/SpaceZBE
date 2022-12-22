@@ -48,7 +48,6 @@ public class ReviewController {
         Member member = ((UserDetailsImpl) principal).getMember();
         log.info("member?:{}", member);
 
-        // 리뷰 등록 service
         reviewService.reviewRegister(requestDto, member.getMemberId());
 
         return ResponseEntity.ok()
@@ -56,11 +55,11 @@ public class ReviewController {
     }
 
     // 리뷰 수정
+    @ApiOperation(value = "리뷰 수정", notes = "마이페이지에서 리뷰 수정기능입니다.")
     @PutMapping("/update")
     public ResponseEntity<String> reviewUpdate(
             @RequestBody ReviewDto requestDto) {
 
-        // 리뷰 삭제 service
         reviewService.reviewUpdate(requestDto);
 
         return ResponseEntity.ok()
@@ -69,6 +68,7 @@ public class ReviewController {
     }
 
     // 리뷰 삭제
+    @ApiOperation(value = "리뷰 삭제", notes = "마이페이지에서 리뷰 삭제기능입니다.")
     @DeleteMapping("/delete/{reviewId}")
     public ResponseEntity<String> reviewDelete(
             @PathVariable(name="reviewId") Long reviewId) {

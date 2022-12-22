@@ -1,6 +1,5 @@
 package com.golfzon.lastspacezbe.reservation.entity;
 
-import com.golfzon.lastspacezbe.space.entity.Space;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,11 +57,6 @@ public class Reservation {
     int mileage;
 
 
-
-//    @ManyToOne
-//    @JoinColumn(name = "member_id", nullable = false)
-//    private Member member;
-
     // reserveTime 을 제외한 생성자
     public Reservation(Long memberId,String reservationName, String startDate, String endDate,
                        String status, String payStatus, int price, String prepay,
@@ -83,11 +77,6 @@ public class Reservation {
         this.companyId = companyId;
         this.toss = toss;
         this.methodId = methodId;
-    }
-
-    // 예약 취소 생성자
-    public Reservation(Long reservationId) {
-        this.reservationId = reservationId;
     }
 
     @Override

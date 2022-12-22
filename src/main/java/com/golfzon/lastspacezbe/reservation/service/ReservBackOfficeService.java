@@ -10,9 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -121,6 +118,7 @@ public class ReservBackOfficeService {
         return reservationResponseDtos;
     }
 
+    // 기간별 예약 금액, 예약 현황 조회
     public Map<String, Object> totalIncomes(Long companyId, ReservationRequestDto requestDto) {
         log.info("dto:{}",requestDto);
         List<Reservation> reservations =  reservationRepository.findReservations(companyId);
@@ -176,7 +174,6 @@ public class ReservBackOfficeService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
 
         Map<String, Object> map = new HashMap<>();
         map.put("totalIncome", totalIncome);
