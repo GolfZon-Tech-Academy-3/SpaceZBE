@@ -23,7 +23,7 @@
   <ul>
     <li>원하는 시간을 선택한 뒤 예약하기 버튼을 클릭하고 결제 방법에 따라 예약이 가능합니다.</li>
     <li>이미 예약된 시간과 날짜에는 예약할 수 없습니다.</li>
-  <li> <img width="600" src="https://user-images.githubusercontent.com/101076530/209040458-45ebdb13-64c1-46e5-833c-782a7f6ee689.gif"> </li>
+    <img width="600" src="https://user-images.githubusercontent.com/101076530/209040458-45ebdb13-64c1-46e5-833c-782a7f6ee689.gif">
   </ul>
 </details>
 
@@ -33,7 +33,7 @@
   <ul>
     <li>회의실과 데스크 사무공간 결제는 선결제(전체)와 보증금 결제로 나뉘어져 결제가 가능하며 오피스 사무공간은 예약결제로 진행이 됩니다.</li>
     <li>SPACEZ pay 간편결제로 카드등록 한번으로 편하게 결제서비스를 이용할 수 있습니다.</li>
-    <li><img width="600" src="https://user-images.githubusercontent.com/101076530/209040748-2823c309-1ddc-4a0a-bec4-804ccc095fe5.gif"></li>
+    <img width="600" src="https://user-images.githubusercontent.com/101076530/209040748-2823c309-1ddc-4a0a-bec4-804ccc095fe5.gif">
   </ul>
 </details>
 
@@ -42,7 +42,7 @@
   <br/>
   <ul>
     <li>백오피스, 마스터 공간에서 업체와 마스터간 문의사항을 1:1 채팅으로 문의, 답변할 수 있습니다.</li>
-   <li><img width="600" src="https://user-images.githubusercontent.com/101076530/209040517-f5d45ada-9fd7-46ee-927d-6bf083dc348b.gif"></li>
+   <img width="600" src="https://user-images.githubusercontent.com/101076530/209040517-f5d45ada-9fd7-46ee-927d-6bf083dc348b.gif">
   </ul>
 </details>
 <br>
