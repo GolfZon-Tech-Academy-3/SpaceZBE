@@ -48,13 +48,13 @@
 </details>
 <br>
 
-## 🗒️ 기능명세서
-<a href="https://pointy-resistance-d0f.notion.site/f2176b965c7649ec8dd68e9d900088f8?v=1459dc2e7977419ba5e469a98b8c2382"><img width="100" src="https://img.shields.io/badge/Notion-000000?style=flat&logo=Notion&logoColor=white" /></a>
+## :tent: Swagger
+<a href="https://spacez3.shop/swagger-ui.html"><img width="100" src="https://img.shields.io/badge/Swagger-85EA2D?style=flat&logo=Swagger&logoColor=white" /></a>
 <br>
 <br>
 
 ## 🗒️ API명세서
-<a href="https://pointy-resistance-d0f.notion.site/API-18b5ed87d3594631907b776bb66916f9"><img width="100" src="https://img.shields.io/badge/Notion-000000?style=flat&logo=Notion&logoColor=white" /></a>
+<a href="https://bouncy-fisher-a4d.notion.site/API-fe0630016c5a4114a0518bd44c724b99"><img width="100" src="https://img.shields.io/badge/Notion-000000?style=flat&logo=Notion&logoColor=white" /></a>
 <br>
 <br>
 
