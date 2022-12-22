@@ -42,7 +42,7 @@
   <br/>
   <ul>
     <li>백오피스, 마스터 공간에서 업체와 마스터간 문의사항을 1:1 채팅으로 문의, 답변할 수 있습니다.</li>
-   <li><img width="600" alt="스크린샷 2022-11-10 오후 5 58 16" src="https://user-images.githubusercontent.com/101076530/209040748-2823c309-1ddc-4a0a-bec4-804ccc095fe5.gif"></li>
+   <li><img width="600" src="https://user-images.githubusercontent.com/101076530/209040517-f5d45ada-9fd7-46ee-927d-6bf083dc348b.gif"></li>
   </ul>
 </details>
 <br>
