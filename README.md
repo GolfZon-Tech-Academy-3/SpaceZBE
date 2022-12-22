@@ -71,6 +71,9 @@
 
 ## 💻사용한 기술 스택
 <img src="https://user-images.githubusercontent.com/101076530/209035964-592a5ab0-f634-4209-ade4-46b2d5a20ad8.png">
-</br>
+<br>
+<br>
+
+## :bank:프로젝트 아키텍쳐
 <br>
 <br>
