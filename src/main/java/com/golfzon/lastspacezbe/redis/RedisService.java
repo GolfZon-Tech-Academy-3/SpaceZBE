@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.transaction.Transactional;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,32 +22,6 @@ import java.util.List;
 public class RedisService {
 
     private final RedisTemplate<String, String> redisTemplate;
-
-    public void redisString() {
-        ValueOperations<String, String> operations = redisTemplate.opsForValue();
-        operations.set("test", "test");
-        String redis = operations.get("test");
-        log.info(redis);
-    }
-
-    // 키-벨류 설정
-    public void setRefreshValues(String email, String refresh) {
-        ValueOperations<String, String> values = redisTemplate.opsForValue();
-//        values.set(name, age);
-        values.set(email, refresh, Duration.ofDays(7));
-    }
-
-    // 키값으로 벨류 가져오기
-    public String getRefreshValues(String email) {
-        ValueOperations<String, String> values = redisTemplate.opsForValue();
-        return values.get(email);
-    }
-
-    // 키-벨류 삭제
-    public void delRefreshValues(String email) {
-        redisTemplate.delete(email);
-    }
-
 
     // 예약날짜 저장
     public void checkReservation(ReservationRequestDto requestDto, List<String> checktimes) {
@@ -75,7 +48,7 @@ public class RedisService {
                 for (String checktime : checktimes) {
                     String key = requestDto.getSpaceId() + checktime;
                     operations.opsForValue().set(key, "true", Duration.ofMinutes(5));
-                    log.info("저장:{}", key);
+                    log.info("저장:{}", key + "keys:"+keys);
                 }
                 Object obj;
                 obj = operations.exec();

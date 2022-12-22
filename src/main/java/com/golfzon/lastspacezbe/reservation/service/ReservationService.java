@@ -279,10 +279,8 @@ public class ReservationService {
         // 1. 공간 정보 찾기
         Space space = spaceRepository.findById(spaceId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 spaceId는 존재하지 않습니다."));
-
         // 2. 예약된 시간 찾기
         List<String> reservedTimes = getReservedTimes(space);
-
         // 3. 총 마일리지 찾기
         int totalMileage = mileageService.getTotalScore(member.getMemberId());
 
@@ -406,6 +404,7 @@ public class ReservationService {
         return flag;
     }
 
+    //이용완료로 변경
     public void doneReservation(Long reservationId) {
 
         log.info("reservationId:{}", reservationId);
@@ -419,11 +418,11 @@ public class ReservationService {
         }
     }
 
+    //예약된 시간 찾기
     public List<String> getTimes(Long spaceId) {
         // 1. 공간 정보 찾기
         Space space = spaceRepository.findById(spaceId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 spaceId는 존재하지 않습니다."));
-
         // 2. 예약된 시간 찾기
         return getReservedTimes(space);
     }
@@ -476,7 +475,6 @@ public class ReservationService {
                 e.printStackTrace();
             }
         }
-
         log.info("checkTimes:{}",checktimes);
 
         //2) Redis에 예약중인 날짜 저장

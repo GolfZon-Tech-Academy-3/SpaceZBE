@@ -44,6 +44,7 @@ public class TossPaymentService {
         toss_secret = value;
     }
 
+    //토스 인증토큰 발급
     public String getTossAccessToken(String code, String customerKey) {
         RestTemplate rt = new RestTemplate();
         // HTTP Header 생성
@@ -78,6 +79,7 @@ public class TossPaymentService {
         return jsonNode.get("accessToken").asText();
     }
 
+    //토스 결제수단 조회
     public String getMethods(ReservationRequestDto requestDto) {
         RestTemplate rt = new RestTemplate();
         // HTTP Header 생성
@@ -128,6 +130,7 @@ public class TossPaymentService {
         }
     }
 
+    //토스 결제
     public void tossReserve(ReservationRequestDto requestDto) {
         log.info("requestDto : {}", requestDto);
         //중복예약 확인
@@ -324,6 +327,7 @@ public class TossPaymentService {
         }
     }
 
+    //토스 환불
     public static void tossRefund(RefundDto refundDto) {
         RestTemplate rt = new RestTemplate();
         // HTTP Header 생성

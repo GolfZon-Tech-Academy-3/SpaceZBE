@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-@EnableSwagger2 // Swagger2 사용하겠다.
+@EnableSwagger2 // Swagger2 사용
 @SuppressWarnings("unchecked")
 public class SwaggerConfig extends WebMvcConfigurationSupport {
 
@@ -73,6 +73,11 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
 
     // API마다 구분짓기 위한 설정.
     @Bean
+    public Docket allApi() {
+        return getDocket("전체", Predicates.or(PathSelectors.regex("/*.*")));
+    }
+
+    @Bean
     public Docket productApi() {
         return getDocket("회원", Predicates.or(PathSelectors.regex("/member.*")));
     }
@@ -83,18 +88,22 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
     }
 
     @Bean
-    public Docket searchApi() {
-        return getDocket("주문", Predicates.or(PathSelectors.regex("/order.*")));
+    public Docket companyApi() {
+        return getDocket("사무공간", Predicates.or(PathSelectors.regex("/company.*")));
     }
 
     @Bean
-    public Docket commonApi() {
-        return getDocket("공통", Predicates.or(PathSelectors.regex("/test.*")));
-
-    }
+    public Docket myPageApi() { return getDocket("마이페이지", Predicates.or(PathSelectors.regex("/mypage.*")));}
 
     @Bean
-    public Docket allApi() {
-        return getDocket("전체", Predicates.or(PathSelectors.regex("/*.*")));
-    }
+    public Docket reviewApi() { return getDocket("리뷰", Predicates.or(PathSelectors.regex("/review.*")));}
+
+    @Bean
+    public Docket inquiryApi() { return getDocket("사용자 문의", Predicates.or(PathSelectors.regex("/inquiry.*")));}
+
+    @Bean
+    public Docket backOfficeApi() { return getDocket("백오피스", Predicates.or(PathSelectors.regex("/back-office.*")));}
+
+    @Bean
+    public Docket masterApi() { return getDocket("마스터 공간", Predicates.or(PathSelectors.regex("/master.*")));}
 }
