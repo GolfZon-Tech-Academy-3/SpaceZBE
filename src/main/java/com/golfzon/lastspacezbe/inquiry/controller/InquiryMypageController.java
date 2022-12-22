@@ -5,6 +5,7 @@ import com.golfzon.lastspacezbe.inquiry.dto.InquiryResponseDto;
 import com.golfzon.lastspacezbe.inquiry.service.InquiryMypageService;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.security.UserDetailsImpl;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @Slf4j
+@Api(tags = "마이페이지 문의 컨트롤러")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/mypage")

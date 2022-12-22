@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class PaymentTestController {
 
     // 예약 결제 테스트
-    @ApiOperation(value = "예약하기 폼페이지", notes = "예약하기 폼 페이지")
+    @ApiOperation(value = "토스 예약하기 폼페이지", notes = "토스 예약하기 폼 페이지")
     @GetMapping(value = "/member/paytest")
     public String payTest(){
 

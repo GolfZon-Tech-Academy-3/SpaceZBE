@@ -1,24 +1,21 @@
 package com.golfzon.lastspacezbe.space.controller;
 
-import com.golfzon.lastspacezbe.security.UserDetailsImpl;
 import com.golfzon.lastspacezbe.space.dto.SpaceBackOfficeResponseDto;
-import com.golfzon.lastspacezbe.space.dto.SpaceRequestDto;
-import com.golfzon.lastspacezbe.space.entity.Space;
 import com.golfzon.lastspacezbe.space.service.SpaceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Slf4j
-@Api(tags = "Space 컨트롤러")
+@Api(tags = "사무공간 백오피스 컨트롤러")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/space")

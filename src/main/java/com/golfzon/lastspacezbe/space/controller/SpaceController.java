@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
-@Api(tags = "Space 컨트롤러")
+@Api(tags = "사무공간 컨트롤러")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/space")

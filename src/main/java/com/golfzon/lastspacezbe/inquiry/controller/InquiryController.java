@@ -6,6 +6,7 @@ import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.inquiry.dto.InquiryRequestDto;
 import com.golfzon.lastspacezbe.inquiry.service.InquiryService;
 import com.golfzon.lastspacezbe.security.UserDetailsImpl;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@Api(tags = "문의 컨트롤러")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/inquiry")

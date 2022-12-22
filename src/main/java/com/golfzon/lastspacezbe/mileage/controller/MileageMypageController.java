@@ -3,6 +3,7 @@ package com.golfzon.lastspacezbe.mileage.controller;
 import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.mileage.service.MileageService;
 import com.golfzon.lastspacezbe.security.UserDetailsImpl;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @Slf4j
+@Api(tags = "마이페이지 마일리지 컨트롤러")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/mypage")

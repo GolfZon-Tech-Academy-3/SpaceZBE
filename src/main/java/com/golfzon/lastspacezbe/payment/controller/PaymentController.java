@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 
 @Slf4j
-@Api(tags = "예약완료 컨트롤러")
+@Api(tags = "결제 컨트롤러")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/payment")
