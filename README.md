@@ -45,6 +45,15 @@
    <img width="600" src="https://user-images.githubusercontent.com/101076530/209040517-f5d45ada-9fd7-46ee-927d-6bf083dc348b.gif">
   </ul>
 </details>
+
+<details> 
+  <summary><strong> 🤖 무분별한 예약방지 기능</strong></summary>
+  <br/>
+  <ul>
+    <li>메크로를 이용한 예약을 막습니다.</li>
+   <img width="600" src="">
+  </ul>
+</details>
 <br>
 
 ## :tent: Swagger
@@ -75,5 +84,4 @@
 
 ## :bank:프로젝트 아키텍쳐
 <img src="https://user-images.githubusercontent.com/101076530/209036689-0e909517-4d19-4228-9b3f-3d9fc7a55a62.png">
-<br>
-<br>
+
