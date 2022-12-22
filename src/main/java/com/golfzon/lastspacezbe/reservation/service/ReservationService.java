@@ -4,7 +4,6 @@ import com.golfzon.lastspacezbe.member.entity.Member;
 import com.golfzon.lastspacezbe.mileage.service.MileageService;
 import com.golfzon.lastspacezbe.payment.dto.RefundDto;
 import com.golfzon.lastspacezbe.payment.service.PaymentService;
-import com.golfzon.lastspacezbe.payment.service.TossPaymentService;
 import com.golfzon.lastspacezbe.redis.RedisService;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationRequestDto;
 import com.golfzon.lastspacezbe.reservation.dto.ReservationSpaceDto;
