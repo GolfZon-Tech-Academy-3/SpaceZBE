@@ -1,3 +1,5 @@
+<p align="center"><img width= 200px src="https://user-images.githubusercontent.com/101076530/209034927-4c389ea3-448a-48cd-a925-859ce77ae769.png">
+<br>사무공간을 쉽고 빠르게 예약할 수 있는 사무공간 렌탈 플랫폼 SpaceZ 입니다!</p>
 
 
 ## ✨ 프로젝트 소개
