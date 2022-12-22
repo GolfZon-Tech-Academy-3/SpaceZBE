@@ -75,5 +75,6 @@
 <br>
 
 ## :bank:프로젝트 아키텍쳐
+<img src="https://user-images.githubusercontent.com/101076530/209036689-0e909517-4d19-4228-9b3f-3d9fc7a55a62.png">
 <br>
 <br>
