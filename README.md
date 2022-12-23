@@ -50,6 +50,7 @@
     <li>매크로를 이용한 예약을 막습니다.</li>
     <h5>매크로 프로그램</h5>
    <img width="600" src="https://user-images.githubusercontent.com/58718743/209247394-ceb1a5e3-13b4-4ea0-9ed3-81c6bd641f78.gif">
+   <br>
    <img width="600" src="https://user-images.githubusercontent.com/58718743/209247921-75c93f21-fa16-40cf-8f7d-70ded1b47151.png">
   </ul>
 </details>
