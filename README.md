@@ -12,7 +12,7 @@
 
 ## :tv: 시연영상
 
-<a href="https://youtu.be/4pZrPC1I4_8"><img src="https://img.shields.io/badge/YouTube-FF0000?style=flat&logo=YouTube&logoColor=white"/></a>
+<a href="https://youtu.be/4pZrPC1I4_8"><img width="100" src="https://img.shields.io/badge/YouTube-FF0000?style=flat&logo=YouTube&logoColor=white"/></a>
 <br>
 <br>
 
