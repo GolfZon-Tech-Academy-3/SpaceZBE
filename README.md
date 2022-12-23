@@ -47,8 +47,10 @@
   <summary><strong> 🤖 무분별한 예약방지 기능</strong></summary>
   <br/>
   <ul>
-    <li>메크로를 이용한 예약을 막습니다.</li>
-   <img width="600" src="">
+    <li>매크로를 이용한 예약을 막습니다.</li>
+    테스트용 매크로 프로그램
+   <img width="600" src="https://user-images.githubusercontent.com/58718743/209247394-ceb1a5e3-13b4-4ea0-9ed3-81c6bd641f78.gif">
+   <img width="600" src="https://user-images.githubusercontent.com/58718743/209247921-75c93f21-fa16-40cf-8f7d-70ded1b47151.png">
   </ul>
 </details>
 <br>
